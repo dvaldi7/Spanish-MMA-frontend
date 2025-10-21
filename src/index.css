@@ -3,6 +3,15 @@
 @tailwind utilities;
 
 @layer components {
+     /* ESTILOS DEL MENU */
+  .menu-item {
+    @apply  tracking-wider flex-none text-lg flex flex-1;
+  }
+
+  .menu-item-a {
+    @apply block transition duration-200 hover:text-custom-gold transform hover:scale-105;
+  }
+
     /*TARJETAS*/
     .card {
         @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6
