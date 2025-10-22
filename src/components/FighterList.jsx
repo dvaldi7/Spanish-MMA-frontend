@@ -36,7 +36,7 @@ const FighterList = () => {
 
     return (
         <div className="p-6">
-            <h2 className="text-3xl font-extrabold mb-8 text-custom-red border-b pb-2 flex
+            <h2 className="text-3xl font-extrabold mb-16 text-custom-red border-b pb-10 flex
             items-center justify-center">
                 PELEADORES
             </h2>
@@ -45,7 +45,7 @@ const FighterList = () => {
             <div className="card mt-12 mb-20">
                 {fighters.map(fighter => (
                     <div key={fighter.fighter_id} className="bg-white p-5 shadow-xl rounded-xl border-l-4
-                   hover:shadow-2xl hover:scale-110 transition duration-300">
+                   hover:shadow-2xl hover:scale-110 transition duration-300 cursor-pointer">
                         <h3 className="text-lg font-bold text-gray-900 mb-1 text-center">
                             {fighter.first_name} "{fighter.nickname}" {fighter.last_name}
                         </h3>
