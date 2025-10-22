@@ -44,9 +44,9 @@ const FighterList = () => {
             {/* TARJETA DE LOS LUCHADORES */}
             <div className="card mt-12 mb-20">
                 {fighters.map(fighter => (
-                    <div key={fighter.fighter_id} className="bg-white p-5 shadow-xl rounded-xl border-l-4
-                   hover:shadow-2xl hover:scale-110 transition duration-300 cursor-pointer">
-                        <h3 className="text-lg font-bold text-gray-900 mb-1 text-center">
+                    <div key={fighter.fighter_id} className="bg-gray-200 p-5 shadow-xl rounded-xl border-l-4
+                   hover:shadow-2xl hover:scale-105 transition duration-300 cursor-pointer">
+                        <h3 className="text-lg font-bold text-gray-900 mb-5 text-center">
                             {fighter.first_name} "{fighter.nickname}" {fighter.last_name}
                         </h3>
                         <div className="mb-3">
@@ -60,7 +60,7 @@ const FighterList = () => {
                                 <img
                                     src={avatar}
                                     alt={`Avatar de peleador`}
-                                    className="w-full h-72 object-fit rounded-md mb-2 border border-gray-200"
+                                    className="w-full h-72 object-fit rounded-md mb-2 border border-gray-400"
                                 />
                             )}
                         </div>
@@ -71,7 +71,9 @@ const FighterList = () => {
                         <hr className="my-2" />
                         <div className="flex justify-between text-sm text-gray-700">
                             <span>Peso: {fighter.weight_class}</span>
-                            <span className="font-semibold text-green-700">Récord: {fighter.record_wins}-{fighter.record_losses}-{fighter.record_draws}</span>
+                            <span className="font-semibold text-green-700">
+                                Récord: {fighter.record_wins}-{fighter.record_losses}-{fighter.record_draws}
+                            </span>
                         </div>
                     </div>
                 ))}
