@@ -1,5 +1,6 @@
 import React from 'react';
 import useFetchFighters from '../hooks/useFetchFighters';
+import avatar from "../../public/images/fighters/avatar.png";
 
 const FighterList = () => {
 
@@ -53,13 +54,14 @@ const FighterList = () => {
                                 <img
                                     src={fighter.photo_url}
                                     alt={`Foto de ${fighter.first_name}`}
-                                    className="w-full h-52 object-cover rounded-md mb-2 border border-gray-200"
+                                    className="w-full h-72 object-cover rounded-md mb-2 border border-gray-200"
                                 />
                             ) : (
-                                <div className="w-full h-52 flex items-center justify-center bg-gray-200
-                                 text-gray-500 rounded-md mb-2">
-                                    Sin foto
-                                </div>
+                                <img
+                                    src={avatar}
+                                    alt={`Avatar de peleador`}
+                                    className="w-full h-72 object-fit rounded-md mb-2 border border-gray-200"
+                                />
                             )}
                         </div>
 
