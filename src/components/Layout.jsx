@@ -9,12 +9,12 @@ const Layout = () => {
             <Header />
 
             {/* MAIN */}
-            <main className="flex-grow container mx-auto p-4">
+            <main className="flex-grow container mx-auto p-4 font-serif">
                 <Outlet /> 
             </main>
 
             {/* FOOTER */}
-            <footer className="bg-custom-black text-custom-gold text-center p-4 mt-8">
+            <footer className="bg-custom-black text-custom-gold text-center p-4 mt-8 font-mono">
                 <p>&copy; {new Date().getFullYear()} Spanish MMA | Desarrollado por Davaldev</p>
             </footer>
         </div>
