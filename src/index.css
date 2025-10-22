@@ -2,14 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
+ @layer base {
+    
+      
+}
+
 @layer components {
+
      /* ESTILOS DEL MENU */
   .menu-item {
-    @apply  tracking-wider flex-none text-lg flex flex-1;
+    @apply  tracking-wider text-lg flex flex-1 justify-center items-center mt-2 font-semibold;
   }
 
   .menu-item-a {
-    @apply block transition duration-200 hover:text-custom-gold transform hover:scale-105;
+    @apply block transition duration-200 hover:text-custom-gold transform hover:scale-105
+    ;
   }
 
     /*TARJETAS*/

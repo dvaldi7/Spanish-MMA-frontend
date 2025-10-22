@@ -21,12 +21,12 @@ export const Header = () => {
                             hover:bg-gray-400 hover:text-custom-red tracking-wider cursor-pointer overflow-hidden transition duration-300
                             flex flex-row group'>
 
-                                <span className='block float-left ml-11 mt-5 animation group-hover:scale-125
-                                group-hover:animate-from-bellow'>
-                                    <img src={octagonoImage} alt='octogono' className='h-5 w-5' />
+                                <span className='block text-center ml-5 mt-7 animation group-hover:scale-125
+                                group-hover:animate-from-bellow w-12 h-10'>
+                                    <img src={octagonoImage} alt='octogono' className='w-8 h-8' />
                                 </span>
 
-                                <h3 className='block text-3xl mt-1.5 ml-7 float-right mr-16 transition duration-100
+                                <h3 className='block text-3xl mt-1.5 ml-8 float-right mr-16 transition duration-100
                                 group-hover:animate-from-right'>
                                     Sp<span className='group-hover:text-custom-gold'>ani</span>sh
                                     M<span className='group-hover:text-custom-gold'>M</span>A
@@ -41,23 +41,27 @@ export const Header = () => {
                         text-center sm:mr-0 sm:text-center md:justify-end space-x-4'>
 
                             <li className='menu-item'>
-                                <Link to='/' className='menu-item-a hover:text-custom-gold transition duration-200'>Inicio</Link>
+                                <Link to='/' className='menu-item-a hover:text-custom-gold 
+                                transition duration-200'>Inicio</Link>
                             </li>
 
                             <li className='menu-item'>
-                                <Link to='/peleadores' className='menu-item-a hover:text-custom-gold transition duration-200'>Peleadores</Link>
+                                <Link to='/peleadores' className='menu-item-a hover:text-custom-gold 
+                                transition duration-200'>Peleadores</Link>
                             </li>
 
                             <li className='menu-item'>
-                                <Link to='/promotoras' className='menu-item-a hover:text-custom-gold transition duration-200'>Promotoras</Link>
+                                <Link to='/promotoras' className='menu-item-a hover:text-custom-gold 
+                                transition duration-200'>Compañías</Link>
                             </li>
 
                             <li className='menu-item'>
-                                <Link to='/eventos' className='menu-item-a hover:text-custom-gold transition duration-200'>Eventos</Link>
+                                <Link to='/eventos' className='menu-item-a hover:text-custom-gold 
+                                transition duration-200'>Eventos</Link>
                             </li>
 
                             {/* AUTENTICACIÓN */}
-                            <li className='menu-item ml-4'>
+                            <li className='menu-item ml-4 flex flex-wrap'>
                                 {user ? (
                                     <div className='flex items-center space-x-3'>
                                         {/* Enlace al Dashboard de Admin */}
