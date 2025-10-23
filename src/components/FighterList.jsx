@@ -36,8 +36,8 @@ const FighterList = () => {
 
     return (
         <div className="p-6">
-            <h2 className="text-3xl font-extrabold mb-16 text-custom-red border-b pb-10 flex
-            items-center justify-center">
+            <h2 className="text-5xl sm:text-6xl mb-16 bg-gradient-to-b from-custom-red to-custom-gold bg-clip-text text-transparent
+            border-b pb-10 flex items-center justify-center streetFighterTypo">
                 PELEADORES
             </h2>
 
@@ -46,7 +46,7 @@ const FighterList = () => {
                 {fighters.map(fighter => (
                     <div key={fighter.fighter_id} className="bg-gray-200 p-5 shadow-xl rounded-xl border-l-4
                    hover:shadow-2xl hover:scale-105 transition duration-300 cursor-pointer ">
-                        <h3 className="text-base font-bold text-gray-900 mb-5 text-center">
+                        <h3 className="text-base font-bold text-custom-black mb-5 text-center">
                             {fighter.first_name} "{fighter.nickname}" {fighter.last_name}
                         </h3>
                         <div className="mb-3 flex justify-center items-center">
@@ -54,16 +54,13 @@ const FighterList = () => {
                                 <img
                                     src={fighter.photo_url}
                                     alt={`Foto de ${fighter.first_name}`}
-                                    className="w-72 md:w-full h-72 sm:h-80 object-cover md:object-cover rounded-md mb-2 
-                                    border
-                                     border-gray-200 "
+                                    className="card_photo-fighter"
                                 />
                             ) : (
                                 <img
                                     src={avatar}
                                     alt={`Avatar de peleador`}
-                                    className="w-72 md:w-full h-72 sm:h-80 object-fit rounded-md mb-2 
-                                    border border-gray-400"
+                                    className="card_photo-avatar"
                                 />
                             )}
                         </div>
