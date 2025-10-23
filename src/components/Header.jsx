@@ -23,10 +23,12 @@ export const Header = () => {
                              transition duration-300 flex items-center group p-1'> 
 
                                 <span className='mx-2'>
-                                    <img src={octagonoImage} alt='octogono' className='w-6 h-6' />
+                                    <img src={octagonoImage} alt='octogono' className='w-9 h-8 
+                                    group-hover:animate-from-bellow' />
                                 </span>
 
-                                <h3 className='text-xl font-semibold transition duration-300 group-hover:animate-from-right'>
+                                <h3 className='text-xl font-semibold transition duration-300 
+                                group-hover:animate-from-right'>
                                     Sp<span className='group-hover:text-custom-gold'>ani</span>sh
                                     M<span className='group-hover:text-custom-gold'>M</span>A
                                 </h3>
