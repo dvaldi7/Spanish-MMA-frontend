@@ -11,7 +11,7 @@
 
      /* ESTILOS DEL MENU */
   .menu-item {
-    @apply  tracking-wider text-lg flex flex-1 justify-center items-center mt-2 font-semibold;
+    @apply  tracking-wider text-lg flex flex-1 justify-center items-center mt-1 font-semibold mr-5 ml-5;
   }
 
   .menu-item-a {

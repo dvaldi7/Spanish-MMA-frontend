@@ -45,22 +45,25 @@ const FighterList = () => {
             <div className="card mt-12 mb-20">
                 {fighters.map(fighter => (
                     <div key={fighter.fighter_id} className="bg-gray-200 p-5 shadow-xl rounded-xl border-l-4
-                   hover:shadow-2xl hover:scale-105 transition duration-300 cursor-pointer">
-                        <h3 className="text-lg font-bold text-gray-900 mb-5 text-center">
+                   hover:shadow-2xl hover:scale-105 transition duration-300 cursor-pointer ">
+                        <h3 className="text-base font-bold text-gray-900 mb-5 text-center">
                             {fighter.first_name} "{fighter.nickname}" {fighter.last_name}
                         </h3>
-                        <div className="mb-3">
+                        <div className="mb-3 flex justify-center items-center">
                             {fighter.photo_url ? (
                                 <img
                                     src={fighter.photo_url}
                                     alt={`Foto de ${fighter.first_name}`}
-                                    className="w-full h-72 object-cover rounded-md mb-2 border border-gray-200"
+                                    className="w-72 md:w-full h-72 sm:h-80 object-cover md:object-cover rounded-md mb-2 
+                                    border
+                                     border-gray-200 "
                                 />
                             ) : (
                                 <img
                                     src={avatar}
                                     alt={`Avatar de peleador`}
-                                    className="w-full h-72 object-fit rounded-md mb-2 border border-gray-400"
+                                    className="w-72 md:w-full h-72 sm:h-80 object-fit rounded-md mb-2 
+                                    border border-gray-400"
                                 />
                             )}
                         </div>
@@ -81,25 +84,25 @@ const FighterList = () => {
 
             {/* PAGINACIÓN */}
             {total_pages > 1 && (
-                <div className="mt-10 flex flex-wrap justify-center items-center space-x-2">
+                <div className="mt-10 flex flex-nowrap flex-1 justify-center items-center space-x-2">
                     <button
                         onClick={() => goToPage(current_page - 1)}
                         disabled={current_page === 1}
-                        className="px-4 py-2 bg-gray-700 text-white rounded-md hover:bg-gray-800 
-                        transition disabled:opacity-50"
+                        className="px-3 py-2 bg-gray-700 text-white rounded-md hover:bg-gray-800 
+                        transition disabled:opacity-50 text-sm"
                     >
                         Anterior
                     </button>
 
-                    <div className="flex flex-wrap justify-center">
+                    <div className="flex flex-nowrap justify-center">
                         {pageButtons}
                     </div>
 
                     <button
                         onClick={() => goToPage(current_page + 1)}
                         disabled={current_page === total_pages}
-                        className="px-4 py-2 bg-gray-700 text-white rounded-md hover:bg-gray-800 
-                        transition disabled:opacity-50 "
+                        className="px-3 py-2 bg-gray-700 text-white rounded-md hover:bg-gray-800 
+                        transition disabled:opacity-50 text-sm"
                     >
                         Siguiente
                     </button>
