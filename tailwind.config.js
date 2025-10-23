@@ -6,6 +6,9 @@ export default {
   ],
   theme: {
     extend: {
+      backgroundImage: {
+        "bg-octagon": "url('/bg-octagon.jpg')",
+      },
       colors: {
         'custom-blue': '#1e3a8a',
         'custom-gold': '#ffdb0fe5',

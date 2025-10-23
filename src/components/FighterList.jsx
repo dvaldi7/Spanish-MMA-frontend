@@ -36,8 +36,8 @@ const FighterList = () => {
 
     return (
         <div className="p-6">
-            <h2 className="text-5xl sm:text-6xl mb-16 bg-gradient-to-b from-custom-red to-custom-gold bg-clip-text text-transparent
-            border-b pb-10 flex items-center justify-center streetFighterTypo">
+            <h2 className="text-5xl sm:text-6xl mb-16 gradiant-color border-b pb-10 flex items-center justify-center 
+            streetFighterTypo">
                 PELEADORES
             </h2>
 

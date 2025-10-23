@@ -42,4 +42,10 @@
     .card_photo-avatar{
         @apply w-72 md:w-full h-72 sm:h-80 rounded-md mb-2 border border-gray-400
     }
+
+    /* COLORES PERSONALIZADOS */
+
+    .gradiant-color{
+        @apply bg-gradient-to-b from-custom-red to-custom-gold bg-clip-text text-transparent
+    }
 }
