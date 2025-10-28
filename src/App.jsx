@@ -5,6 +5,7 @@ import Login from './components/Login.jsx';
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import Layout from './components/Layout.jsx';
 import { CompanyList } from './components/CompanyList.jsx';
+import { EventList } from './components/EventList.jsx';
 
 const HomePage = () => (
   <div className="text-center mt-20">
@@ -22,7 +23,8 @@ function App() {
               <Route index element={<HomePage />} />
               <Route path="/peleadores" element={<FighterList />} />
               <Route path="/login" element={<Login />} />
-               <Route path="/promotoras" element={<CompanyList />} />
+              <Route path="/promotoras" element={<CompanyList />} />
+              <Route path="/eventos" element={<EventList />} />
 
               <Route path="/admin/dashboard" element={
                 <ProtectedRoute requiredRole="admin">
