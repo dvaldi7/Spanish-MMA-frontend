@@ -1,6 +1,6 @@
 import React from 'react';
 import useFetchEvents from '../hooks/useFetchEvents';
-import avatar from "../../public/images/companies/avatar.jpg";
+import avatar from "../../public/images/events/avatar.jpg";
 
 export const EventList = () => {
     const {
@@ -71,25 +71,6 @@ export const EventList = () => {
                         <div className="flex justify-between text-sm text-gray-700">
                             <span className='text-custom-black'>Fecha: <span className="text-custom-red">
                                 {event.date}</span></span>
-                            {/*<span className="font-semibold text-green-700">
-                                {event.website && (
-                                    <a
-                                        href={event.website}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="text-sm transition 
-                                duration-150 font-medium flex items-center"
-                                    >
-                                        <span className='text-green-700 hover:text-emerald-900'>
-                                            Visitar página web</span>
-                                    </a>
-                                )}
-                                {!event.website && (
-                                    <p className="text-sm text-gray-500">
-                                        Web no disponible
-                                    </p>
-                                )}
-                            </span>*/}
                         </div>
                     </div>
                 ))}

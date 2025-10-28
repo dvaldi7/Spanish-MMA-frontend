@@ -51,6 +51,14 @@
         @apply w-72 md:w-full h-64 sm:h-80 object-fill rounded-md mb-2 border border-gray-200
     }
 
+    .card_poster-event{
+         @apply w-72 md:w-full h-64 sm:h-80 object-fill rounded-md mb-2 border border-gray-200
+    }
+
+    .card_poster-avatar{
+        @apply w-72 md:w-full h-64 sm:h-80 object-fill rounded-md mb-2 border border-gray-200
+    }
+
     /* COLORES PERSONALIZADOS */
 
     .gradiant-color{
