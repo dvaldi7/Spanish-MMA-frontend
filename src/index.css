@@ -43,6 +43,14 @@
         @apply w-72 md:w-full h-72 sm:h-80 rounded-md mb-2 border border-gray-400
     }
 
+      .card_logo-company{
+        @apply w-72 md:w-full h-64 sm:h-80 object-fill rounded-md mb-2 border border-gray-200
+    }
+
+      .card_logo-avatar{
+        @apply w-72 md:w-full h-64 sm:h-80 object-fill rounded-md mb-2 border border-gray-200
+    }
+
     /* COLORES PERSONALIZADOS */
 
     .gradiant-color{

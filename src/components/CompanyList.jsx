@@ -1,5 +1,6 @@
 import React from 'react';
 import useFetchCompanies from '../hooks/useFetchCompanies';
+import avatar from "../../public/images/companies/avatar.jpg";
 
 export const CompanyList = () => {
     const {
@@ -47,21 +48,21 @@ export const CompanyList = () => {
                         <h3 className="text-base font-bold text-custom-black mb-5 text-center">
                             {company.name}
                         </h3>
-                        {/*<div className="mb-3 flex justify-center items-center">
-                            {fighter.photo_url ? (
+                        {<div className="mb-3 flex justify-center items-center">
+                            {company.logo_url ? (
                                 <img
-                                    src={fighter.photo_url}
-                                    alt={`Foto de ${fighter.first_name}`}
-                                    className="card_photo-fighter"
+                                    src={company.logo_url}
+                                    alt={`Foto de ${company.name}`}
+                                    className="card_logo-company"
                                 />
                             ) : (
                                 <img
                                     src={avatar}
                                     alt={`Avatar de peleador`}
-                                    className="card_photo-avatar"
+                                    className="card_logo-avatar"
                                 />
                             )}
-                        </div>*/}
+                        </div>}
 
                         <p className="text-sm text-custom-black font-medium">
                             País: <span className="text-blue-700">{company.country || 'No Disponible'}</span>
