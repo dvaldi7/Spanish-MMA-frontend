@@ -1,3 +1,67 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+ @layer base {
+    
+    /*FUENTES*/
+  @font-face {
+    font-family: "streetFighter";
+    src: url('/fonts/streetFighter.ttf');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  .streetFighterTypo{
+    font-family: "streetFighter";
+  }
+      
+}
+
+@layer components {
+
+     /* ESTILOS DEL MENU */
+  .menu-item {
+    @apply  tracking-wider text-lg flex flex-1 justify-center items-center mt-1 font-semibold mr-5 ml-5;
+  }
+
+  .menu-item-a {
+    @apply block transition duration-200 hover:text-custom-gold transform hover:scale-105
+    ;
+  }
+
+    /*TARJETAS*/
+    .card {
+        @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6
+    }
+
+    .card_photo-fighter{
+        @apply w-72 md:w-full h-72 sm:h-80 object-cover md:object-cover rounded-md mb-2 border border-gray-200
+    }
+
+    .card_photo-avatar{
+        @apply w-72 md:w-full h-72 sm:h-80 rounded-md mb-2 border border-gray-400
+    }
+
+      .card_logo-company{
+        @apply w-72 md:w-full h-64 sm:h-80 object-fill rounded-md mb-2 border border-gray-200
+    }
+
+      .card_logo-avatar{
+        @apply w-72 md:w-full h-64 sm:h-80 object-fill rounded-md mb-2 border border-gray-200
+    }
+
+    .card_poster-event{
+         @apply w-72 md:w-full h-64 sm:h-80 object-fill rounded-md mb-2 border border-gray-200
+    }
+
+    .card_poster-avatar{
+        @apply w-72 md:w-full h-64 sm:h-80 object-fill rounded-md mb-2 border border-gray-200
+    }
+
+    /* COLORES PERSONALIZADOS */
+
+    .gradiant-color{
+        @apply bg-gradient-to-b from-custom-red to-custom-gold bg-clip-text text-transparent
+    }
+}
