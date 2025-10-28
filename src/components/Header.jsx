@@ -65,11 +65,12 @@ export const Header = () => {
                             </li>
                             <li className='menu-item w-full md:w-auto'>
                                 <Link to='/eventos' onClick={toggleMenu} className='menu-item-a
-                                 hover:text-custom-gold transition duration-200 block p-2 md:p-0'>Eventos</Link>
+                                 hover:text-custom-gold transition duration-200 block p-2 md:p-0 
+                                 border-b border-black border-'>Eventos</Link>
                             </li>
 
                             {/* AUTENTICACIÓN */}
-                            <li className='menu-item w-full md:w-auto pt-2 md:pt-0 border-t md:border-t-0
+                            <li className='menu-item w-full md:w-auto pt-2 md:pt-0 md:border-t-0
                              border-gray-700'>
                                 {user ? (
                                     <div className='flex items-center space-x-3'>
