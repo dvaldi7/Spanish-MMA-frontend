@@ -66,7 +66,7 @@ export const Header = () => {
                             <li className='menu-item w-full md:w-auto'>
                                 <Link to='/eventos' onClick={toggleMenu} className='menu-item-a
                                  hover:text-custom-gold transition duration-200 block p-2 md:p-0 
-                                 border-b border-black border-'>Eventos</Link>
+                                 border-b border-black md:border-none'>Eventos</Link>
                             </li>
 
                             {/* AUTENTICACIÓN */}
