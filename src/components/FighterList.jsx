@@ -1,16 +1,29 @@
-import React from 'react';
+import React, { useState } from 'react';
 import useFetchFighters from '../hooks/useFetchFighters';
 import avatar from "../../public/images/fighters/avatar.png";
 
 const FighterList = () => {
+
+    const [ searchTerm, setSearchTerm ] = useState('');
 
     const {
         fighters,
         pagination,
         loading,
         error,
-        goToPage
+        goToPage,
+        fetchFighters,
     } = useFetchFighters(10);
+
+    const handleSearch = (e) => {
+        e.preventDefault();
+
+        fetchFighters(1, pagination.limit, searchTerm);
+    }
+
+    const handleGoToPage = (pageNumber) => {
+        goToPage(pageNumber, searchTerm);
+    }
 
     if (loading) return <p className="text-center text-xl p-6 text-custom-blue">Cargando luchadores...</p>;
     if (error) return <p className="text-center text-custom-red text-xl p-6">{error}</p>;
@@ -22,7 +35,7 @@ const FighterList = () => {
         pageButtons.push(
             <button
                 key={i}
-                onClick={() => goToPage(i)}
+                onClick={() => handleGoToPage(i)}
                 className={`px-4 py-2 mx-1 rounded-full transition duration-150 text-sm ${i === current_page
                         ? 'bg-custom-red text-custom-gold font-bold shadow-md'
                         : 'bg-gray-200 text-gray-800 hover:bg-blue-200'
@@ -40,6 +53,24 @@ const FighterList = () => {
             streetFighterTypo">
                 PELEADORES
             </h2>
+
+            {/* FORMULARIO DE BÚSQUEDA */}
+            <form onSubmit={handleSearch} className="mb-8 flex justify-center">
+                <input
+                    type="text"
+                    placeholder="Buscar por nombre, apellido o alias..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="w-full max-w-lg p-3 border border-gray-300 rounded-l-lg
+                     focus:ring-blue-500 focus:border-blue-500 text-gray-800"
+                />
+                <button
+                    type="submit"
+                    className="bg-blue-600 text-white px-6 py-3 rounded-r-lg hover:bg-blue-700 transition"
+                >
+                    Buscar
+                </button>
+            </form>
 
             {/* TARJETA DE LOS LUCHADORES */}
             <div className="card mt-12 mb-20">
@@ -83,7 +114,7 @@ const FighterList = () => {
             {total_pages > 1 && (
                 <div className="mt-10 flex flex-nowrap flex-1 justify-center items-center space-x-2">
                     <button
-                        onClick={() => goToPage(current_page - 1)}
+                        onClick={() => handleGoToPage(current_page - 1)}
                         disabled={current_page === 1}
                         className="px-3 py-2 bg-gray-700 text-white rounded-md hover:bg-gray-800 
                         transition disabled:opacity-50 text-sm"
@@ -96,7 +127,7 @@ const FighterList = () => {
                     </div>
 
                     <button
-                        onClick={() => goToPage(current_page + 1)}
+                        onClick={() => handleGoToPage(current_page + 1)}
                         disabled={current_page === total_pages}
                         className="px-3 py-2 bg-gray-700 text-white rounded-md hover:bg-gray-800 
                         transition disabled:opacity-50 text-sm"
