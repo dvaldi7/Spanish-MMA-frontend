@@ -1,5 +1,6 @@
 import React from 'react';
 import useFetchEvents from '../hooks/useFetchEvents';
+import avatar from "../../public/images/companies/avatar.jpg";
 
 export const EventList = () => {
     const {
@@ -47,21 +48,21 @@ export const EventList = () => {
                         <h3 className="text-base font-bold text-custom-black mb-5 text-center">
                             {event.name}
                         </h3>
-                        {/*<div className="mb-3 flex justify-center items-center">
-                            {event.logo_url ? (
+                        {<div className="mb-3 flex justify-center items-center">
+                            {event.poster_url ? (
                                 <img
-                                    src={event.logo_url}
+                                    src={event.poster_url}
                                     alt={`Foto de ${event.name}`}
-                                    className="card_logo-event"
+                                    className="card_poster-event"
                                 />
                             ) : (
                                 <img
                                     src={avatar}
                                     alt={`Avatar de peleador`}
-                                    className="card_logo-avatar"
+                                    className="card_poster-avatar"
                                 />
                             )}
-                        </div>*/}
+                        </div>}
 
                         <p className="text-sm text-custom-black font-medium">
                             Localización: <span className="text-blue-700">{event.location || 'No Disponible'}</span>
