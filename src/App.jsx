@@ -30,8 +30,8 @@ function App() {
                 </ProtectedRoute>
               } />
 
-              <Route path="*" element={<div className='bg-gray-200 rounded-xl w-3/4 h-auto text-center'>
-                                          <h1 className="text-center mt-20 text-3xl flex justify-center items-center">
+              <Route path="*" element={<div className='bg-gray-200 rounded-xl w-auto h-auto mt-14 sm:w-3/4 sm:ml-24'>
+                                          <h1 className="text-center mt-5 text-3xl flex justify-center items-center">
                                             404 - Página no encontrada
                                           </h1>
                                       </div>} />
