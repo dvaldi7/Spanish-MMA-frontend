@@ -44,7 +44,7 @@ export const EventList = () => {
             <div className="card mt-12 mb-20">
                 {events.map(event => (
                     <div key={event.event_id} className="bg-gray-200 p-5 shadow-xl rounded-xl border-l-4
-                           hover:shadow-2xl hover:scale-105 transition duration-300 cursor-pointer ">
+                           hover:shadow-2xl hover:scale-105 transition duration-300 cursor-pointer bg-opacity-65">
                         <h3 className="text-base font-bold text-custom-black mb-5 text-center">
                             {event.name}
                         </h3>
