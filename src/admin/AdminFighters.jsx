@@ -1,23 +1,23 @@
 import React, { useState } from 'react';
-import useFetchFighters from '../hooks/useFetchFighters'; // Asegúrate que la ruta es correcta
-// No se necesita importar nada de Tailwind, solo usar las clases
+import useFetchFighters from '../hooks/useFetchFighters';
+import axios from 'axios';
 
 export const AdminFighters = () => {
 
-    const { 
-        fighters, 
-        isLoading, 
-        error, 
-        totalPages, 
-        currentPage, 
-        setPage, 
-        setSearchTerm, 
-        searchTerm 
+    const {
+        fighters,
+        isLoading,
+        error,
+        totalPages,
+        currentPage,
+        setPage,
+        setSearchTerm,
+        searchTerm
     } = useFetchFighters();
-    
+
     // Estados para el Modal (Crear/Editar)
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [selectedFighter, setSelectedFighter] = useState(null); 
+    const [selectedFighter, setSelectedFighter] = useState(null);
 
     // Manejadores
     const handleSearchChange = (e) => {
@@ -25,19 +25,30 @@ export const AdminFighters = () => {
     };
 
     const handleCreate = () => {
-        setSelectedFighter(null); 
+        setSelectedFighter(null);
         setIsModalOpen(true);
     };
 
     const handleEdit = (fighter) => {
-        setSelectedFighter(fighter); 
+        setSelectedFighter(fighter);
         setIsModalOpen(true);
     };
 
-    const handleDelete = (fighterId) => {
-        if (window.confirm(`¿Estás seguro de eliminar al peleador con ID ${fighterId}?`)) {
-            // 🚨 Aquí irá la lógica de DELETE
-            console.log(`Eliminando peleador con ID: ${fighterId}`);
+    const handleDelete = async (fighterId) => {
+
+        /* por si no quiero eliminar */
+        if (!window.confirm(`¿Estás seguro de eliminar al peleador con ID ${fighterId}?`)) {
+            return;
+        }
+
+        try {
+            await axios.delete(`http://localhost:3001/api/fighters/${fighterId}`);
+            console.log("Peleador eliminado con éxito");
+
+            refreshList();
+
+        } catch (error) {
+            console.error("Error al eliminar al peleador: ", error);
         }
     };
 
@@ -45,16 +56,16 @@ export const AdminFighters = () => {
     if (error) return <div className="p-6 text-red-600 font-semibold">Error al cargar: {error.message}</div>;
 
     return (
-        <div className="p-6 bg-gray-50 min-h-screen">
-            
+        <div className="p-6 bg-gray-50 min-h-screen opacity-85 rounded-lg mt-10">
+
             {/* Encabezado y Botón Crear */}
             <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-semibold text-gray-800">🛡️ Gestión de Peleadores</h2>
-                <button 
-                    onClick={handleCreate} 
+                <h2 className="text-2xl font-semibold text-gray-800">Gestión de Peleadores</h2>
+                <button
+                    onClick={handleCreate}
                     className="px-4 py-2 bg-green-600 text-white rounded-lg shadow-md hover:bg-green-700 transition duration-150"
                 >
-                    ➕ Crear Nuevo Peleador
+                    Crear Nuevo Peleador
                 </button>
             </div>
 
@@ -72,30 +83,57 @@ export const AdminFighters = () => {
             {/* Tabla de Datos */}
             <div className="overflow-x-auto bg-white shadow-lg rounded-lg">
                 <table className="min-w-full divide-y divide-gray-200">
+
                     <thead className="bg-gray-100">
                         <tr>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Apodo</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Compañía</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase 
+                            tracking-wider">
+                                ID
+                            </th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase 
+                            tracking-wider">
+                                Nombre
+                            </th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase 
+                            tracking-wider">
+                                Apodo
+                            </th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase 
+                            tracking-wider">
+                                Compañía
+                            </th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase 
+                            tracking-wider">
+                                Acciones
+                            </th>
                         </tr>
                     </thead>
+
                     <tbody className="bg-white divide-y divide-gray-200">
                         {fighters.map(fighter => (
+
                             <tr key={fighter.fighter_id} className="hover:bg-gray-50">
-                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{fighter.fighter_id}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{fighter.first_name} {fighter.last_name}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{fighter.nickname}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{fighter.company_name || 'N/A'}</td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                    {fighter.fighter_id}</td>
+
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    {fighter.first_name} {fighter.last_name}</td>
+
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    {fighter.nickname}</td>
+
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500
+                                ">{fighter.company_name || 'N/A'}</td>
+
                                 <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                    <button 
+                                    <button
                                         onClick={() => handleEdit(fighter)}
-                                        className="text-indigo-600 hover:text-indigo-900 mr-4 transition duration-150"
+                                        className="text-indigo-600 hover:text-indigo-900 mr-4 transition 
+                                        duration-150"
                                     >
                                         Editar
                                     </button>
-                                    <button 
+                                    <button
                                         onClick={() => handleDelete(fighter.fighter_id)}
                                         className="text-red-600 hover:text-red-900 transition duration-150"
                                     >
@@ -105,21 +143,22 @@ export const AdminFighters = () => {
                             </tr>
                         ))}
                     </tbody>
+
                 </table>
             </div>
 
             {/* Controles de Paginación */}
             <div className="flex justify-center items-center mt-6">
-                <button 
-                    onClick={() => setPage(currentPage - 1)} 
-                    disabled={currentPage === 1} 
+                <button
+                    onClick={() => setPage(currentPage - 1)}
+                    disabled={currentPage === 1}
                     className="px-4 py-2 mr-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-100 disabled:opacity-50"
                 >
                     Anterior
                 </button>
                 <span className="text-sm text-gray-700 mx-4">Página {currentPage} de {totalPages}</span>
-                <button 
-                    onClick={() => setPage(currentPage + 1)} 
+                <button
+                    onClick={() => setPage(currentPage + 1)}
                     disabled={currentPage === totalPages}
                     className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-100 disabled:opacity-50"
                 >
