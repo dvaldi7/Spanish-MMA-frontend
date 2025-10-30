@@ -78,7 +78,7 @@ export const Header = () => {
                                         <Link to="/admin/dashboard" onClick={toggleMenu} className="text-sm
                                          bg-custom-gold text-custom-black px-3 py-1 rounded-full
                                           hover:bg-gray-400 transition">
-                                            🛡️ Admin
+                                             Maestro
                                         </Link>
                                         {/* Botón de Logout */}
                                         <button
