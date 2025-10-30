@@ -55,18 +55,19 @@ const FighterList = () => {
             </h2>
 
             {/* FORMULARIO DE BÚSQUEDA */}
-            <form onSubmit={handleSearch} className="mb-8 flex justify-center">
+            <form onSubmit={handleSearch} className="mb-8 flex justify-center ">
                 <input
                     type="text"
-                    placeholder="Buscar por nombre, apellido o alias..."
+                    placeholder="Buscar peleador"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full max-w-lg p-3 border border-gray-300 rounded-l-lg
-                     focus:ring-blue-500 focus:border-blue-500 text-gray-800"
+                    className="w-full max-w-lg h-9 p-3 border border-gray-300 rounded-l-lg
+                    text-gray-800 opacity-65"
                 />
                 <button
                     type="submit"
-                    className="bg-blue-600 text-white px-6 py-3 rounded-r-lg hover:bg-blue-700 transition"
+                    className="bg-gradient-to-b from-custom-red to-custom-gold px-6 py-1 rounded-r-lg 
+                    transition h-9 font-medium"
                 >
                     Buscar
                 </button>
