@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import useFetchFighters from '../hooks/useFetchFighters';
-import avatar from "../../public/images/fighters/avatar.png";
+import avatar from "/images/fighters/avatar.png";
 
 const FighterList = () => {
 
@@ -75,8 +75,9 @@ const FighterList = () => {
             {/* TARJETA DE LOS LUCHADORES */}
             <div className="card mt-12 mb-20">
                 {fighters.map(fighter => (
-                    <div key={fighter.fighter_id} className="bg-gray-200 p-5 shadow-xl rounded-xl border-l-4
-                   hover:shadow-2xl hover:scale-105 transition duration-300 cursor-pointer ">
+                    <div key={fighter.fighter_id} className="bg-gray-200 bg-opacity-65 p-5 shadow-xl rounded-xl 
+                    border-l-2 border-l-custom-red border-b-2  border-b-custom-gold hover:shadow-2xl hover:scale-105 
+                    transition duration-300 cursor-pointer ">
                         <h3 className="text-base font-bold text-custom-black mb-5 text-center">
                             {fighter.first_name} "{fighter.nickname}" {fighter.last_name}
                         </h3>

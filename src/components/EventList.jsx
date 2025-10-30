@@ -1,6 +1,6 @@
 import React from 'react';
 import useFetchEvents from '../hooks/useFetchEvents';
-import avatar from "../../public/images/events/avatar.jpg";
+import avatar from "/images/events/avatar.jpg";
 
 export const EventList = () => {
     const {

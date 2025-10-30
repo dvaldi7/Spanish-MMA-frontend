@@ -1,6 +1,6 @@
 import React from 'react';
 import useFetchCompanies from '../hooks/useFetchCompanies';
-import avatar from "../../public/images/companies/avatar.jpg";
+import avatar from "/images/companies/avatar.jpg";
 
 export const CompanyList = () => {
     const {
