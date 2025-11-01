@@ -75,7 +75,7 @@ export const Header = () => {
                                 {user ? (
                                     <div className='flex items-center space-x-3'>
                                         {/* Enlace al Dashboard de Admin */}
-                                        <Link to="/admin/dashboard" onClick={toggleMenu} className="text-sm
+                                        <Link to="/admin/fighters" onClick={toggleMenu} className="text-sm
                                          bg-custom-gold text-custom-black px-3 py-1 rounded-full
                                           hover:bg-gray-400 transition">
                                              Maestro
