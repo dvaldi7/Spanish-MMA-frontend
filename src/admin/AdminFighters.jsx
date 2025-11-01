@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import useFetchFighters from '../hooks/useFetchFighters';
-import axios from 'axios';
 import api from '../services/api';
+import FighterFormModal from '../components/FighterFormModal';
+import { FiEdit, FiTrash2, FiPlus } from 'react-icons/fi';
 
 export const AdminFighters = () => {
 
@@ -19,23 +20,36 @@ export const AdminFighters = () => {
 
     // Estados para el Modal (Crear/Editar)
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [selectedFighter, setSelectedFighter] = useState(null);
+    const [fighterIdToEdit, setFighterIdToEdit] = useState(null);
 
     // Manejadores
+
+    //
     const handleSearchChange = (e) => {
         setSearchTerm(e.target.value);
     };
 
-    const handleCreate = () => {
-        setSelectedFighter(null);
+    //Crear y/o editar peleadores 
+    const openCreateModal = () => {
+        setFighterIdToEdit(null);
         setIsModalOpen(true);
     };
 
-    const handleEdit = (fighter) => {
-        setSelectedFighter(fighter);
+    const openEditModal = (fighterId) => {
+        setFighterIdToEdit(fighterId);
         setIsModalOpen(true);
     };
 
+    const closeModal = () => {
+        setIsModalOpen(false);
+        setFighterIdToEdit(null);
+    };
+
+    const handleFighterSaved = () => {
+        goToPage(pagination.current_page);
+    };
+
+    //Borrar peleadores
     const handleDelete = async (fighterId) => {
 
         /* por si no quiero eliminar */
@@ -62,9 +76,11 @@ export const AdminFighters = () => {
 
             {/* Encabezado y Botón Crear */}
             <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-semibold text-gray-800">Gestión de Peleadores</h2>
+                <h2 className="text-2xl font-semibold text-gray-800">
+                    Gestión de Peleadores
+                </h2>
                 <button
-                    onClick={handleCreate}
+                    onClick={openCreateModal}
                     className="px-4 py-2 bg-green-600 text-white rounded-lg shadow-md hover:bg-green-700 transition duration-150"
                 >
                     Crear Nuevo Peleador
@@ -129,7 +145,7 @@ export const AdminFighters = () => {
 
                                 <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                     <button
-                                        onClick={() => handleEdit(fighter)}
+                                        onClick={() => openEditModal(fighterIdToEdit)}
                                         className="text-indigo-600 hover:text-indigo-900 mr-4 transition 
                                         duration-150"
                                     >
@@ -167,6 +183,15 @@ export const AdminFighters = () => {
                     Siguiente
                 </button>
             </div>
+
+            {/* El modal del peleador para cambiar, crear o editar peleadores */}
+            <FighterFormModal
+              
+                fighterIdToEdit={fighterIdToEdit} 
+                isModalOpen={isModalOpen}         
+                closeModal={closeModal}          
+                onFighterSaved={handleFighterSaved}
+            />
         </div>
     );
 };

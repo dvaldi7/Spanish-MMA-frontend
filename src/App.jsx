@@ -10,8 +10,14 @@ import { AdminFighters } from './admin/AdminFighters.jsx';
 
 const HomePage = () => (
   <div className="text-center mt-20">
-    <h1 className="text-4xl font-extrabold bg-gradient-to-b from-custom-red to-custom-gold bg-clip-text text-transparent rounded-md">Bienvenido al Catálogo de MMA EN Español</h1>
-    <p className="text-xl bg-gradient-to-b from-custom-red to-custom-gold bg-clip-text text-transparent rounded-md">últimas noticias</p>
+    <h1 className="text-4xl font-extrabold bg-gradient-to-b from-custom-red
+     to-custom-gold bg-clip-text text-transparent rounded-md">
+      Bienvenido al Catálogo de MMA EN Español
+    </h1>
+    <p className="text-xl bg-gradient-to-b from-custom-red
+     to-custom-gold bg-clip-text text-transparent rounded-md">
+      últimas noticias
+    </p>
   </div>
 );
 
