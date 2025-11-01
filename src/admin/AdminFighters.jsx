@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import useFetchFighters from '../hooks/useFetchFighters';
 import axios from 'axios';
+import api from '../services/api';
 
 export const AdminFighters = () => {
 
@@ -10,9 +11,10 @@ export const AdminFighters = () => {
         error,
         totalPages,
         currentPage,
-        setPage,
+        goToPage,
         setSearchTerm,
-        searchTerm
+        searchTerm,
+        pagination,
     } = useFetchFighters();
 
     // Estados para el Modal (Crear/Editar)
@@ -42,10 +44,10 @@ export const AdminFighters = () => {
         }
 
         try {
-            await axios.delete(`http://localhost:3001/api/fighters/${fighterId}`);
+            await api.delete(`/fighters/id/${fighterId}`);
             console.log("Peleador eliminado con éxito");
 
-            refreshList();
+            goToPage(pagination.current_page);
 
         } catch (error) {
             console.error("Error al eliminar al peleador: ", error);
