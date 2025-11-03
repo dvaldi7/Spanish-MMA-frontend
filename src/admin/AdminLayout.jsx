@@ -17,11 +17,14 @@ const AdminLayout = () => {
         }`;
 
     return (
-        <div className="flex min-h-screen bg-gray-100 pt-16"> {/* Añade padding superior si tu Header es fijo */}
+        <div className="flex min-h-screen bg-gray-100"> 
             
             {/* Sidebar de Administración */}
-            <aside className="w-64 bg-white p-4 shadow-xl">
-                <h3 className="text-lg font-bold mb-4 text-gray-800 border-b pb-2">Admin Menu</h3>
+            <aside className="w-40 bg-white p-4 shadow-xl">
+                
+                <h3 className="text-lg font-bold mb-4 text-gray-800 border-b pb-2">
+                    Admin Menu
+                    </h3>
                 <nav>
                     {adminLinks.map(link => (
                         <NavLink key={link.to} to={link.to} className={navLinkClass}>
