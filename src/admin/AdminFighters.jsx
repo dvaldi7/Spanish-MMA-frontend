@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import useFetchFighters from '../hooks/useFetchFighters';
 import api from '../services/api';
 import FighterFormModal from '../components/FighterFormModal';
-import { FiEdit, FiTrash2, FiPlus } from 'react-icons/fi';
 
 export const AdminFighters = () => {
 
@@ -22,9 +21,7 @@ export const AdminFighters = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [fighterIdToEdit, setFighterIdToEdit] = useState(null);
 
-    // Manejadores
-
-    //
+    //mManejadores
     const handleSearchChange = (e) => {
         setSearchTerm(e.target.value);
     };
@@ -145,7 +142,7 @@ export const AdminFighters = () => {
 
                                 <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                     <button
-                                        onClick={() => openEditModal(fighterIdToEdit)}
+                                        onClick={() => openEditModal(fighter.fighter_id)}
                                         className="text-indigo-600 hover:text-indigo-900 mr-4 transition 
                                         duration-150"
                                     >

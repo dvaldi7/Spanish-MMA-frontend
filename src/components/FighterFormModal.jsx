@@ -43,9 +43,13 @@ const FighterFormModal = ({ fighterIdToEdit, isModalOpen, closeModal, onFighterS
                 try {
 
                     const response = await api.get(`/fighters/id/${fighterIdToEdit}`);
+                    const fighterData = response.data;
 
                     const loadedData = {
-                        ...response.data,
+                        first_name: fighterData.first_name || '',
+                        last_name: fighterData.last_name || '',
+                        nickname: fighterData.nickname || '',
+                        weight_class: fighterData.weight_class || '',
                         record_wins: response.data.record_wins || 0,
                         record_losses: response.data.record_losses || 0,
                         record_draws: response.data.record_draws || 0,
@@ -53,6 +57,7 @@ const FighterFormModal = ({ fighterIdToEdit, isModalOpen, closeModal, onFighterS
                     };
 
                     setFormData(response.data);
+
                 } catch (error) {
                     console.error("Error al cargar datos del peleador: ", error);
                     setError("No se pudieron cargar los datos para editar");
@@ -98,21 +103,25 @@ const FighterFormModal = ({ fighterIdToEdit, isModalOpen, closeModal, onFighterS
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setError(null);
+
+        console.log("Modo Edición (isEditMode):", isEditMode); 
+        console.log("ID a editar (fighterIdToEdit):", fighterIdToEdit);
 
         if (!validateForm()) {
             setError('Por favor, corrige los errores en el formulario.');
             return;
         }
 
-        setIsLoading(true);
-
-        try {
-            const dataToSend = {
+        const dataToSend = {
                 ...formData,
                 company_id: formData.company_id === '' ? null : parseInt(formData.company_id)
             };
 
+        setIsLoading(true);
+        setError(null);
+
+        try {
+            
             if (isEditMode) {
                 // UPDATE (PUT)
                 await api.put(`/fighters/id/${fighterIdToEdit}`, dataToSend);
@@ -126,10 +135,10 @@ const FighterFormModal = ({ fighterIdToEdit, isModalOpen, closeModal, onFighterS
             onFighterSaved();
             closeModal();
 
-        } catch (err) {
-            const msg = err.response?.data?.message || 'Error en la operación de guardado';
+        } catch (error) {
+            const msg = error.response?.data?.message || 'Error en la operación de guardado';
             setError(msg);
-            console.error(msg, err);
+            console.error(msg, error);
         } finally {
             setIsLoading(false);
         }
@@ -138,7 +147,7 @@ const FighterFormModal = ({ fighterIdToEdit, isModalOpen, closeModal, onFighterS
     if (!isModalOpen) return null;
 
     return (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-75 flex justify-center items-center z-50">
+        <div className="fixed inset-0 bg-gray-600 flex justify-center items-center z-50">
             <div className="bg-white p-6 rounded-lg shadow-xl w-full max-w-lg overflow-y-auto max-h-[90vh]">
                 <div className="flex justify-between items-center border-b pb-3 mb-4">
                     <h2 className="text-2xl font-bold">
@@ -231,7 +240,7 @@ const FighterFormModal = ({ fighterIdToEdit, isModalOpen, closeModal, onFighterS
                         </div>
                     </div>
 
-                    {/* Récord (Victorias, Derrotas, Empates) */}
+                    {/* Récord  */}
                     <fieldset className="border p-4 rounded-md">
                         <legend className="text-sm font-medium text-gray-700 px-1">
                             Récord (Números enteros)
@@ -289,14 +298,14 @@ const FighterFormModal = ({ fighterIdToEdit, isModalOpen, closeModal, onFighterS
                         <input
                             type="number"
                             name="company_id"
-                            value={formData.company_id || ''}
+                            value={formData.company_id === null ? '' : String(formData.company_id)}
                             onChange={handleChange}
                             min="1"
                             placeholder="Ej: 1, 2, 3..."
                             className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
                         />
                         <p className="text-xs text-gray-500 mt-1">
-                            Si está vacío, la compañía será NULL en la base de datos
+                            Si está vacío, la compañía será NULL
                         </p>
                     </div>
 
