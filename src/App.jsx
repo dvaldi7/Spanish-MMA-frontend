@@ -7,6 +7,8 @@ import Layout from './components/Layout.jsx';
 import { CompanyList } from './components/CompanyList.jsx';
 import { EventList } from './components/EventList.jsx';
 import { AdminFighters } from './admin/AdminFighters.jsx';
+import { AdminCompanies } from './admin/AdminCompanies.jsx';
+import AdminLayout from './admin/AdminLayout.jsx';
 
 const HomePage = () => (
   <div className="text-center mt-20">
@@ -33,6 +35,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/promotoras" element={<CompanyList />} />
           <Route path="/eventos" element={<EventList />} />
+          {/* <Route path="/fighters/:id" element={...} */}
 
           <Route path="*" element={
             <div className='bg-gradient-to-b from-custom-red to-custom-gold rounded-xl w-auto h-auto mt-14 
@@ -43,21 +46,20 @@ function App() {
             </div>} />
 
           {/* RUTAS DE ADMIN */}
-          <Route path="/admin/fighters" element={
-            <ProtectedRoute requiredRole="admin">
-              <AdminFighters />
-            </ProtectedRoute>
-          } />
-
-          <Route path="/admin/dashboard" element={
-            <ProtectedRoute requiredRole="admin">
-              <h1 className="text-center mt-20 text-3xl font-bold text-red-600">
-                ¡PANEL DE ADMINISTRACIÓN!
-              </h1>
-            </ProtectedRoute>
-          } />
-
-
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute requiredRole="admin">
+                  <AdminLayout />
+              </ProtectedRoute>
+            }
+          >
+            {/* RUTAS HIJAS dentro del AdminLayout */}
+            <Route index element={<AdminFighters />} />
+            <Route path="fighters" element={<AdminFighters />} />
+            <Route path="companies" element={<AdminCompanies />} />
+            {/*<Route path="events" element={<AdminEvents />} /> */}
+          </Route>
 
         </Route>
       </Routes>

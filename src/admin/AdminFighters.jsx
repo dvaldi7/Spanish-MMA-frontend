@@ -13,7 +13,30 @@ export const AdminFighters = () => {
         currentPage,
         goToPage,
         pagination,
+        fetchFighters,
     } = useFetchFighters();
+
+    /* PARA EL BUSCADOR
+    useEffect(() => {
+        // Ejecuta la búsqueda 300ms después de la última pulsación de tecla
+        const delayDebounceFn = setTimeout(() => {
+            // Llama a la API con el nuevo término, volviendo a la página 1
+            // Necesitas que fetchFighters acepte el término de búsqueda
+            fetchFighters(1, pagination.limit, searchTerm); 
+        }, 300);
+
+        // Limpia el timeout si el componente se desmonta o si searchTerm cambia
+        return () => clearTimeout(delayDebounceFn);
+        
+    }, [searchTerm]); // Se activa cada vez que el término de búsqueda cambia
+    
+    // ...
+
+    const handleFighterSaved = () => {
+        // Al guardar, recarga la página actual MANTENIENDO el término de búsqueda.
+        goToPage(pagination.current_page, searchTerm); 
+    };
+    */
 
     // Estados para el Modal (Crear/Editar)
     const [ isModalOpen, setIsModalOpen ] = useState(false);
@@ -85,7 +108,7 @@ export const AdminFighters = () => {
                 </button>
             </div>
 
-            {/* Buscador */}
+            {/* Buscador  TODAVÍA NO ES FUNCIONAL*/}
             <div className="mb-4">
                 <input
                     type="text"

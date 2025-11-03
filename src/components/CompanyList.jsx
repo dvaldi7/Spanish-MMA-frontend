@@ -1,15 +1,25 @@
-import React from 'react';
+import React, { useState } from 'react';
 import useFetchCompanies from '../hooks/useFetchCompanies';
 import avatar from "/images/companies/avatar.jpg";
 
 export const CompanyList = () => {
+    
+    const [ searchTerm, setSearchTerm ] = useState('');
+
     const {
         companies,
         pagination,
         loading,
         error,
-        goToPage
+        goToPage,
+        fetchCompanies,
     } = useFetchCompanies(10);
+
+    const handleSearch = (e) => {
+        e.preventDefault();
+
+        fetchCompanies(1, pagination.limit, searchTerm);
+    }
 
     if (loading) return <p className="text-center text-xl p-6 text-blue-600">Cargando compañías...</p>;
     if (error) return <p className="text-center text-red-600 text-xl p-6">{error}</p>;
@@ -39,6 +49,25 @@ export const CompanyList = () => {
                     streetFighterTypo">
                 PROMOTORAS
             </h2>
+
+            {/* FORMULARIO DE BÚSQUEDA */}
+            <form onSubmit={handleSearch} className="mb-8 flex justify-center ">
+                <input
+                    type="text"
+                    placeholder="Buscar compañía"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="w-full max-w-lg h-9 p-3 border border-gray-300 rounded-l-lg
+                    text-gray-800 opacity-65"
+                />
+                <button
+                    type="submit"
+                    className="bg-gradient-to-b from-custom-red to-custom-gold px-6 py-1 rounded-r-lg 
+                    transition h-9 font-medium"
+                >
+                    Buscar
+                </button>
+            </form>
 
             {/* TARJETA DE LAS COMPAÑÍAS */}
             <div className="card mt-12 mb-20">

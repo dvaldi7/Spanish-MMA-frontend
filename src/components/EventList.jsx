@@ -1,15 +1,30 @@
-import React from 'react';
+import React, { useState } from 'react';
 import useFetchEvents from '../hooks/useFetchEvents';
 import avatar from "/images/events/avatar.jpg";
 
 export const EventList = () => {
+
+    const [searchTerm, setSearchTerm] = useState('');
+
     const {
         events,
         pagination,
         loading,
         error,
-        goToPage
+        goToPage,
+        fetchEvents,
     } = useFetchEvents(10);
+
+
+    const handleSearch = (e) => {
+        e.preventDefault();
+
+        fetchEvents(1, pagination.limit, searchTerm);
+    }
+
+    const handleGoToPage = (pageNumber) => {
+        goToPage(pageNumber, searchTerm);
+    }
 
     if (loading) return <p className="text-center text-xl p-6 text-blue-600">Cargando eventos...</p>;
     if (error) return <p className="text-center text-red-600 text-xl p-6">{error}</p>;
@@ -39,6 +54,25 @@ export const EventList = () => {
                     streetFighterTypo">
                 EVENTOS
             </h2>
+
+            {/* FORMULARIO DE BÚSQUEDA */}
+            <form onSubmit={handleSearch} className="mb-8 flex justify-center">
+                <input
+                    type="text"
+                    placeholder="Buscar eventos"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="w-full max-w-lg h-9 p-3 border border-gray-300 rounded-l-lg
+                    text-gray-800 opacity-65"
+                />
+                <button
+                    type="submit"
+                    className="bg-gradient-to-b from-custom-red to-custom-gold px-6 py-1 rounded-r-lg 
+                    transition h-9 font-medium"
+                >
+                    Buscar
+                </button>
+            </form>
 
             {/* TARJETA DE LAS COMPAÑÍAS */}
             <div className="card mt-12 mb-20">

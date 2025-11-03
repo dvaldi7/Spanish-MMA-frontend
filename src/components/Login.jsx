@@ -36,7 +36,7 @@ const Login = () => {
             await login(email, password);
             setMessage('¡Login exitoso! Token guardado.');
             
-            navigate('/admin/fighters');
+            navigate('/admin');
 
         } catch (error) {
             setError(error.message);

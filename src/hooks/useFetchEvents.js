@@ -14,26 +14,33 @@ const useFetchEvents = (initialLimit = 10) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    const fetchEvents = async (page = pagination.current_page, limit = pagination.limit) => {
+    const fetchEvents = async (page = pagination.current_page, limit = pagination.limit, term = '') => {
         setLoading(true);
         setError(null);
 
+        let url = `/events?page=${page}&limit=${limit}`;
+
+        if (term) {
+            url += `&search=${term}`;
+        }
+
         try {
-            const response = await api.get(`/events?page=${page}&limit=${limit}`);
+            const response = await api.get(url);
             
             setEvents(response.data.events);
             setPagination(response.data.pagination);
 
-        } catch (err) {
-            console.error("Error al obtener los eventos: ", err);
+        } catch (error) {
+            console.error("Error al obtener los eventos: ", error);
             setError("No se pudieron cargar los datos de los eventos");
+
         } finally {
             setLoading(false);
         }
     };
 
     useEffect(() => {
-        fetchEvents();
+        fetchEvents(1, initialLimit, '');
     }, []);
 
     const goToPage = (pageNumber) => {
@@ -47,7 +54,8 @@ const useFetchEvents = (initialLimit = 10) => {
         pagination, 
         loading, 
         error, 
-        goToPage
+        goToPage,
+        fetchEvents,
     };
 };
 

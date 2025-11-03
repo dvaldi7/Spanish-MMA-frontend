@@ -41,7 +41,6 @@ const useFetchFighters = (initialLimit = 10) => {
         }
     };
 
-
     useEffect(() => {
         fetchFighters(1, initialLimit, '');
     }, []);
@@ -51,7 +50,6 @@ const useFetchFighters = (initialLimit = 10) => {
             fetchFighters(pageNumber, pagination.limit, currentSearchTerm);
         }
     };
-
 
     return {
         fighters,
