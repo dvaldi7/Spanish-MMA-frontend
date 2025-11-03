@@ -4,7 +4,7 @@ import { FiX } from 'react-icons/fi';
 
 const WEIGHT_CLASSES = [
     'Peso Paja', 'Peso Mosca', 'Peso Gallo', 'Peso Pluma',
-    'Peso Ligero', 'Peso Welter', 'Peso Mediano', 'Peso Pesado'
+    'Peso Ligero', 'Peso Welter', 'Peso Mediano', 'Peso Semi-pesado', 'Peso Pesado'
 ];
 
 const initialFormState = {
@@ -25,9 +25,11 @@ const FighterFormModal = ({ fighterIdToEdit, isModalOpen, closeModal, onFighterS
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
     const [validationErrors, setValidationErrors] = useState({});
+    const [companies, setCompanies] = useState([]);
 
     const isEditMode = !!fighterIdToEdit;
 
+    //UseEffect para los peleadores
     useEffect(() => {
         if (!isModalOpen) {
             setFormData(initialFormState);
@@ -44,6 +46,7 @@ const FighterFormModal = ({ fighterIdToEdit, isModalOpen, closeModal, onFighterS
 
                     const response = await api.get(`/fighters/id/${fighterIdToEdit}`);
                     const fighterData = response.data;
+
 
                     const loadedData = {
                         first_name: fighterData.first_name || '',
@@ -76,6 +79,34 @@ const FighterFormModal = ({ fighterIdToEdit, isModalOpen, closeModal, onFighterS
 
     }, [isModalOpen, fighterIdToEdit, isEditMode]);
 
+    //useEffect para las compañías
+    useEffect(() => {
+        if (!isModalOpen) return;
+
+        const fetchCompanies = async () => {
+
+            try {
+                const response = await api.get('/companies');
+                const companiesArray = response.data.companies;
+
+
+                if (Array.isArray(companiesArray)) {
+                    setCompanies(companiesArray);
+                } else {
+                    console.error("La respuesta de /companies no es un array:", companiesArray);
+                    setCompanies([]);
+                }
+
+            } catch (error) {
+                console.error("Error al cargar las compañías: ", error);
+                setCompanies([]);
+            }
+        };
+
+        fetchCompanies();
+
+    }, [isModalOpen]);
+
 
     const handleChange = (e) => {
         const { name, value, type } = e.target;
@@ -104,24 +135,21 @@ const FighterFormModal = ({ fighterIdToEdit, isModalOpen, closeModal, onFighterS
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        console.log("Modo Edición (isEditMode):", isEditMode); 
-        console.log("ID a editar (fighterIdToEdit):", fighterIdToEdit);
-
         if (!validateForm()) {
             setError('Por favor, corrige los errores en el formulario.');
             return;
         }
 
         const dataToSend = {
-                ...formData,
-                company_id: formData.company_id === '' ? null : parseInt(formData.company_id)
-            };
+            ...formData,
+            company_id: formData.company_id === '' ? null : parseInt(formData.company_id)
+        };
 
         setIsLoading(true);
         setError(null);
 
         try {
-            
+
             if (isEditMode) {
                 // UPDATE (PUT)
                 await api.put(`/fighters/id/${fighterIdToEdit}`, dataToSend);
@@ -293,20 +321,24 @@ const FighterFormModal = ({ fighterIdToEdit, isModalOpen, closeModal, onFighterS
                     <div>
 
                         <label htmlFor="company_id" className="block text-sm font-medium text-gray-700">
-                            ID de Compañía (Opcional)
+                            Compañía
                         </label>
-                        <input
-                            type="number"
+                        <select
                             name="company_id"
                             value={formData.company_id === null ? '' : String(formData.company_id)}
                             onChange={handleChange}
-                            min="1"
-                            placeholder="Ej: 1, 2, 3..."
                             className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
-                        />
-                        <p className="text-xs text-gray-500 mt-1">
-                            Si está vacío, la compañía será NULL
-                        </p>
+                        >
+                            <option value=""> Sin compañía (N/A) </option>
+                            {Array.isArray(companies) && companies.map(company =>
+                                <option
+                                    key={company.company_id}
+                                    value={company.company_id}
+                                >
+                                    {company.name}
+                                </option>
+                            )}
+                        </select>
                     </div>
 
                     {/* Botón de Submit */}

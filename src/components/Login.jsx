@@ -10,9 +10,7 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState(null);
     const [message, setMessage] = useState(null);
-
     const [showPassword, setShowPassword] = useState(false);
-
     const { user, login } = useAuth();
 
     const passwordVisibility = () => {

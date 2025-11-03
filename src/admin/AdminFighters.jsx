@@ -12,16 +12,15 @@ export const AdminFighters = () => {
         totalPages,
         currentPage,
         goToPage,
-        setSearchTerm,
-        searchTerm,
         pagination,
     } = useFetchFighters();
 
     // Estados para el Modal (Crear/Editar)
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [fighterIdToEdit, setFighterIdToEdit] = useState(null);
+    const [ isModalOpen, setIsModalOpen ] = useState(false);
+    const [ fighterIdToEdit, setFighterIdToEdit ] = useState(null);
+    const [ searchTerm, setSearchTerm ] = useState('');
 
-    //mManejadores
+    // Manejadores
     const handleSearchChange = (e) => {
         setSearchTerm(e.target.value);
     };
@@ -73,12 +72,14 @@ export const AdminFighters = () => {
 
             {/* Encabezado y Botón Crear */}
             <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-semibold text-gray-800">
+                <h2 className="text-lg md:text-2xl font-semibold gradiant-color">
                     Gestión de Peleadores
                 </h2>
                 <button
                     onClick={openCreateModal}
-                    className="px-4 py-2 bg-green-600 text-white rounded-lg shadow-md hover:bg-green-700 transition duration-150"
+                    className="px-1 sm:px-4 py-1 sm:py-4 bg-green-600 text-white rounded-lg shadow-md
+                     hover:bg-green-700 
+                    transition duration-150"
                 >
                     Crear Nuevo Peleador
                 </button>
@@ -91,7 +92,8 @@ export const AdminFighters = () => {
                     placeholder="Buscar por nombre o apodo..."
                     value={searchTerm}
                     onChange={handleSearchChange}
-                    className="p-2 border border-gray-300 rounded-lg w-full max-w-lg focus:ring-blue-500 focus:border-blue-500"
+                    className="p-2 border border-gray-300 rounded-lg w-full max-w-lg focus:ring-blue-500
+                     focus:border-blue-500"
                 />
             </div>
 
@@ -144,13 +146,14 @@ export const AdminFighters = () => {
                                     <button
                                         onClick={() => openEditModal(fighter.fighter_id)}
                                         className="text-indigo-600 hover:text-indigo-900 mr-4 transition 
-                                        duration-150"
+                                        duration-150 font-bold"
                                     >
                                         Editar
                                     </button>
                                     <button
                                         onClick={() => handleDelete(fighter.fighter_id)}
-                                        className="text-red-600 hover:text-red-900 transition duration-150"
+                                        className="text-red-600 hover:text-red-800 transition 
+                                        duration-150 font-bold"
                                     >
                                         Eliminar
                                     </button>
@@ -165,7 +168,7 @@ export const AdminFighters = () => {
             {/* Controles de Paginación */}
             <div className="flex justify-center items-center mt-6">
                 <button
-                    onClick={() => setPage(currentPage - 1)}
+                    onClick={() => goToPage(currentPage - 1)}
                     disabled={currentPage === 1}
                     className="px-4 py-2 mr-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-100 disabled:opacity-50"
                 >
@@ -173,7 +176,7 @@ export const AdminFighters = () => {
                 </button>
                 <span className="text-sm text-gray-700 mx-4">Página {currentPage} de {totalPages}</span>
                 <button
-                    onClick={() => setPage(currentPage + 1)}
+                    onClick={() => goToPage(currentPage + 1)}
                     disabled={currentPage === totalPages}
                     className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-100 disabled:opacity-50"
                 >
