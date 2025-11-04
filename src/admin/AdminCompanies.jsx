@@ -1,15 +1,12 @@
-// Asegúrate de que tu componente principal de administración tenga la lógica del modal y borrado.
-
 import React, { useState } from 'react';
 import useFetchCompanies from '../hooks/useFetchCompanies';
-import { CompanyFormModal } from '../components/CompanyFormModal'; // Importar el modal
+import { CompanyFormModal } from '../components/CompanyFormModal';
 import api from '../services/api';
-// ... otros imports
 
-export const AdminCompanies = () => { // Cambia CompanyList por AdminCompanies
+export const AdminCompanies = () => {
     const [searchTerm, setSearchTerm] = useState('');
-    const [showModal, setShowModal] = useState(false); // Estado para mostrar/ocultar modal
-    const [companyToEdit, setCompanyToEdit] = useState(null); // Compañía a editar (null = crear)
+    const [showModal, setShowModal] = useState(false);
+    const [companyToEdit, setCompanyToEdit] = useState(null);
 
     const {
         companies,
@@ -17,36 +14,34 @@ export const AdminCompanies = () => { // Cambia CompanyList por AdminCompanies
         loading,
         error,
         goToPage,
-        fetchCompanies, // Esta función es clave para recargar la lista
+        fetchCompanies,
+        currentPage,
     } = useFetchCompanies(10);
 
-    // ----------------------------------------------------
-    // Lógica del Modal (Crear / Editar)
-    // ----------------------------------------------------
+    /* CREAR */
     const openCreateModal = () => {
-        setCompanyToEdit(null); // Para crear
+        setCompanyToEdit(null);
         setShowModal(true);
     };
 
+    /* EDITAR */
     const openEditModal = (company) => {
-        setCompanyToEdit(company); // Para editar
+        setCompanyToEdit(company);
         setShowModal(true);
     };
 
+    /* REFRESACAR DESPUES DE HACER ACCIÓN */
     const handleSaveSuccess = () => {
-        // Recargar la lista de compañías después de una creación/actualización
         fetchCompanies(pagination.current_page, pagination.limit, searchTerm);
     };
 
-    // ----------------------------------------------------
-    // Lógica de Borrado
-    // ----------------------------------------------------
+    /* BORRAR */
     const handleDelete = async (companyId, companyName) => {
         if (window.confirm(`¿Estás seguro de que quieres eliminar la compañía: ${companyName}?`)) {
             try {
                 await api.delete(`/companies/${companyId}`);
                 alert('Compañía eliminada exitosamente.');
-                handleSaveSuccess(); // Recargar la lista
+                handleSaveSuccess();
 
             } catch (error) {
                 console.error("Error al borrar la compañía:", error);
@@ -55,23 +50,25 @@ export const AdminCompanies = () => { // Cambia CompanyList por AdminCompanies
         }
     };
 
-    // ... handleSearch y lógica de paginación ...
+
 
     return (
         <div className="p-6">
+
             {/* Título y Botón de Crear */}
-            <div className="flex justify-between items-center mb-10 border-b pb-4">
-                <h2 className="text-4xl font-bold gradiant-color">PROMOTORAS</h2>
+            <div className="flex justify-between items-center mb-6">
+                <h2 className="text-lg md:text-2xl font-semibold gradiant-color">
+                    Compañías
+                </h2>
                 <button
                     onClick={openCreateModal}
                     className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition font-medium"
                 >
-                    + Crear Compañía
+                    Crear Compañía
                 </button>
             </div>
 
             {/* FORMULARIO DE BÚSQUEDA */}
-            {/* ... tu código de formulario de búsqueda ... */}
 
             {/* TARJETA DE LAS COMPAÑÍAS */}
             <div className="card mt-12 mb-20">
@@ -98,8 +95,25 @@ export const AdminCompanies = () => { // Cambia CompanyList por AdminCompanies
                 ))}
             </div>
 
-            {/* PAGINACIÓN */}
-            {/* ... tu código de paginación ... */}
+
+            {/* Controles de Paginación */}
+            <div className="flex justify-center items-center mt-6">
+                <button
+                    onClick={() => goToPage(currentPage - 1)}
+                    disabled={currentPage === 1}
+                    className="px-4 py-2 mr-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-100 disabled:opacity-50"
+                >
+                    Anterior
+                </button>
+                <span className="text-sm text-gray-700 mx-4">Página {currentPage} de {totalPages}</span>
+                <button
+                    onClick={() => goToPage(currentPage + 1)}
+                    disabled={currentPage === totalPages}
+                    className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-100 disabled:opacity-50"
+                >
+                    Siguiente
+                </button>
+            </div>
 
             {/* Modal de Formulario */}
             {showModal && (

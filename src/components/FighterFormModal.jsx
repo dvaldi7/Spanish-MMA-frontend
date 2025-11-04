@@ -57,9 +57,10 @@ const FighterFormModal = ({ fighterIdToEdit, isModalOpen, closeModal, onFighterS
                         record_losses: response.data.record_losses || 0,
                         record_draws: response.data.record_draws || 0,
                         company_id: response.data.company_id || '',
+                        photo_url: fighterData.photo_url || '',
                     };
 
-                    setFormData(response.data);
+                    setFormData(loadedData);
 
                 } catch (error) {
                     console.error("Error al cargar datos del peleador: ", error);
@@ -140,9 +141,16 @@ const FighterFormModal = ({ fighterIdToEdit, isModalOpen, closeModal, onFighterS
             return;
         }
 
+        const { company_name,
+                company_slug,
+                slug,
+                ...fighterFields
+        } = formData;
+
         const dataToSend = {
-            ...formData,
-            company_id: formData.company_id === '' ? null : parseInt(formData.company_id)
+            ...fighterFields,
+            company_id: fighterFields.company_id === '' ? null : parseInt(fighterFields.company_id),
+            fighter_id: undefined
         };
 
         setIsLoading(true);

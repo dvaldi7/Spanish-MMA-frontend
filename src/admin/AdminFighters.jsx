@@ -2,53 +2,32 @@ import React, { useState } from 'react';
 import useFetchFighters from '../hooks/useFetchFighters';
 import api from '../services/api';
 import FighterFormModal from '../components/FighterFormModal';
+import avatar from "/images/fighters/avatar.png";
+import { LuAlignVerticalJustifyStart } from 'react-icons/lu';
 
-export const AdminFighters = () => {
+
+const AdminFighters = () => {
 
     const {
         fighters,
-        isLoading,
+        loading,
         error,
-        totalPages,
-        currentPage,
         goToPage,
         pagination,
         fetchFighters,
     } = useFetchFighters();
 
-    /* PARA EL BUSCADOR
-    useEffect(() => {
-        // Ejecuta la búsqueda 300ms después de la última pulsación de tecla
-        const delayDebounceFn = setTimeout(() => {
-            // Llama a la API con el nuevo término, volviendo a la página 1
-            // Necesitas que fetchFighters acepte el término de búsqueda
-            fetchFighters(1, pagination.limit, searchTerm); 
-        }, 300);
+    const currentPage = pagination.current_page;
+    const totalPages = pagination.total_pages;
 
-        // Limpia el timeout si el componente se desmonta o si searchTerm cambia
-        return () => clearTimeout(delayDebounceFn);
-        
-    }, [searchTerm]); // Se activa cada vez que el término de búsqueda cambia
-    
-    // ...
-
-    const handleFighterSaved = () => {
-        // Al guardar, recarga la página actual MANTENIENDO el término de búsqueda.
-        goToPage(pagination.current_page, searchTerm); 
-    };
-    */
-
-    // Estados para el Modal (Crear/Editar)
     const [ isModalOpen, setIsModalOpen ] = useState(false);
     const [ fighterIdToEdit, setFighterIdToEdit ] = useState(null);
     const [ searchTerm, setSearchTerm ] = useState('');
 
-    // Manejadores
     const handleSearchChange = (e) => {
         setSearchTerm(e.target.value);
     };
 
-    //Crear y/o editar peleadores 
     const openCreateModal = () => {
         setFighterIdToEdit(null);
         setIsModalOpen(true);
@@ -68,10 +47,8 @@ export const AdminFighters = () => {
         goToPage(pagination.current_page);
     };
 
-    //Borrar peleadores
     const handleDelete = async (fighterId) => {
 
-        /* por si no quiero eliminar */
         if (!window.confirm(`¿Estás seguro de eliminar al peleador con ID ${fighterId}?`)) {
             return;
         }
@@ -87,28 +64,25 @@ export const AdminFighters = () => {
         }
     };
 
-    if (isLoading) return <div className="p-6 text-gray-600">Cargando peleadores...</div>;
+    if (loading) return <div className="p-6 text-gray-600">Cargando peleadores...</div>;
     if (error) return <div className="p-6 text-red-600 font-semibold">Error al cargar: {error.message}</div>;
 
     return (
-        <div className="p-6 bg-gray-50 min-h-screen opacity-85 rounded-lg mt-10">
+        <div className="p-4 sm:p-6 bg-gray-50 min-h-screen opacity-85 rounded-lg mt-10">
 
-            {/* Encabezado y Botón Crear */}
-            <div className="flex justify-between items-center mb-6">
+            <div className="flex flex-col sm:flex-row justify-between items-center mb-6 space-y-4 sm:space-y-0">
                 <h2 className="text-lg md:text-2xl font-semibold gradiant-color">
                     Gestión de Peleadores
                 </h2>
                 <button
                     onClick={openCreateModal}
-                    className="px-1 sm:px-4 py-1 sm:py-4 bg-green-600 text-white rounded-lg shadow-md
-                     hover:bg-green-700 
-                    transition duration-150"
+                    className="w-full sm:w-auto px-4 py-2 bg-green-600 text-white rounded-lg shadow-md
+                     hover:bg-green-700 transition duration-150 text-sm font-semibold"
                 >
                     Crear Nuevo Peleador
                 </button>
             </div>
 
-            {/* Buscador  TODAVÍA NO ES FUNCIONAL*/}
             <div className="mb-4">
                 <input
                     type="text"
@@ -120,12 +94,16 @@ export const AdminFighters = () => {
                 />
             </div>
 
-            {/* Tabla de Datos */}
             <div className="overflow-x-auto bg-white shadow-lg rounded-lg">
-                <table className="min-w-full divide-y divide-gray-200">
+
+                <table className="min-w-full divide-y divide-gray-200 hidden sm:table">
 
                     <thead className="bg-gray-100">
                         <tr>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase
+                             tracking-wider">
+                                Foto
+                            </th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase 
                             tracking-wider">
                                 ID
@@ -142,10 +120,7 @@ export const AdminFighters = () => {
                             tracking-wider">
                                 Compañía
                             </th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase 
-                            tracking-wider">
-                                Acciones
-                            </th>
+                          
                         </tr>
                     </thead>
 
@@ -153,6 +128,19 @@ export const AdminFighters = () => {
                         {fighters.map(fighter => (
 
                             <tr key={fighter.fighter_id} className="hover:bg-gray-50">
+
+                                <td className="px-6 py-4 whitespace-nowrap">
+                                    <img
+                                        src={fighter.photo_url || avatar}
+                                        alt={`Foto de ${fighter.first_name}`}
+                                        className="h-10 w-10 rounded-full object-cover"
+                                        onError={(e) => {
+                                            e.target.onerror = null;
+                                            e.target.src = {avatar};
+                                        }}
+                                    />
+                                </td>
+
                                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                                     {fighter.fighter_id}</td>
 
@@ -165,7 +153,7 @@ export const AdminFighters = () => {
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500
                                 ">{fighter.company_name || 'N/A'}</td>
 
-                                <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                <td className="px-6 py-4 whitespace-nowrap flex items-center text-sm font-medium">
                                     <button
                                         onClick={() => openEditModal(fighter.fighter_id)}
                                         className="text-indigo-600 hover:text-indigo-900 mr-4 transition 
@@ -175,8 +163,8 @@ export const AdminFighters = () => {
                                     </button>
                                     <button
                                         onClick={() => handleDelete(fighter.fighter_id)}
-                                        className="text-red-600 hover:text-red-800 transition 
-                                        duration-150 font-bold"
+                                        className="text-red-600 hover:text-red-800 transition duration-150 
+                                        font-bold"
                                     >
                                         Eliminar
                                     </button>
@@ -186,35 +174,79 @@ export const AdminFighters = () => {
                     </tbody>
 
                 </table>
+
+                <div className="sm:hidden divide-y divide-gray-200">
+                    {fighters.map(fighter => (
+                        <div key={fighter.fighter_id} className="p-4 flex justify-between items-center bg-white
+                         hover:bg-gray-50">
+                            <div className="flex items-center space-x-3">
+                                <img
+                                    src={fighter.photo_url || avatar}
+                                    alt={`Foto de ${fighter.first_name}`}
+                                    className="h-10 w-10 rounded-full object-cover"
+                                    onError={(e) => {
+                                        e.target.onerror = null;
+                                        e.target.src = {avatar};
+                                    }}
+                                />
+                                <div>
+                                    <div className="font-semibold text-gray-900">
+                                        {fighter.first_name} {fighter.last_name}</div>
+                                    <div className="text-xs text-gray-500">{fighter.nickname || 'N/A'}</div>
+                                </div>
+                            </div>
+                            <div className="flex flex-col items-end space-y-1">
+                                <button
+                                    onClick={() => openEditModal(fighter.fighter_id)}
+                                    className="text-indigo-600 hover:text-indigo-900 text-xs font-bold"
+                                >
+                                    Editar
+                                </button>
+                                <button
+                                    onClick={() => handleDelete(fighter.fighter_id)}
+                                    className="text-red-600 hover:text-red-800 text-xs font-bold"
+                                >
+                                    Eliminar
+                                </button>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+
             </div>
 
-            {/* Controles de Paginación */}
             <div className="flex justify-center items-center mt-6">
                 <button
                     onClick={() => goToPage(currentPage - 1)}
                     disabled={currentPage === 1}
-                    className="px-4 py-2 mr-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-100 disabled:opacity-50"
+                    className="px-4 py-2 mr-2 border border-gray-300 rounded-md shadow-sm text-sm 
+                    font-medium text-gray-700 bg-white hover:bg-gray-100 disabled:opacity-50"
                 >
                     Anterior
                 </button>
-                <span className="text-sm text-gray-700 mx-4">Página {currentPage} de {totalPages}</span>
+
+                <span className="text-sm text-gray-700 mx-4">
+                    Página {currentPage} de {totalPages}
+                    </span>
                 <button
                     onClick={() => goToPage(currentPage + 1)}
-                    disabled={currentPage === totalPages}
-                    className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-100 disabled:opacity-50"
+                    disabled={currentPage === totalPages || totalPages === 0}
+                    className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium
+                     text-gray-700 bg-white hover:bg-gray-100 disabled:opacity-50"
                 >
                     Siguiente
                 </button>
             </div>
 
-            {/* El modal del peleador para cambiar, crear o editar peleadores */}
             <FighterFormModal
-              
-                fighterIdToEdit={fighterIdToEdit} 
-                isModalOpen={isModalOpen}         
-                closeModal={closeModal}          
+
+                fighterIdToEdit={fighterIdToEdit}
+                isModalOpen={isModalOpen}
+                closeModal={closeModal}
                 onFighterSaved={handleFighterSaved}
             />
         </div>
     );
 };
+
+export default AdminFighters;

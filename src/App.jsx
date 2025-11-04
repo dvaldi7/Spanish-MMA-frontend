@@ -6,7 +6,7 @@ import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import Layout from './components/Layout.jsx';
 import { CompanyList } from './components/CompanyList.jsx';
 import { EventList } from './components/EventList.jsx';
-import { AdminFighters } from './admin/AdminFighters.jsx';
+import AdminFighters from './admin/AdminFighters.jsx';
 import { AdminCompanies } from './admin/AdminCompanies.jsx';
 import AdminLayout from './admin/AdminLayout.jsx';
 

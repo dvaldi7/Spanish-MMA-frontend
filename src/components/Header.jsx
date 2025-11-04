@@ -68,34 +68,7 @@ export const Header = () => {
                                  hover:text-custom-gold transition duration-200 block p-2 md:p-0 
                                  border-b border-black md:border-none'>Eventos</Link>
                             </li>
-
-                            {/* AUTENTICACIÓN */}
-                            <li className='menu-item w-full md:w-auto pt-2 md:pt-0 md:border-t-0
-                             border-gray-700'>
-                                {user ? (
-                                    <div className='flex items-center space-x-3'>
-                                        {/* Enlace al Dashboard de Admin */}
-                                        <Link to="/admin/fighters" onClick={toggleMenu} className="text-sm
-                                         bg-custom-gold text-custom-black px-3 py-1 rounded-full
-                                          hover:bg-gray-400 transition">
-                                             Maestro
-                                        </Link>
-                                        {/* Botón de Logout */}
-                                        <button
-                                            onClick={() => { logout(); toggleMenu(); }}
-                                            className="text-sm text-gray-400 hover:text-white transition"
-                                        >
-                                            Salir
-                                        </button>
-                                    </div>
-                                ) : (
-                                    <Link to="/login" onClick={toggleMenu} className="text-sm bg-custom-gold
-                                     text-custom-black px-4 py-2 rounded-md hover:bg-gray-400 transition 
-                                     duration-200 block w-full text-center mr-7">
-                                        Login
-                                    </Link>
-                                )}
-                            </li>
+                            
                         </ul>
                     </nav>
 
