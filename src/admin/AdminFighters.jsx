@@ -3,7 +3,6 @@ import useFetchFighters from '../hooks/useFetchFighters';
 import api from '../services/api';
 import FighterFormModal from '../components/FighterFormModal';
 import avatar from "/images/fighters/avatar.png";
-import { LuAlignVerticalJustifyStart } from 'react-icons/lu';
 
 
 const AdminFighters = () => {
