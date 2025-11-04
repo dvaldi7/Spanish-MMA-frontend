@@ -130,7 +130,9 @@ const AdminFighters = () => {
 
                                 <td className="px-6 py-4 whitespace-nowrap">
                                     <img
-                                        src={fighter.photo_url || avatar}
+                                        src={fighter.photo_url 
+                                            ? `http://localhost:3001/${fighter.photo_url}`
+                                            : avatar }
                                         alt={`Foto de ${fighter.first_name}`}
                                         className="h-10 w-10 rounded-full object-cover"
                                         onError={(e) => {

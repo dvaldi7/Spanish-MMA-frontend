@@ -31,7 +31,7 @@ api.interceptors.response.use(
         // token inválido o expirado.
         if (status === 401) {
 
-            console.error('⚠️ Sesión expirada o no autorizada. Forzando cierre de sesión.');
+            console.error('Sesión expirada o no autorizada. Forzando cierre de sesión.');
 
             localStorage.removeItem('jwtToken');
 

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import useFetchFighters from '../hooks/useFetchFighters';
 import avatar from "/images/fighters/avatar.png";
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
 
 const FighterList = () => {
 
@@ -46,6 +47,14 @@ const FighterList = () => {
         );
     }
 
+    const getImageUrl = (photoUrl) => {
+    if (photoUrl && (photoUrl.startsWith('http') || photoUrl.startsWith('https'))) {
+        return photoUrl;
+    }
+
+    return `${BACKEND_URL}/${photoUrl}`;
+};
+
 
     return (
         <div className="p-6">
@@ -85,7 +94,7 @@ const FighterList = () => {
                         <div className="mb-3 flex justify-center items-center">
                             {fighter.photo_url ? (
                                 <img
-                                    src={fighter.photo_url}
+                                    src={getImageUrl(fighter.photo_url)}
                                     alt={`Foto de ${fighter.first_name}`}
                                     className="card_photo-fighter"
                                 />

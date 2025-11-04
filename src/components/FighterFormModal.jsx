@@ -83,6 +83,22 @@ const FighterFormModal = ({ fighterIdToEdit, isModalOpen, closeModal, onFighterS
 
     }, [isModalOpen, fighterIdToEdit, isEditMode]);
 
+    // useEffect para las compañías
+    useEffect(() => {
+        const fetchCompanies = async () => {
+            try {
+                const response = await api.get('/companies');
+                setCompanies(response.data.companies || []);
+
+            } catch (error) {
+                console.error("Error al cargar las compañías: ", error);
+            }
+        };
+
+        if (isModalOpen) {
+            fetchCompanies();
+        }
+    }, [isModalOpen]);
 
     const handleChange = (e) => {
         const { name, value, type, files } = e.target;
@@ -123,70 +139,53 @@ const FighterFormModal = ({ fighterIdToEdit, isModalOpen, closeModal, onFighterS
             return;
         }
 
-        const { company_name,
-            company_slug,
-            slug,
-            ...fighterFields
-        } = formData;
-
-        const dataToSend = {
-            ...fighterFields,
-            company_id: fighterFields.company_id === '' ? null : parseInt(fighterFields.company_id),
-            fighter_id: undefined
-        };
-
         setIsLoading(true);
         setError(null);
 
         const formPayload = new FormData();
 
         for (const key in formData) {
+            if (['company_name', 'company_slug', 'slug', 'photo_url'].includes(key)) continue;
 
-            if (key !== 'company_name' && key !== 'company_slug' && key !== 'slug' && key !== 'photo_url') {
-
-                let value = formData[key];
-
-                if (key === 'company_id') {
-                    value = value === '' || value === null ? '' : parseInt(value);
-                }
-
-                formPayload.append(key, value);
+            let value = formData[key];
+            if (key === 'company_id') {
+                value = value === '' || value === null ? '' : String(value);
             }
+
+            formPayload.append(key, value);
         }
 
         if (imageFile) {
             formPayload.append('photo', imageFile);
-
-        } else if (formData.photo_url) {
-            formPayload.append('photo_url', formData.photo_url);
+        } else if (isEditMode) {
+            if (!formData.photo_url) {
+                formPayload.append('photo_url', '');
+            }
         }
-
 
         try {
             if (isEditMode) {
-                // UPDATE (PUT)
-                await api.put(`/fighters/id/${fighterIdToEdit}`, formPayload);
+                await api.put(`/fighters/id/${fighterIdToEdit}`, formPayload, {
+                    headers: { 'Content-Type': 'multipart/form-data' },
+                });
                 alert('Peleador actualizado con éxito!');
-
             } else {
-                // CREATE (POST)
-                await api.post('/fighters', formPayload);
+                await api.post('/fighters', formPayload, {
+                    headers: { 'Content-Type': 'multipart/form-data' },
+                });
                 alert('Peleador creado con éxito!');
             }
 
             onFighterSaved();
             closeModal();
-
         } catch (error) {
-            const msg = error.response?.data?.message || 'Error en la operación de guardado o subida de archivo';
-            setError(msg);
             console.error("Error al guardar peleador: ", error);
-
+            const msg = error.response?.data?.message || 'Error desconocido al guardar el peleador.';
+            setError(msg);
         } finally {
             setIsLoading(false);
         }
-
-    }
+    };
 
     if (!isModalOpen) return null;
 
@@ -286,26 +285,53 @@ const FighterFormModal = ({ fighterIdToEdit, isModalOpen, closeModal, onFighterS
 
                     {/* Foto */}
                     <div>
-                        <label htmlFor="photo_file" className="block text-sm font-medium text-gray-700">
+                        <label htmlFor="photo" className="block text-sm font-medium text-gray-700">
                             Foto del peleador
                         </label>
+
                         <input
                             type="file"
-                            name="photo_file"
-                            id="photo_file"
-                            accept="image/png, image/jpeg, image/webp"
-                            onChange={handleChange}
+                            name="photo"
+                            id="photo"
+                            accept="image/*"
+                            onChange={(e) => {
+                                const file = e.target.files[0];
+                                setImageFile(file);
+
+                                if (file) {
+                                    const previewUrl = URL.createObjectURL(file);
+                                    setFormData((prev) => ({ ...prev, photo_url: previewUrl }));
+                                }
+                            }}
                             className="mt-1 block w-full text-sm text-gray-900 
                             border border-gray-300 rounded-lg cursor-pointer bg-gray-50 p-2"
                         />
+
+                        {formData.photo_url && (
+                            <div className="mt-3">
+                                <img
+                                    src={
+                                        imageFile
+                                            ? formData.photo_url
+                                            : `http://localhost:3001/${formData.photo_url}`
+                                    }
+                                    alt={`imagen de ${formData.name || 'peleador'}`}
+                                    className="h-40 w-40 object-cover rounded-lg border border-gray-300 shadow-md"
+                                />
+                            </div>
+                        )}
+
                         <p className="mt-1 text-xs text-gray-500" id="file_help">
                             {isEditMode && formData.photo_url
                                 ? `Foto actual cargada. Sube una nueva para reemplazarla.`
                                 : `Formatos aceptados: PNG, JPG, WEBP.`}
                         </p>
-                        {validationErrors.photo_file && <p className="text-red-500 text-xs mt-1">
-                            {validationErrors.photo_file}
-                        </p>}
+
+                        {validationErrors.photo_file && (
+                            <p className="text-red-500 text-xs mt-1">
+                                {validationErrors.photo_file}
+                            </p>
+                        )}
                     </div>
 
                     {/* Récord  */}
