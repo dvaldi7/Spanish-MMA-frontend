@@ -43,12 +43,12 @@ const useFetchCompanies = (initialLimit = 10) => {
     }, [setCompanies, setPagination, setLoading, setError]);
 
     useEffect(() => {
-        fetchFighters(1, pagination.limit, currentSearchTerm);
-    }, [currentSearchTerm, pagination.limit, fetchFighters]);
+        fetchCompanies(1, pagination.limit, currentSearchTerm);
+    }, [currentSearchTerm, pagination.limit, fetchCompanies]);
 
     const goToPage = (pageNumber) => {
         if (pageNumber > 0 && pageNumber <= pagination.total_pages) {
-            fetchFighters(pageNumber, pagination.limit, currentSearchTerm);
+            fetchCompanies(pageNumber, pagination.limit, currentSearchTerm);
         }
     };
 

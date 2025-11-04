@@ -1,13 +1,11 @@
-// components/AdminCompanies.jsx
-
 import React, { useState, useEffect } from 'react';
 import useFetchCompanies from '../hooks/useFetchCompanies';
 import api from '../services/api';
 import CompanyFormModal from '../components/CompanyFormModal';
-import avatar from "/images/companies/logo_default.png";
+import avatar from "/images/companies/avatar.jpg";
 
 
-const AdminCompanies = () => {
+export const AdminCompanies = () => {
 
     const {
         companies,
@@ -115,10 +113,6 @@ const AdminCompanies = () => {
                              tracking-wider">ID</th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase 
                             tracking-wider">Nombre</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase 
-                            tracking-wider">Slogan</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase 
-                            tracking-wider">Contacto Email</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -223,5 +217,3 @@ const AdminCompanies = () => {
         </div>
     );
 };
-
-export default AdminCompanies;
