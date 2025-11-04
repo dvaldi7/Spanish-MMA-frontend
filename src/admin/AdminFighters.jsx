@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import useFetchFighters from '../hooks/useFetchFighters';
 import api from '../services/api';
 import FighterFormModal from '../components/FighterFormModal';
@@ -19,11 +19,22 @@ const AdminFighters = () => {
     const currentPage = pagination.current_page;
     const totalPages = pagination.total_pages;
 
-    const [ isModalOpen, setIsModalOpen ] = useState(false);
-    const [ fighterIdToEdit, setFighterIdToEdit ] = useState(null);
-    const [ searchTerm, setSearchTerm ] = useState('');
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [fighterIdToEdit, setFighterIdToEdit] = useState(null);
+    const [searchTerm, setSearchTerm] = useState('');
+
+    //Para el buscador
+    useEffect(() => {
+        const delaySearch = setTimeout(() => {
+            fetchFighters(1, pagination.limit, searchTerm);
+        }, 500); 
+
+        return () => clearTimeout(delaySearch);
+    }, [searchTerm, fetchFighters, pagination.limit]);
+
 
     const handleSearchChange = (e) => {
+        //Este para buscar mientras escribes
         setSearchTerm(e.target.value);
     };
 
@@ -83,6 +94,7 @@ const AdminFighters = () => {
             </div>
 
             <div className="mb-4">
+
                 <input
                     type="text"
                     placeholder="Buscar por nombre o apodo..."
@@ -91,6 +103,7 @@ const AdminFighters = () => {
                     className="p-2 border border-gray-300 rounded-lg w-full max-w-lg focus:ring-blue-500
                      focus:border-blue-500"
                 />
+
             </div>
 
             <div className="overflow-x-auto bg-white shadow-lg rounded-lg">
@@ -119,7 +132,7 @@ const AdminFighters = () => {
                             tracking-wider">
                                 Compañía
                             </th>
-                          
+
                         </tr>
                     </thead>
 
@@ -130,14 +143,14 @@ const AdminFighters = () => {
 
                                 <td className="px-6 py-4 whitespace-nowrap">
                                     <img
-                                        src={fighter.photo_url 
+                                        src={fighter.photo_url
                                             ? `http://localhost:3001/${fighter.photo_url}`
-                                            : avatar }
+                                            : avatar}
                                         alt={`Foto de ${fighter.first_name}`}
                                         className="h-10 w-10 rounded-full object-cover"
                                         onError={(e) => {
                                             e.target.onerror = null;
-                                            e.target.src = {avatar};
+                                            e.target.src = { avatar };
                                         }}
                                     />
                                 </td>
@@ -187,7 +200,7 @@ const AdminFighters = () => {
                                     className="h-10 w-10 rounded-full object-cover"
                                     onError={(e) => {
                                         e.target.onerror = null;
-                                        e.target.src = {avatar};
+                                        e.target.src = { avatar };
                                     }}
                                 />
                                 <div>
@@ -228,7 +241,7 @@ const AdminFighters = () => {
 
                 <span className="text-sm text-gray-700 mx-4">
                     Página {currentPage} de {totalPages}
-                    </span>
+                </span>
                 <button
                     onClick={() => goToPage(currentPage + 1)}
                     disabled={currentPage === totalPages || totalPages === 0}

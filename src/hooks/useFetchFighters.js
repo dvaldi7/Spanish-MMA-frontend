@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import api from '../services/api';
 
 const useFetchFighters = (initialLimit = 10) => {
@@ -14,8 +14,9 @@ const useFetchFighters = (initialLimit = 10) => {
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [currentSearchTerm, setCurrentSearchTerm] = useState('');
 
-    const fetchFighters = async (page = pagination.current_page, limit = pagination.limit, term = '') => {
+    const fetchFighters = useCallback(async (page = pagination.current_page, limit = pagination.limit, term = '') => {
         setLoading(true);
         setError(null);
 
@@ -39,17 +40,17 @@ const useFetchFighters = (initialLimit = 10) => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [ setFighters, setPagination, setLoading, setError ]);
 
     useEffect(() => {
-        fetchFighters(1, initialLimit, '');
-    }, []);
+        fetchFighters(1, pagination.limit, currentSearchTerm);
+    }, [currentSearchTerm, pagination.limit, fetchFighters]);
 
-    const goToPage = (pageNumber, currentSearchTerm = '') => {
-        if (pageNumber > 0 && pageNumber <= pagination.total_pages) {
-            fetchFighters(pageNumber, pagination.limit, currentSearchTerm);
-        }
-    };
+   const goToPage = (pageNumber) => { 
+    if (pageNumber > 0 && pageNumber <= pagination.total_pages) {
+        fetchFighters(pageNumber, pagination.limit, currentSearchTerm); 
+    }
+};
 
     return {
         fighters,
@@ -57,7 +58,8 @@ const useFetchFighters = (initialLimit = 10) => {
         loading,
         error,
         fetchFighters,
-        goToPage
+        goToPage,
+        searchTerm: currentSearchTerm,
     };
 };
 
