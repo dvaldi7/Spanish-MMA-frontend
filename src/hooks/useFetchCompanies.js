@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import api from '../services/api';
 
 const useFetchCompanies = (initialLimit = 10) => {
@@ -14,8 +14,9 @@ const useFetchCompanies = (initialLimit = 10) => {
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [currentSearchTerm, setCurrentSearchTerm] = useState('');
 
-    const fetchCompanies = async (page = pagination.current_page, limit = pagination.limit, term = '' ) => {
+    const fetchCompanies = useCallback(async (page = pagination.current_page, limit = pagination.limit, term = '') => {
         setLoading(true);
         setError(null);
 
@@ -26,9 +27,9 @@ const useFetchCompanies = (initialLimit = 10) => {
         }
 
         try {
-            
+
             const response = await api.get(url);
-            
+
             setCompanies(response.data.companies);
             setPagination(response.data.pagination);
 
@@ -39,25 +40,26 @@ const useFetchCompanies = (initialLimit = 10) => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [setCompanies, setPagination, setLoading, setError]);
 
     useEffect(() => {
-        fetchCompanies(1, initialLimit, '');
-    }, []);
+        fetchFighters(1, pagination.limit, currentSearchTerm);
+    }, [currentSearchTerm, pagination.limit, fetchFighters]);
 
-    const goToPage = (pageNumber, currentSearchTerm = '') => {
+    const goToPage = (pageNumber) => {
         if (pageNumber > 0 && pageNumber <= pagination.total_pages) {
-            fetchCompanies(pageNumber, pagination.limit, currentSearchTerm);
+            fetchFighters(pageNumber, pagination.limit, currentSearchTerm);
         }
     };
 
-    return { 
-        companies, 
-        pagination, 
-        loading, 
-        error, 
+    return {
+        companies,
+        pagination,
+        loading,
+        error,
         goToPage,
         fetchCompanies,
+        searchTerm: currentSearchTerm,
     };
 };
 

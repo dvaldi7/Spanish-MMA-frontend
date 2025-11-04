@@ -337,7 +337,7 @@ const FighterFormModal = ({ fighterIdToEdit, isModalOpen, closeModal, onFighterS
                     {/* Récord  */}
                     <fieldset className="border p-4 rounded-md">
                         <legend className="text-sm font-medium text-gray-700 px-1">
-                            Récord (Números enteros)
+                            Récord 
                         </legend>
                         <div className="grid grid-cols-3 gap-4">
 
