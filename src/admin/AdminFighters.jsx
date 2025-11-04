@@ -195,7 +195,7 @@ const AdminFighters = () => {
                                     <div className="text-xs text-gray-500">{fighter.nickname || 'N/A'}</div>
                                 </div>
                             </div>
-                            <div className="flex flex-col items-end space-y-1">
+                            <div className="flex flex-col items-end space-y-1 grid-rows-1">
                                 <button
                                     onClick={() => openEditModal(fighter.fighter_id)}
                                     className="text-indigo-600 hover:text-indigo-900 text-xs font-bold"

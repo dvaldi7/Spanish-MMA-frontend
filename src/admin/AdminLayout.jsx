@@ -14,7 +14,7 @@ const AdminLayout = () => {
 
     const navLinkClass = ({ isActive }) =>
         `px-4 py-2 my-1 rounded-lg transition duration-150 block font-medium ${isActive
-            ? 'bg-indigo-600 text-white shadow-md'
+            ? 'bg-gradient-to-b from-custom-red to-custom-gold shadow-md'
             : 'text-gray-700 hover:bg-gray-200'
         }`;
 
@@ -23,7 +23,8 @@ const AdminLayout = () => {
 
             {/* Botón de Menú para Móviles */}
             <div className="md:hidden p-4 bg-white shadow-md flex justify-between items-center sticky top-0 z-1">
-                <h3 className="text-lg font-bold text-gray-800">
+                <h3 className="text-lg font-bold bg-gradient-to-b from-custom-red to-custom-gold bg-clip-text 
+                text-transparent">
                     Admin Panel
                 </h3>
                 <button
@@ -44,7 +45,8 @@ const AdminLayout = () => {
                 `}
             >
                 {/* Contenido del Sidebar */}
-                <h3 className="text-lg font-bold mb-4 text-gray-800 border-b pb-2">
+                <h3 className="text-lg font-bold mb-4 bg-gradient-to-b from-custom-red to-custom-gold bg-clip-text 
+                text-transparent border-b pb-2">
                     Admin Menú
                 </h3>
                 <nav>
