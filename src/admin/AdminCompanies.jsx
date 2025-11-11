@@ -73,6 +73,8 @@ export const AdminCompanies = () => {
         }
     };
 
+    
+
     if (loading) return <div className="p-6 text-gray-600">Cargando compañías...</div>;
     if (error) return <div className="p-6 text-red-600 font-semibold">Error al cargar: {error.message}</div>;
 
@@ -154,20 +156,20 @@ export const AdminCompanies = () => {
                     </tbody>
                 </table>
 
-                {/* Vista móvil */}
                 <div className="sm:hidden divide-y divide-gray-200">
                     {companies.map(company => (
                         <div key={company.company_id} className="p-4 flex justify-between items-center
                          bg-white hover:bg-gray-50">
                             <div className="flex items-center space-x-3">
                                 <img
-                                    src={company.logo_url || avatar}
+                                    src={company.logo_url 
+                                        ? `http://localhost:3001/images/companies/${company.logo_url}`
+                                        : avatar}
                                     alt={`Logo de ${company.name}`}
                                     className="h-10 w-10 rounded-full object-cover"
                                 />
                                 <div>
                                     <div className="font-semibold text-gray-900">{company.name}</div>
-                                    <div className="text-xs text-gray-500">{company.slogan || 'N/A'}</div>
                                 </div>
                             </div>
                             <div className="flex flex-col items-end space-y-1 grid-rows-1">

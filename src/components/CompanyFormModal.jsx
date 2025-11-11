@@ -4,11 +4,10 @@ import { FiX } from 'react-icons/fi';
 
 const initialFormState = {
     name: '',
-    slogan: '',
-    contact_email: '',
-    phone: '',
-    address: '',
     logo_url: '', 
+    headquarters: '',
+    country: '',
+    website: '',
 };
 
 
@@ -22,7 +21,7 @@ const CompanyFormModal = ({ companyIdToEdit, isModalOpen, closeModal, onCompanyS
 
     const isEditMode = !!companyIdToEdit;
 
-    // useEffect para cargar datos de la compañía y limpiar el estado
+  
     useEffect(() => {
         if (!isModalOpen) {
             setFormData(initialFormState);
@@ -39,14 +38,13 @@ const CompanyFormModal = ({ companyIdToEdit, isModalOpen, closeModal, onCompanyS
                 try {
 
                     const response = await api.get(`/companies/id/${companyIdToEdit}`);
-                    const companyData = response.data;
+                    const companyData = response.data.company;
 
                     const loadedData = {
                         name: companyData.name || '',
-                        slogan: companyData.slogan || '',
-                        contact_email: companyData.contact_email || '',
-                        phone: companyData.phone || '',
-                        address: companyData.address || '',
+                        headquarters: companyData.headquarters || '', 
+                        country: companyData.country || '',
+                        website: companyData.website || '',
                         logo_url: companyData.logo_url || '',
                     };
 
@@ -92,71 +90,78 @@ const CompanyFormModal = ({ companyIdToEdit, isModalOpen, closeModal, onCompanyS
         const errors = {}
 
         if (!formData.name.trim()) errors.name = "El campo nombre es obligatorio";
-        if (!formData.contact_email.trim()) errors.contact_email = "El campo email de contacto es obligatorio";
-        if (formData.contact_email.trim() && !/^\S+@\S+\.\S+$/.test(formData.contact_email)) {
-            errors.contact_email = "El email no es válido";
-        }
-        
+    
         setValidationErrors(errors);
         return Object.keys(errors).length === 0;
     }
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
+    e.preventDefault();
 
-        if (!validateForm()) {
-            setError('Por favor, corrige los errores en el formulario.');
-            return;
-        }
+    if (!validateForm()) {
+        setError('Por favor, corrige los errores en el formulario');
+        return;
+    }
 
-        setIsLoading(true);
-        setError(null);
+    setIsLoading(true);
+    setError(null);
 
-        const formPayload = new FormData();
+    const formPayload = new FormData();
 
-        for (const key in formData) {
-          
-            if (key === 'logo_url') continue; 
+    for (const key in formData) {
         
-            const value = formData[key] === null ? '' : formData[key];
-            formPayload.append(key, value);
+        if (key === 'logo_url') continue; 
+    
+        const value = formData[key] === null ? '' : formData[key];
+        formPayload.append(key, value);
+    }
+
+    if (imageFile) {
+
+        formPayload.append('logo', imageFile); 
+
+    } else if (isEditMode) {
+
+         if (!formData.logo_url) {
+             formPayload.append('logo_url', '');
+         }
+    }
+
+    let response; 
+
+    try {
+        if (isEditMode) {
+            response = await api.put(`/companies/id/${companyIdToEdit}`, formPayload, {
+                headers: { 'Content-Type': 'multipart/form-data' },
+            });
+            alert('Compañía actualizada con éxito!');
+        } else {
+            response = await api.post('/companies', formPayload, {
+                headers: { 'Content-Type': 'multipart/form-data' },
+            });
+            alert('Compañía creada con éxito!');
         }
 
-        if (imageFile) {
-
-            formPayload.append('logo', imageFile); 
-
-        } else if (isEditMode) {
-
-             if (!formData.logo_url) {
-                 formPayload.append('logo_url', '');
-             }
+       
+        const newLogoUrl = response.data?.new_logo_url || response.data?.logo_url;
+        
+        if (newLogoUrl) {
+            setFormData(prev => ({ ...prev, logo_url: newLogoUrl }));
         }
 
+        setImageFile(null); 
+      
 
-        try {
-            if (isEditMode) {
-                await api.put(`/companies/id/${companyIdToEdit}`, formPayload, {
-                    headers: { 'Content-Type': 'multipart/form-data' },
-                });
-                alert('Compañía actualizada con éxito!');
-            } else {
-                await api.post('/companies', formPayload, {
-                    headers: { 'Content-Type': 'multipart/form-data' },
-                });
-                alert('Compañía creada con éxito!');
-            }
-
-            onCompanySaved();
-            closeModal();
-        } catch (error) {
-            console.error("Error al guardar compañía: ", error);
-            const msg = error.response?.data?.message || 'Error desconocido al guardar la compañía.';
-            setError(msg);
-        } finally {
-            setIsLoading(false);
-        }
-    };
+        onCompanySaved();
+        closeModal();
+    } catch (error) {
+        console.error("Error al guardar compañía: ", error);
+        const msg = error.response?.data?.message || 'Error desconocido al guardar la compañía.';
+        setError(msg);
+    } finally {
+        setIsLoading(false);
+    }
+};
 
     if (!isModalOpen) return null;
 
@@ -194,6 +199,52 @@ const CompanyFormModal = ({ companyIdToEdit, isModalOpen, closeModal, onCompanyS
                             {validationErrors.name && <p className="text-red-500 text-xs mt-1">
                                 {validationErrors.name}
                             </p>}
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-3 gap-4">
+
+                        {/* País  */}
+                        <div>
+                            <label htmlFor="country" className="block text-sm font-medium text-gray-700">
+                                País
+                            </label>
+                            <input
+                                type="text"
+                                name="country"
+                                value={formData.country}
+                                onChange={handleChange}
+                                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+                            />
+                        </div>
+
+                        {/* Ciudad (headquarters) */}
+                        <div>
+                            <label htmlFor="headquarters" className="block text-sm font-medium text-gray-700">
+                                Ciudad / Sede
+                            </label>
+                            <input
+                                type="text"
+                                name="headquarters"
+                                value={formData.headquarters}
+                                onChange={handleChange}
+                                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+                            />
+                        </div>
+
+                        {/* Web */}
+                        <div>
+                            <label htmlFor="website" className="block text-sm font-medium text-gray-700">
+                                Web
+                            </label>
+                            <input
+                                type="url"
+                                name="website"
+                                value={formData.website}
+                                onChange={handleChange}
+                                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+                                placeholder="https://ejemplo.com"
+                            />
                         </div>
                     </div>
      

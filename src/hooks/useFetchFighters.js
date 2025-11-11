@@ -40,17 +40,17 @@ const useFetchFighters = (initialLimit = 10) => {
         } finally {
             setLoading(false);
         }
-    }, [ setFighters, setPagination, setLoading, setError ]);
+    }, [setFighters, setPagination, setLoading, setError]);
 
     useEffect(() => {
         fetchFighters(1, pagination.limit, currentSearchTerm);
     }, [currentSearchTerm, pagination.limit, fetchFighters]);
 
-   const goToPage = (pageNumber) => { 
-    if (pageNumber > 0 && pageNumber <= pagination.total_pages) {
-        fetchFighters(pageNumber, pagination.limit, currentSearchTerm); 
-    }
-};
+    const goToPage = (pageNumber) => {
+        if (pageNumber > 0 && pageNumber <= pagination.total_pages) {
+            fetchFighters(pageNumber, pagination.limit, currentSearchTerm);
+        }
+    };
 
     return {
         fighters,

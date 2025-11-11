@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import useFetchCompanies from '../hooks/useFetchCompanies';
 import avatar from "/images/companies/avatar.jpg";
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
 
 export const CompanyList = () => {
-    
-    const [ searchTerm, setSearchTerm ] = useState('');
+
+    const [searchTerm, setSearchTerm] = useState('');
 
     const {
         companies,
@@ -41,6 +42,15 @@ export const CompanyList = () => {
             </button>
         );
     }
+
+
+    const getLogoUrl = (logoUrl) => {
+        if (logoUrl && (logoUrl.startsWith('http') || logoUrl.startsWith('https'))) {
+            return logoUrl;
+        }
+
+        return `${BACKEND_URL}/${logoUrl}`;
+    };
 
 
     return (
@@ -80,14 +90,14 @@ export const CompanyList = () => {
                         {<div className="mb-3 flex justify-center items-center">
                             {company.logo_url ? (
                                 <img
-                                    src={company.logo_url}
+                                    src={getLogoUrl(company.logo_url)}
                                     alt={`Foto de ${company.name}`}
                                     className="card_logo-company"
                                 />
                             ) : (
                                 <img
                                     src={avatar}
-                                    alt={`Avatar de peleador`}
+                                    alt={`Avatar de compañía`}
                                     className="card_logo-avatar"
                                 />
                             )}
@@ -102,21 +112,21 @@ export const CompanyList = () => {
                                 {company.headquarters}</span></span>
                             <span className="font-semibold text-green-700">
                                 {company.website && (
-                            <a 
-                                href={company.website} 
-                                target="_blank" 
-                                rel="noopener noreferrer" 
-                                className="text-sm transition 
+                                    <a
+                                        href={company.website}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-sm transition 
                                 duration-150 font-medium flex items-center"
-                            >
-                             <span className='text-green-700 hover:text-emerald-900'>Visitar página web</span>
-                            </a>
-                        )}
-                        {!company.website && (
-                            <p className="text-sm text-gray-500">
-                                Web no disponible
-                            </p>
-                        )}
+                                    >
+                                        <span className='text-green-700 hover:text-emerald-900'>Visitar página web</span>
+                                    </a>
+                                )}
+                                {!company.website && (
+                                    <p className="text-sm text-gray-500">
+                                        Web no disponible
+                                    </p>
+                                )}
                             </span>
                         </div>
                     </div>
