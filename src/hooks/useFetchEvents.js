@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import api from '../services/api';
 
 const useFetchEvents = (initialLimit = 10) => {
@@ -13,8 +13,9 @@ const useFetchEvents = (initialLimit = 10) => {
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [currentSearchTerm, setCurrentSearchTerm] = useState('');
 
-    const fetchEvents = async (page = pagination.current_page, limit = pagination.limit, term = '') => {
+    const fetchEvents = useCallback(async (page = pagination.current_page, limit = pagination.limit, term = '') => {
         setLoading(true);
         setError(null);
 
@@ -37,15 +38,16 @@ const useFetchEvents = (initialLimit = 10) => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [setEvents, setPagination, setLoading, setError]);
 
+   
     useEffect(() => {
-        fetchEvents(1, initialLimit, '');
-    }, []);
+        fetchEvents(1, pagination.limit, currentSearchTerm);
+    }, [currentSearchTerm, pagination.limit, fetchEvents]);
 
     const goToPage = (pageNumber) => {
         if (pageNumber > 0 && pageNumber <= pagination.total_pages) {
-            fetchEvents(pageNumber, pagination.limit);
+            fetchEvents(pageNumber, pagination.limit, currentSearchTerm);
         }
     };
 
@@ -56,6 +58,7 @@ const useFetchEvents = (initialLimit = 10) => {
         error, 
         goToPage,
         fetchEvents,
+        searchTerm: currentSearchTerm,
     };
 };
 

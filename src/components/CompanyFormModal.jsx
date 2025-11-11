@@ -108,10 +108,8 @@ const CompanyFormModal = ({ companyIdToEdit, isModalOpen, closeModal, onCompanyS
 
     const formPayload = new FormData();
 
-    // 1. Envía todos los campos de texto (name, headquarters, country, website)
     for (const key in formData) {
         
-        // Excluir 'logo_url' AHORA para manejarlo por separado
         if (key === 'logo_url') continue; 
     
         const value = formData[key] === null ? '' : formData[key];
@@ -119,19 +117,15 @@ const CompanyFormModal = ({ companyIdToEdit, isModalOpen, closeModal, onCompanyS
     }
 
     if (imageFile) {
-        // 2. Si hay archivo nuevo, adjuntamos el archivo 'logo'
+
         formPayload.append('logo', imageFile); 
-        // No necesitamos adjuntar la logo_url existente ya que se va a reemplazar
         
     } else if (isEditMode) {
-        // 3. Si estamos en modo edición y NO hay archivo nuevo
-        
-        // 3a. Adjuntamos la URL del logo existente (y limpia de 'blob:') 
-        // para que el backend sepa cuál es la ruta actual.
+
         if (formData.logo_url && !formData.logo_url.startsWith('blob:')) {
             formPayload.append('logo_url', formData.logo_url);
+
         } else if (!formData.logo_url) {
-            // 3b. Caso para borrar el logo (si el usuario lo permite)
              formPayload.append('logo_url', '');
         }
     }

@@ -132,7 +132,7 @@ export const AdminCompanies = () => {
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium
                                  text-gray-900">{company.company_id}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500  font-semibold">
                                     {company.name}</td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                     {company.slogan}</td>
@@ -156,15 +156,16 @@ export const AdminCompanies = () => {
                     </tbody>
                 </table>
 
+                {/* Vista Móvil */}
                 <div className="sm:hidden divide-y divide-gray-200">
                     {companies.map(company => (
                         <div key={company.company_id} className="p-4 flex justify-between items-center
                          bg-white hover:bg-gray-50">
                             <div className="flex items-center space-x-3">
                                 <img
-                                    src={company.logo_url 
-                                        ? `http://localhost:3001/images/companies/${company.logo_url}`
-                                        : avatar}
+                                    src={company.logo_url
+                                            ? `http://localhost:3001/${company.logo_url}`
+                                            : avatar}
                                     alt={`Logo de ${company.name}`}
                                     className="h-10 w-10 rounded-full object-cover"
                                 />

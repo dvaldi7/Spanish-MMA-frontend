@@ -1,36 +1,50 @@
 import React, { useState, useEffect } from 'react';
-import useFetchFighters from '../hooks/useFetchFighters';
+import useFetchEvents from '../hooks/useFetchEvents';
 import api from '../services/api';
-import FighterFormModal from '../components/FighterFormModal';
-import avatar from "/images/fighters/avatar.png";
+import EventFormModal from '../components/EventFormModal';
+import avatar from "/images/events/avatar.jpg";
 
-
-const AdminFighters = () => {
+const AdminEvents = () => {
 
     const {
-        fighters,
+        events,
         loading,
         error,
         goToPage,
         pagination,
-        fetchFighters,
-    } = useFetchFighters();
+        fetchEvents,
+    } = useFetchEvents();
 
     const currentPage = pagination.current_page;
     const totalPages = pagination.total_pages;
 
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [fighterIdToEdit, setFighterIdToEdit] = useState(null);
+    const [eventIdToEdit, setEventIdToEdit] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
+
+    // formatear la fecha
+    const formatDate = (dateString) => {
+        if (!dateString) return 'N/A';
+        try {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('es-ES', { 
+                day: '2-digit', 
+                month: 'short', 
+                year: 'numeric' 
+            });
+        } catch (e) {
+            return 'Fecha Inválida';
+        }
+    };
 
     //Para el buscador
     useEffect(() => {
         const delaySearch = setTimeout(() => {
-            fetchFighters(1, pagination.limit, searchTerm);
+            fetchEvents(1, pagination.limit, searchTerm);
         }, 500); 
 
         return () => clearTimeout(delaySearch);
-    }, [searchTerm, fetchFighters, pagination.limit]);
+    }, [searchTerm, fetchEvents, pagination.limit]);
 
 
     const handleSearchChange = (e) => {
@@ -39,57 +53,57 @@ const AdminFighters = () => {
     };
 
     const openCreateModal = () => {
-        setFighterIdToEdit(null);
+        setEventIdToEdit(null);
         setIsModalOpen(true);
     };
 
-    const openEditModal = (fighterId) => {
-        setFighterIdToEdit(fighterId);
+    const openEditModal = (eventId) => {
+        setEventIdToEdit(eventId);
         setIsModalOpen(true);
     };
 
     const closeModal = () => {
         setIsModalOpen(false);
-        setFighterIdToEdit(null);
+        setEventIdToEdit(null);
     };
 
-    const handleFighterSaved = () => {
+    const handleEventSaved = () => {
         goToPage(pagination.current_page);
     };
 
-    const handleDelete = async (fighterId) => {
+    const handleDelete = async (eventId) => {
 
-        if (!window.confirm(`¿Estás seguro de eliminar al peleador con ID ${fighterId}?`)) {
+        if (!window.confirm(`¿Estás seguro de eliminar el evento con ID ${eventId}?`)) {
             return;
         }
 
         try {
-            await api.delete(`/fighters/id/${fighterId}`);
-            console.log("Peleador eliminado con éxito");
+            await api.delete(`/events/id/${eventId}`);
+            console.log(`Evento ID ${eventId} eliminado con éxito.`);
 
             goToPage(pagination.current_page);
 
         } catch (error) {
-            console.error("Error al eliminar al peleador: ", error);
+            console.error("Error al eliminar el evento: ", error);
         }
     };
 
-    if (loading) return <div className="p-6 text-gray-600">Cargando peleadores...</div>;
-    if (error) return <div className="p-6 text-red-600 font-semibold">Error al cargar: {error.message}</div>;
+    if (loading) return <div className="p-6 text-gray-600">Cargando eventos...</div>;
+    if (error) return <div className="p-6 text-red-600 font-semibold">Error al cargar eventos: {error.message}</div>;
 
     return (
         <div className="p-4 sm:p-6 bg-gray-50 min-h-screen opacity-85 rounded-lg mt-10">
 
             <div className="flex flex-col sm:flex-row justify-between items-center mb-6 space-y-4 sm:space-y-0">
                 <h2 className="text-lg md:text-2xl font-semibold gradiant-color">
-                    Gestión de Peleadores
+                    Gestión de Eventos
                 </h2>
                 <button
                     onClick={openCreateModal}
                     className="w-full sm:w-auto px-4 py-2 bg-green-600 text-white rounded-lg shadow-md
                      hover:bg-green-700 transition duration-150 text-sm font-semibold"
                 >
-                    Crear Nuevo Peleador
+                    Crear Nuevo Evento
                 </button>
             </div>
 
@@ -97,7 +111,7 @@ const AdminFighters = () => {
 
                 <input
                     type="text"
-                    placeholder="Buscar por nombre o apodo..."
+                    placeholder="Buscar por nombre"
                     value={searchTerm}
                     onChange={handleSearchChange}
                     className="p-2 border border-gray-300 rounded-lg w-full max-w-lg focus:ring-blue-500
@@ -114,7 +128,7 @@ const AdminFighters = () => {
                         <tr>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase
                              tracking-wider">
-                                Foto
+                                Póster
                             </th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase 
                             tracking-wider">
@@ -126,59 +140,84 @@ const AdminFighters = () => {
                             </th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase 
                             tracking-wider">
-                                Apodo
+                                Ubicación
                             </th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase 
                             tracking-wider">
-                                Compañía
+                                Fecha
                             </th>
-
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase 
+                            tracking-wider">
+                                Estado
+                            </th>
+                            <th className="relative px-6 py-3">
+                                <span className="sr-only">Acciones</span>
+                            </th>
                         </tr>
                     </thead>
 
                     <tbody className="bg-white divide-y divide-gray-200">
-                        {fighters.map(fighter => (
+                        {events.map(event => (
 
-                            <tr key={fighter.fighter_id} className="hover:bg-gray-50">
+                            <tr key={event.event_id} className="hover:bg-gray-50">
 
+                                {/* Póster */}
                                 <td className="px-6 py-4 whitespace-nowrap">
                                     <img
-                                        src={fighter.photo_url
-                                            ? `http://localhost:3001/${fighter.photo_url}`
+                                        src={event.poster_url
+                                            ? `${api.baseURL}/${event.poster_url}`
                                             : avatar}
-                                        alt={`Foto de ${fighter.first_name}`}
-                                        className="h-10 w-10 rounded-full object-cover"
+                                        alt={`Póster de ${event.name}`}
+                                        className="h-10 w-10 rounded-md object-cover"
                                         onError={(e) => {
                                             e.target.onerror = null;
-                                            e.target.src = { avatar };
+                                            e.target.src = avatar;
                                         }}
                                     />
                                 </td>
 
+                                {/* ID */}
                                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                    {fighter.fighter_id}</td>
+                                    {event.event_id}
+                                </td>
 
+                                {/* Nombre */}
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 font-semibold">
-                                    {fighter.first_name} {fighter.last_name}</td>
+                                    {event.name || 'N/A'}
+                                </td>
 
+                                {/* Ubicación */}
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    {fighter.nickname}</td>
+                                    {event.location || 'N/A'}
+                                </td>
+                                
+                                {/* Fecha  */}
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    {formatDate(event.date)}
+                                </td>
 
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500
-                                ">{fighter.company_name || 'N/A'}</td>
+                                {/* Estado */}
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                                        event.is_completed ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'
+                                    }`}>
+                                        {event.is_completed ? 'Finalizado' : 'Próximo'}
+                                    </span>
+                                </td>
 
+                                {/* Acciones  */}
                                 <td className="px-6 py-4 whitespace-nowrap flex items-center text-sm font-medium">
                                     <button
-                                        onClick={() => openEditModal(fighter.fighter_id)}
+                                        onClick={() => openEditModal(event.event_id)}
                                         className="text-indigo-600 hover:text-indigo-900 mr-4 transition 
-                                        duration-150 font-bold"
+                                         duration-150 font-bold"
                                     >
                                         Editar
                                     </button>
                                     <button
-                                        onClick={() => handleDelete(fighter.fighter_id)}
+                                        onClick={() => handleDelete(event.event_id)}
                                         className="text-red-600 hover:text-red-800 transition duration-150 
-                                        font-bold"
+                                         font-bold"
                                     >
                                         Eliminar
                                     </button>
@@ -191,35 +230,44 @@ const AdminFighters = () => {
 
                 {/* Vista Móvil */}
                 <div className="sm:hidden divide-y divide-gray-200">
-                    {fighters.map(fighter => (
-                        <div key={fighter.fighter_id} className="p-4 flex justify-between items-center bg-white
+                    {events.map(event => (
+                        <div key={event.event_id} className="p-4 flex justify-between items-center bg-white
                          hover:bg-gray-50">
                             <div className="flex items-center space-x-3">
                                 <img
-                                    src={fighter.photo_url
-                                            ? `http://localhost:3001/${fighter.photo_url}`
-                                            : avatar}
-                                    className="h-10 w-10 rounded-full object-cover"
+                                    src={event.poster_url || avatar}
+                                    alt={`Póster de ${event.name}`}
+                                    className="h-10 w-10 rounded-md object-cover"
                                     onError={(e) => {
                                         e.target.onerror = null;
-                                        e.target.src = { avatar };
+                                        e.target.src = avatar;
                                     }}
                                 />
                                 <div>
+                                    {/* Nombre del evento */}
                                     <div className="font-semibold text-gray-900">
-                                        {fighter.first_name} {fighter.last_name}</div>
-                                    <div className="text-xs text-gray-500">{fighter.nickname || 'N/A'}</div>
+                                        {event.name || 'N/A'}</div>
+                                    {/* Ubicación y Fecha */}
+                                    <div className="text-xs text-gray-500">{event.location || 'N/A'} - {formatDate(event.date)}</div>
+                                    {/* Slug */}
+                                    <div className="text-xs text-gray-400">Slug: {event.slug || 'N/A'}</div>
                                 </div>
                             </div>
                             <div className="flex flex-col items-end space-y-1 grid-rows-1">
+                                {/* Estado (is_completed) */}
+                                <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full mb-1 ${
+                                        event.is_completed ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'
+                                    }`}>
+                                    {event.is_completed ? 'Finalizado' : 'Próximo'}
+                                </span>
                                 <button
-                                    onClick={() => openEditModal(fighter.fighter_id)}
+                                    onClick={() => openEditModal(event.event_id)}
                                     className="text-indigo-600 hover:text-indigo-900 text-xs font-bold"
                                 >
                                     Editar
                                 </button>
                                 <button
-                                    onClick={() => handleDelete(fighter.fighter_id)}
+                                    onClick={() => handleDelete(event.event_id)}
                                     className="text-red-600 hover:text-red-800 text-xs font-bold"
                                 >
                                     Eliminar
@@ -236,7 +284,7 @@ const AdminFighters = () => {
                     onClick={() => goToPage(currentPage - 1)}
                     disabled={currentPage === 1}
                     className="px-4 py-2 mr-2 border border-gray-300 rounded-md shadow-sm text-sm 
-                    font-medium text-gray-700 bg-white hover:bg-gray-100 disabled:opacity-50"
+                     font-medium text-gray-700 bg-white hover:bg-gray-100 disabled:opacity-50"
                 >
                     Anterior
                 </button>
@@ -254,15 +302,15 @@ const AdminFighters = () => {
                 </button>
             </div>
 
-            <FighterFormModal
+            <EventFormModal
 
-                fighterIdToEdit={fighterIdToEdit}
+                eventIdToEdit={eventIdToEdit}
                 isModalOpen={isModalOpen}
                 closeModal={closeModal}
-                onFighterSaved={handleFighterSaved}
+                onEventSaved={handleEventSaved}
             />
         </div>
     );
 };
 
-export default AdminFighters;
+export default AdminEvents;

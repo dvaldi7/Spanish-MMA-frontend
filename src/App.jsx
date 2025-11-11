@@ -9,6 +9,7 @@ import { EventList } from './components/EventList.jsx';
 import AdminFighters from './admin/AdminFighters.jsx';
 import { AdminCompanies } from './admin/AdminCompanies.jsx';
 import AdminLayout from './admin/AdminLayout.jsx';
+import AdminEvents from './admin/AdminEvents.jsx';
 
 const HomePage = () => (
   <div className="text-center mt-20">
@@ -58,7 +59,7 @@ function App() {
             <Route index element={<AdminFighters />} />
             <Route path="fighters" element={<AdminFighters />} />
             <Route path="companies" element={<AdminCompanies />} />
-            {/*<Route path="events" element={<AdminEvents />} /> */}
+            {<Route path="events" element={<AdminEvents />} /> }
           </Route>
 
         </Route>
