@@ -2,36 +2,29 @@ import React, { useState, useEffect } from 'react';
 import api from '../services/api';
 import { FiX } from 'react-icons/fi';
 
-const WEIGHT_CLASSES = [
-    'Peso Paja', 'Peso Mosca', 'Peso Gallo', 'Peso Pluma',
-    'Peso Ligero', 'Peso Welter', 'Peso Mediano', 'Peso Semi-pesado', 'Peso Pesado'
-];
 
 const initialFormState = {
-    first_name: '',
-    last_name: '',
-    nickname: '',
-    record_wins: 0,
-    record_losses: 0,
-    record_draws: 0,
-    weight_class: '',
-    company_id: null,
-    photo_url: '',
+    name: '',
+    poster_url: '',
+    location: '',
+    event_id: null,
+    is_completed: 'false',
+    date: '',
 };
 
-// Recibe la ID del peleador a editar o null para crear
-const FighterFormModal = ({ fighterIdToEdit, isModalOpen, closeModal, onFighterSaved }) => {
+// Recibe la ID del evento a editar o null para crear
+const EventFormModal = ({ eventIdToEdit, isModalOpen, closeModal, onEventSaved }) => {
 
     const [formData, setFormData] = useState(initialFormState);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
     const [validationErrors, setValidationErrors] = useState({});
-    const [companies, setCompanies] = useState([]);
+    const [events, setEvents] = useState([]);
     const [imageFile, setImageFile] = useState(null);
 
-    const isEditMode = !!fighterIdToEdit;
+    const isEditMode = !!eventIdToEdit;
 
-    //UseEffect para los peleadores
+    //UseEffect para los eventoes
     useEffect(() => {
         if (!isModalOpen) {
             setFormData(initialFormState);
@@ -43,30 +36,27 @@ const FighterFormModal = ({ fighterIdToEdit, isModalOpen, closeModal, onFighterS
 
         if (isEditMode) {
 
-            const fetchFighterData = async () => {
+            const fetchEventData = async () => {
                 setIsLoading(true);
                 try {
 
-                    const response = await api.get(`/fighters/id/${fighterIdToEdit}`);
-                    const fighterData = response.data;
+                    const response = await api.get(`/events/id/${eventIdToEdit}`);
+                    const eventData = response.data.event;
 
 
                     const loadedData = {
-                        first_name: fighterData.first_name || '',
-                        last_name: fighterData.last_name || '',
-                        nickname: fighterData.nickname || '',
-                        weight_class: fighterData.weight_class || '',
-                        record_wins: response.data.record_wins || 0,
-                        record_losses: response.data.record_losses || 0,
-                        record_draws: response.data.record_draws || 0,
-                        company_id: response.data.company_id || '',
-                        photo_url: fighterData.photo_url || '',
+                        name: eventData.name || '',
+                        location: eventData.location || '',
+                        date: eventData.date ? new Date(eventData.date).toISOString().split('T')[0] : '', 
+                        event_id: eventData.event_id || null,
+                        poster_url: eventData.poster_url || '',
+                        is_completed: String(eventData.is_completed || false),
                     };
-
+                
                     setFormData(loadedData);
 
                 } catch (error) {
-                    console.error("Error al cargar datos del peleador: ", error);
+                    console.error("Error al cargar datos del evento: ", error);
                     setError("No se pudieron cargar los datos para editar");
 
                 } finally {
@@ -74,29 +64,29 @@ const FighterFormModal = ({ fighterIdToEdit, isModalOpen, closeModal, onFighterS
                 }
             };
 
-            fetchFighterData();
+            fetchEventData();
 
         } else {
 
             setFormData(initialFormState);
         }
 
-    }, [isModalOpen, fighterIdToEdit, isEditMode]);
+    }, [isModalOpen, eventIdToEdit, isEditMode]);
 
-    // useEffect para las compañías
+    // useEffect para los eventos
     useEffect(() => {
-        const fetchCompanies = async () => {
+        const fetchEvents = async () => {
             try {
-                const response = await api.get('/companies');
-                setCompanies(response.data.companies || []);
+                const response = await api.get('/events');
+                setEvents(response.data.events || []);
 
             } catch (error) {
-                console.error("Error al cargar las compañías: ", error);
+                console.error("Error al cargar los eventos: ", error);
             }
         };
 
         if (isModalOpen) {
-            fetchCompanies();
+            fetchEvents();
         }
     }, [isModalOpen]);
 
@@ -105,7 +95,7 @@ const FighterFormModal = ({ fighterIdToEdit, isModalOpen, closeModal, onFighterS
 
         if (type === 'file') {
             setImageFile(files[0]);
-            setValidationErrors(prev => ({ ...prev, photo_file: '' }));
+            setValidationErrors(prev => ({ ...prev, poster_file: '' }));
 
         } else {
             setFormData(prev => ({
@@ -120,12 +110,7 @@ const FighterFormModal = ({ fighterIdToEdit, isModalOpen, closeModal, onFighterS
 
         const errors = {}
 
-        if (!formData.first_name.trim()) errors.first_name = "El campo nombre es obligatorio";
-        if (!formData.last_name.trim()) errors.last_name = "El campo apellido es obligatorio";
-        if (!formData.weight_class) errors.weight_class = "Selecciona un peso para el peleador";
-        if (!formData.record_wins < 0 || formData.record_losses < 0 || formData.record_draws < 0) {
-            errors.record = "Las estadísticas de combate no pueden ser negativas";
-        }
+        if (!formData.name.trim()) errors.name = "El campo nombre es obligatorio";
 
         setValidationErrors(errors);
         return Object.keys(errors).length === 0;
@@ -135,7 +120,7 @@ const FighterFormModal = ({ fighterIdToEdit, isModalOpen, closeModal, onFighterS
         e.preventDefault();
 
         if (!validateForm()) {
-            setError('Por favor, corrige los errores en el formulario.');
+            setError('Por favor, corrige los errores en el formulario');
             return;
         }
 
@@ -144,43 +129,40 @@ const FighterFormModal = ({ fighterIdToEdit, isModalOpen, closeModal, onFighterS
 
         const formPayload = new FormData();
 
+     const fieldsToExcludeFromPayload = ['poster_url', 'event_id'];
+
         for (const key in formData) {
-            if (['company_name', 'company_slug', 'slug', 'photo_url'].includes(key)) continue;
-
-            let value = formData[key];
-            if (key === 'company_id') {
-                value = value === '' || value === null ? '' : String(value);
-            }
-
-            formPayload.append(key, value);
+            if (fieldsToExcludeFromPayload.includes(key)) continue; 
+            
+            formPayload.append(key, formData[key]);
         }
 
         if (imageFile) {
-            formPayload.append('photo', imageFile);
+            formPayload.append('poster', imageFile);
         } else if (isEditMode) {
-            if (!formData.photo_url) {
-                formPayload.append('photo_url', '');
+            if (!formData.poster_url) {
+                formPayload.append('poster_url', '');
             }
         }
 
         try {
             if (isEditMode) {
-                await api.put(`/fighters/id/${fighterIdToEdit}`, formPayload, {
+                await api.put(`/events/id/${eventIdToEdit}`, formPayload, {
                     headers: { 'Content-Type': 'multipart/form-data' },
                 });
-                alert('Peleador actualizado con éxito!');
+                alert('Evento actualizado con éxito!');
             } else {
-                await api.post('/fighters', formPayload, {
+                await api.post('/events', formPayload, {
                     headers: { 'Content-Type': 'multipart/form-data' },
                 });
-                alert('Peleador creado con éxito!');
+                alert('Evento creado con éxito!');
             }
 
-            onFighterSaved();
+            onEventSaved();
             closeModal();
         } catch (error) {
-            console.error("Error al guardar peleador: ", error);
-            const msg = error.response?.data?.message || 'Error desconocido al guardar el peleador.';
+            console.error("Error al guardar el evento: ", error);
+            const msg = error.response?.data?.message || 'Error desconocido al guardar el evento';
             setError(msg);
         } finally {
             setIsLoading(false);
@@ -194,7 +176,7 @@ const FighterFormModal = ({ fighterIdToEdit, isModalOpen, closeModal, onFighterS
             <div className="bg-white p-6 rounded-lg shadow-xl w-full max-w-lg overflow-y-auto max-h-[90vh]">
                 <div className="flex justify-between items-center border-b pb-3 mb-4">
                     <h2 className="text-2xl font-bold">
-                        {isEditMode ? `Editar Peleador ID: ${fighterIdToEdit}` : 'Crear Nuevo Peleador'}
+                        {isEditMode ? `Editar Evento ID: ${eventIdToEdit}` : 'Crear Nuevo Evento'}
                     </h2>
                     <button onClick={closeModal} className="text-gray-500 hover:text-gray-800">
                         <FiX size={24} />
@@ -208,7 +190,7 @@ const FighterFormModal = ({ fighterIdToEdit, isModalOpen, closeModal, onFighterS
 
                 <form onSubmit={handleSubmit} className="space-y-4">
 
-                    {/* Nombre y Apellido */}
+                    {/* Nombre  */}
                     <div className="grid grid-cols-2 gap-4">
                         <div>
                             <label htmlFor="first_name" className="block text-sm font-medium text-gray-700">
@@ -216,83 +198,61 @@ const FighterFormModal = ({ fighterIdToEdit, isModalOpen, closeModal, onFighterS
                             </label>
                             <input
                                 type="text"
-                                name="first_name"
-                                value={formData.first_name}
+                                name="name"
+                                value={formData.name}
                                 onChange={handleChange}
                                 required
                                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
                             />
-                            {validationErrors.first_name && <p className="text-red-500 text-xs mt-1">
-                                {validationErrors.first_name}
-                            </p>}
-                        </div>
-
-                        <div>
-                            <label htmlFor="last_name" className="block text-sm font-medium text-gray-700">
-                                Apellido
-                            </label>
-                            <input
-                                type="text"
-                                name="last_name"
-                                value={formData.last_name}
-                                onChange={handleChange}
-                                required
-                                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
-                            />
-                            {validationErrors.last_name && <p className="text-red-500 text-xs mt-1">
-                                {validationErrors.last_name}
+                            {validationErrors.name && <p className="text-red-500 text-xs mt-1">
+                                {validationErrors.name}
                             </p>}
                         </div>
                     </div>
 
-                    {/* Apodo y Clase de Peso */}
+                    {/* Ubicación del evento */}
                     <div className="grid grid-cols-2 gap-4">
                         <div>
                             <label htmlFor="nickname" className="block text-sm font-medium text-gray-700">
-                                Apodo
+                                Ubicación
                             </label>
                             <input
                                 type="text"
-                                name="nickname"
-                                value={formData.nickname}
+                                name="location"
+                                value={formData.location}
                                 onChange={handleChange}
                                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
                             />
                         </div>
+                    </div>
 
+                    {/* Fecha */}
+                    <div className="grid grid-cols-2 gap-4">
                         <div>
-                            <label htmlFor="weight_class" className="block text-sm font-medium text-gray-700">
-                                Clase de Peso
+                            <label htmlFor="nickname" className="block text-sm font-medium text-gray-700">
+                                Fecha
                             </label>
-                            <select
-                                name="weight_class"
-                                value={formData.weight_class}
+                            <input
+                                type="date"
+                                name="date"
+                                value={formData.date}
                                 onChange={handleChange}
-                                required
-                                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2
-                                 bg-white"
-                            >
-                                <option value="">-- Seleccionar --</option>
-                                {WEIGHT_CLASSES.map(wc => (
-                                    <option key={wc} value={wc}>{wc}</option>
-                                ))}
-                            </select>
-                            {validationErrors.weight_class && <p className="text-red-500 text-xs mt-1">
-                                {validationErrors.weight_class}
-                            </p>}
+                                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+                            />
                         </div>
                     </div>
 
-                    {/* Foto */}
+
+                    {/* Poster del evento */}
                     <div>
-                        <label htmlFor="photo" className="block text-sm font-medium text-gray-700">
-                            Foto del peleador
+                        <label htmlFor="poster" className="block text-sm font-medium text-gray-700">
+                            Poster del evento
                         </label>
 
                         <input
                             type="file"
-                            name="photo"
-                            id="photo"
+                            name="poster"
+                            id="poster"
                             accept="image/*"
                             onChange={(e) => {
                                 const file = e.target.files[0];
@@ -300,111 +260,38 @@ const FighterFormModal = ({ fighterIdToEdit, isModalOpen, closeModal, onFighterS
 
                                 if (file) {
                                     const previewUrl = URL.createObjectURL(file);
-                                    setFormData((prev) => ({ ...prev, photo_url: previewUrl }));
+                                    setFormData((prev) => ({ ...prev, poster_url: previewUrl }));
                                 }
                             }}
                             className="mt-1 block w-full text-sm text-gray-900 
                             border border-gray-300 rounded-lg cursor-pointer bg-gray-50 p-2"
                         />
 
-                        {formData.photo_url && (
+                        {formData.poster_url && (
                             <div className="mt-3">
                                 <img
                                     src={
                                         imageFile
-                                            ? formData.photo_url
-                                            : `http://localhost:3001/${formData.photo_url}`
+                                            ? formData.poster_url
+                                            : `http://localhost:3001/${formData.poster_url}`
                                     }
-                                    alt={`imagen de ${formData.name || 'peleador'}`}
+                                    alt={`imagen de ${formData.name || 'evento'}`}
                                     className="h-40 w-40 object-cover rounded-lg border border-gray-300 shadow-md"
                                 />
                             </div>
                         )}
 
                         <p className="mt-1 text-xs text-gray-500" id="file_help">
-                            {isEditMode && formData.photo_url
+                            {isEditMode && formData.poster_url
                                 ? `Foto actual cargada. Sube una nueva para reemplazarla.`
                                 : `Formatos aceptados: PNG, JPG, WEBP.`}
                         </p>
 
-                        {validationErrors.photo_file && (
+                        {validationErrors.poster_file && (
                             <p className="text-red-500 text-xs mt-1">
-                                {validationErrors.photo_file}
+                                {validationErrors.poster_file}
                             </p>
                         )}
-                    </div>
-
-                    {/* Récord  */}
-                    <fieldset className="border p-4 rounded-md">
-                        <legend className="text-sm font-medium text-gray-700 px-1">
-                            Récord 
-                        </legend>
-                        <div className="grid grid-cols-3 gap-4">
-
-                            <div>
-                                <label htmlFor="record_wins" className="block text-xs font-medium text-gray-600">
-                                    Victorias
-                                </label>
-                                <input
-                                    type="number"
-                                    name="record_wins"
-                                    value={formData.record_wins}
-                                    onChange={handleChange}
-                                    min="0"
-                                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
-                                />
-                            </div>
-
-                            <div>
-                                <label htmlFor="record_losses" className="block text-xs font-medium text-gray-600">
-                                    Derrotas
-                                </label>
-                                <input
-                                    type="number"
-                                    name="record_losses"
-                                    value={formData.record_losses}
-                                    onChange={handleChange}
-                                    min="0"
-                                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
-                                />
-                            </div>
-
-                            <div>
-                                <label htmlFor="record_draws" className="block text-xs font-medium text-gray-600">
-                                    Empates
-                                </label>
-                                <input
-                                    type="number"
-                                    name="record_draws"
-                                    value={formData.record_draws}
-                                    onChange={handleChange}
-                                    min="0"
-                                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
-                                />
-                            </div>
-                        </div>
-                    </fieldset>
-                    <div>
-
-                        <label htmlFor="company_id" className="block text-sm font-medium text-gray-700">
-                            Compañía
-                        </label>
-                        <select
-                            name="company_id"
-                            value={formData.company_id === null ? '' : String(formData.company_id)}
-                            onChange={handleChange}
-                            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
-                        >
-                            <option value=""> Sin compañía (N/A) </option>
-                            {Array.isArray(companies) && companies.map(company =>
-                                <option
-                                    key={company.company_id}
-                                    value={company.company_id}
-                                >
-                                    {company.name}
-                                </option>
-                            )}
-                        </select>
                     </div>
 
                     {/* Botón de Submit */}
@@ -414,12 +301,12 @@ const FighterFormModal = ({ fighterIdToEdit, isModalOpen, closeModal, onFighterS
                         className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700
                          disabled:bg-gray-400"
                     >
-                        {isLoading ? 'Guardando...' : isEditMode ? 'Guardar Cambios' : 'Crear Peleador'}
+                        {isLoading ? 'Guardando...' : isEditMode ? 'Guardar Cambios' : 'Crear Evento'}
                     </button>
                 </form>
             </div>
-        </div>
+        </div>     
     );
 }
 
-export default FighterFormModal;
+export default EventFormModal;

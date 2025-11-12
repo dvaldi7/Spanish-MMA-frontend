@@ -27,10 +27,10 @@ const AdminEvents = () => {
         if (!dateString) return 'N/A';
         try {
             const date = new Date(dateString);
-            return date.toLocaleDateString('es-ES', { 
-                day: '2-digit', 
-                month: 'short', 
-                year: 'numeric' 
+            return date.toLocaleDateString('es-ES', {
+                day: '2-digit',
+                month: 'short',
+                year: 'numeric'
             });
         } catch (e) {
             return 'Fecha Inválida';
@@ -41,7 +41,7 @@ const AdminEvents = () => {
     useEffect(() => {
         const delaySearch = setTimeout(() => {
             fetchEvents(1, pagination.limit, searchTerm);
-        }, 500); 
+        }, 500);
 
         return () => clearTimeout(delaySearch);
     }, [searchTerm, fetchEvents, pagination.limit]);
@@ -165,14 +165,10 @@ const AdminEvents = () => {
                                 <td className="px-6 py-4 whitespace-nowrap">
                                     <img
                                         src={event.poster_url
-                                            ? `${api.baseURL}/${event.poster_url}`
+                                            ? `http://localhost:3001/${event.poster_url}`
                                             : avatar}
-                                        alt={`Póster de ${event.name}`}
-                                        className="h-10 w-10 rounded-md object-cover"
-                                        onError={(e) => {
-                                            e.target.onerror = null;
-                                            e.target.src = avatar;
-                                        }}
+                                        alt={`Logo de ${event.name}`}
+                                        className="h-10 w-10 rounded-full object-cover"
                                     />
                                 </td>
 
@@ -190,7 +186,7 @@ const AdminEvents = () => {
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                     {event.location || 'N/A'}
                                 </td>
-                                
+
                                 {/* Fecha  */}
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                     {formatDate(event.date)}
@@ -198,9 +194,8 @@ const AdminEvents = () => {
 
                                 {/* Estado */}
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                                        event.is_completed ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'
-                                    }`}>
+                                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${event.is_completed ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'
+                                        }`}>
                                         {event.is_completed ? 'Finalizado' : 'Próximo'}
                                     </span>
                                 </td>
@@ -248,15 +243,14 @@ const AdminEvents = () => {
                                     <div className="font-semibold text-gray-900">
                                         {event.name || 'N/A'}</div>
                                     {/* Ubicación y Fecha */}
-                                    <div className="text-xs text-gray-500">{event.location || 'N/A'} - {formatDate(event.date)}</div>
-                                    {/* Slug */}
-                                    <div className="text-xs text-gray-400">Slug: {event.slug || 'N/A'}</div>
+                                    <div className="text-xs text-gray-500">
+                                        {event.location || 'N/A'} - {formatDate(event.date)}
+                                    </div>
                                 </div>
                             </div>
                             <div className="flex flex-col items-end space-y-1 grid-rows-1">
                                 {/* Estado (is_completed) */}
-                                <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full mb-1 ${
-                                        event.is_completed ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'
+                                <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full mb-1 ${event.is_completed ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'
                                     }`}>
                                     {event.is_completed ? 'Finalizado' : 'Próximo'}
                                 </span>
