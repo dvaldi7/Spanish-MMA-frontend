@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import useFetchFighters from '../hooks/useFetchFighters';
 import avatar from "/images/fighters/avatar.png";
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
@@ -6,6 +7,7 @@ const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
 const FighterList = () => {
 
     const [searchTerm, setSearchTerm] = useState('');
+    const navigate = useNavigate();
 
     const {
         fighters,
@@ -85,7 +87,9 @@ const FighterList = () => {
             {/* TARJETA DE LOS LUCHADORES */}
             <div className="card mt-12 mb-20">
                 {fighters.map(fighter => (
-                    <div key={fighter.fighter_id} className="bg-gray-200 bg-opacity-65 p-5 shadow-xl rounded-xl 
+                    <div key={fighter.fighter_id}
+                        onClick={() => navigate(`/peleadores/${fighter.slug}`)}
+                        className="bg-gray-200 bg-opacity-65 p-5 shadow-xl rounded-xl 
                     border-l-2 border-l-custom-red border-b-2  border-b-custom-gold hover:shadow-2xl hover:scale-105 
                     transition duration-300 cursor-pointer ">
                         <h3 className="text-base font-bold text-custom-black mb-5 text-center">
@@ -123,7 +127,7 @@ const FighterList = () => {
                                 Peso: {" "}
                                 <span className='font-semibold'>
                                     {fighter.weight_class}
-                                    </span>
+                                </span>
                             </span>
                             <span className="font-semibold text-green-700">
                                 Récord: {fighter.record_wins}-{fighter.record_losses}-{fighter.record_draws}
