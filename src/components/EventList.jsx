@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import useFetchEvents from '../hooks/useFetchEvents';
+import { useNavigate } from 'react-router-dom';
 import avatar from "/images/events/avatar.jpg";
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
 
 export const EventList = () => {
 
     const [searchTerm, setSearchTerm] = useState('');
+    const navigate = useNavigate();
 
     const {
         events,
@@ -86,7 +88,9 @@ export const EventList = () => {
             {/* TARJETA DE LAS COMPAÑÍAS */}
             <div className="card mt-12 mb-20">
                 {events.map(event => (
-                    <div key={event.event_id} className="bg-gray-200 bg-opacity-65 p-5 shadow-xl rounded-xl 
+                    <div key={event.event_id} 
+                    onClick={() => navigate(`/eventos/${event.slug}`)}
+                    className="bg-gray-200 bg-opacity-65 p-5 shadow-xl rounded-xl 
                     border-l-2 border-l-custom-red border-b-2  border-b-custom-gold hover:shadow-2xl hover:scale-105 
                     transition duration-300 cursor-pointer ">
                         <h3 className="text-base font-bold text-custom-black mb-5 text-center">

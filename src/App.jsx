@@ -12,6 +12,7 @@ import AdminLayout from './admin/AdminLayout.jsx';
 import AdminEvents from './admin/AdminEvents.jsx';
 import FighterDetail from './components/FighterDetail.jsx';
 import CompanyDetail from './components/CompanyDetail.jsx';
+import EventDetail from './components/EventDetail.jsx';
 import { useNavigate } from 'react-router-dom';
 
 
@@ -101,6 +102,7 @@ function App() {
           <Route path="/eventos" element={<EventList />} />
           <Route path="/peleadores/:slug" element={<FighterDetail />} />
           <Route path="/promotoras/:slug" element={<CompanyDetail />} />
+          <Route path="/eventos/:slug" element={<EventDetail />} />
 
           <Route path="*" element={
             <div className='bg-gradient-to-b from-custom-red to-custom-gold rounded-xl w-auto h-auto mt-14 
