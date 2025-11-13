@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import useFetchCompanies from '../hooks/useFetchCompanies';
 import avatar from "/images/companies/avatar.jpg";
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
@@ -6,6 +7,7 @@ const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
 export const CompanyList = () => {
 
     const [searchTerm, setSearchTerm] = useState('');
+    const navigate = useNavigate();
 
     const {
         companies,
@@ -82,7 +84,9 @@ export const CompanyList = () => {
             {/* TARJETA DE LAS COMPAÑÍAS */}
             <div className="card mt-12 mb-20">
                 {companies.map(company => (
-                    <div key={company.company_id} className="bg-gray-200 bg-opacity-65 p-5 shadow-xl rounded-xl 
+                    <div key={company.company_id}
+                        onClick={() => navigate(`/promotoras/${company.slug}`)}
+                        className="bg-gray-200 bg-opacity-65 p-5 shadow-xl rounded-xl 
                     border-l-2 border-l-custom-red border-b-2  border-b-custom-gold hover:shadow-2xl hover:scale-105 
                     transition duration-300 cursor-pointer ">
                         <h3 className="text-base font-bold text-custom-black mb-5 text-center">
