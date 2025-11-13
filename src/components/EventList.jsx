@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import useFetchEvents from '../hooks/useFetchEvents';
 import avatar from "/images/events/avatar.jpg";
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
 
 export const EventList = () => {
 
@@ -47,6 +48,14 @@ export const EventList = () => {
         );
     }
 
+    const getImageUrl = (posterUrl) => {
+        if (posterUrl && (posterUrl.startsWith('http') || posterUrl.startsWith('https'))) {
+            return posterUrl;
+        }
+
+        return `${BACKEND_URL}/${posterUrl}`;
+    };
+
 
     return (
         <div className="p-6">
@@ -77,15 +86,16 @@ export const EventList = () => {
             {/* TARJETA DE LAS COMPAÑÍAS */}
             <div className="card mt-12 mb-20">
                 {events.map(event => (
-                    <div key={event.event_id} className="bg-gray-200 p-5 shadow-xl rounded-xl border-l-4
-                           hover:shadow-2xl hover:scale-105 transition duration-300 cursor-pointer bg-opacity-65">
+                    <div key={event.event_id} className="bg-gray-200 bg-opacity-65 p-5 shadow-xl rounded-xl 
+                    border-l-2 border-l-custom-red border-b-2  border-b-custom-gold hover:shadow-2xl hover:scale-105 
+                    transition duration-300 cursor-pointer ">
                         <h3 className="text-base font-bold text-custom-black mb-5 text-center">
                             {event.name}
                         </h3>
                         {<div className="mb-3 flex justify-center items-center">
                             {event.poster_url ? (
                                 <img
-                                    src={event.poster_url}
+                                    src={getImageUrl(event.poster_url)}
                                     alt={`Foto de ${event.name}`}
                                     className="card_poster-event"
                                 />
@@ -99,12 +109,26 @@ export const EventList = () => {
                         </div>}
 
                         <p className="text-sm text-custom-black font-medium">
-                            Localización: <span className="text-blue-700">{event.location || 'No Disponible'}</span>
+                            Localización:{" "}
+                            <span className="text-custom-blue font-semibold">
+                                {event.location || 'No Disponible'}
+                            </span>
                         </p>
                         <hr className="my-2" />
                         <div className="flex justify-between text-sm text-gray-700">
-                            <span className='text-custom-black'>Fecha: <span className="text-custom-red">
-                                {event.date}</span></span>
+                            <span className='text-custom-black'>
+                                Fecha:{" "}
+                                <span className="font-semibold text-gray-700">
+                                    {event.date
+                                        ? new Date(event.date).toLocaleDateString("es-Es", {
+                                            day: "2-digit",
+                                            month: "2-digit",
+                                            year: "numeric",
+                                        })
+                                        : "No disponible"
+                                    }
+                                </span>
+                            </span>
                         </div>
                     </div>
                 ))}

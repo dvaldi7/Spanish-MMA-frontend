@@ -5,7 +5,7 @@ const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
 
 const FighterList = () => {
 
-    const [ searchTerm, setSearchTerm ] = useState('');
+    const [searchTerm, setSearchTerm] = useState('');
 
     const {
         fighters,
@@ -38,8 +38,8 @@ const FighterList = () => {
                 key={i}
                 onClick={() => handleGoToPage(i)}
                 className={`px-4 py-2 mx-1 rounded-full transition duration-150 text-sm ${i === current_page
-                        ? 'bg-custom-red text-custom-gold font-bold shadow-md'
-                        : 'bg-gray-200 text-gray-800 hover:bg-blue-200'
+                    ? 'bg-custom-red text-custom-gold font-bold shadow-md'
+                    : 'bg-gray-200 text-gray-800 hover:bg-blue-200'
                     }`}
             >
                 {i}
@@ -48,12 +48,12 @@ const FighterList = () => {
     }
 
     const getImageUrl = (photoUrl) => {
-    if (photoUrl && (photoUrl.startsWith('http') || photoUrl.startsWith('https'))) {
-        return photoUrl;
-    }
+        if (photoUrl && (photoUrl.startsWith('http') || photoUrl.startsWith('https'))) {
+            return photoUrl;
+        }
 
-    return `${BACKEND_URL}/${photoUrl}`;
-};
+        return `${BACKEND_URL}/${photoUrl}`;
+    };
 
 
     return (
@@ -89,11 +89,11 @@ const FighterList = () => {
                     border-l-2 border-l-custom-red border-b-2  border-b-custom-gold hover:shadow-2xl hover:scale-105 
                     transition duration-300 cursor-pointer ">
                         <h3 className="text-base font-bold text-custom-black mb-5 text-center">
-                            {fighter.nickname 
-                            ? `${fighter.first_name} "${fighter.nickname}" ${fighter.last_name}`
-                            : `${fighter.first_name} ${fighter.last_name}`
+                            {fighter.nickname
+                                ? `${fighter.first_name} "${fighter.nickname}" ${fighter.last_name}`
+                                : `${fighter.first_name} ${fighter.last_name}`
                             }
-                            
+
                         </h3>
                         <div className="mb-3 flex justify-center items-center">
                             {fighter.photo_url ? (
@@ -112,11 +112,19 @@ const FighterList = () => {
                         </div>
 
                         <p className="text-sm text-gray-600 font-medium">
-                            Promotora: <span className="text-blue-700">{fighter.company_name || 'Libre'}</span>
+                            Promotora: {" "}
+                            <span className="text-custom-blue font-semibold">
+                                {fighter.company_name || 'Libre'}
+                            </span>
                         </p>
                         <hr className="my-2" />
                         <div className="flex justify-between text-sm text-gray-700">
-                            <span>Peso: {fighter.weight_class}</span>
+                            <span>
+                                Peso: {" "}
+                                <span className='font-semibold'>
+                                    {fighter.weight_class}
+                                    </span>
+                            </span>
                             <span className="font-semibold text-green-700">
                                 Récord: {fighter.record_wins}-{fighter.record_losses}-{fighter.record_draws}
                             </span>

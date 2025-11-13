@@ -82,8 +82,9 @@ export const CompanyList = () => {
             {/* TARJETA DE LAS COMPAÑÍAS */}
             <div className="card mt-12 mb-20">
                 {companies.map(company => (
-                    <div key={company.company_id} className="bg-gray-200 p-5 shadow-xl rounded-xl border-l-4
-                           hover:shadow-2xl hover:scale-105 transition duration-300 cursor-pointer bg-opacity-65 ">
+                    <div key={company.company_id} className="bg-gray-200 bg-opacity-65 p-5 shadow-xl rounded-xl 
+                    border-l-2 border-l-custom-red border-b-2  border-b-custom-gold hover:shadow-2xl hover:scale-105 
+                    transition duration-300 cursor-pointer ">
                         <h3 className="text-base font-bold text-custom-black mb-5 text-center">
                             {company.name}
                         </h3>
@@ -104,12 +105,19 @@ export const CompanyList = () => {
                         </div>}
 
                         <p className="text-sm text-custom-black font-medium">
-                            País: <span className="text-blue-700">{company.country || 'No Disponible'}</span>
+                            País: {" "}
+                            <span className="font-semibold">
+                                {company.country || 'No Disponible'}
+                            </span>
                         </p>
                         <hr className="my-2" />
                         <div className="flex justify-between text-sm text-gray-700">
-                            <span className='text-custom-black'>Ciudad: <span className="text-custom-red">
-                                {company.headquarters}</span></span>
+                            <span className='text-custom-black'>
+                                Ciudad: {" "}
+                                <span className="text-custom-blue font-semibold">
+                                    {company.headquarters || 'No disponible'}
+                                </span>
+                            </span>
                             <span className="font-semibold text-green-700">
                                 {company.website && (
                                     <a
@@ -119,7 +127,9 @@ export const CompanyList = () => {
                                         className="text-sm transition 
                                 duration-150 font-medium flex items-center"
                                     >
-                                        <span className='text-green-700 hover:text-emerald-900'>Visitar página web</span>
+                                        <span className='text-green-700 hover:text-emerald-900'>
+                                            Visitar página web
+                                        </span>
                                     </a>
                                 )}
                                 {!company.website && (

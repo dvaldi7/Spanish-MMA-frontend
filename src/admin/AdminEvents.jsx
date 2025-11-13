@@ -169,6 +169,10 @@ const AdminEvents = () => {
                                             : avatar}
                                         alt={`Logo de ${event.name}`}
                                         className="h-10 w-10 rounded-full object-cover"
+                                        onError={(e) => {
+                                            e.target.onerror = null;
+                                            e.target.src = { avatar };
+                                        }}
                                     />
                                 </td>
 
