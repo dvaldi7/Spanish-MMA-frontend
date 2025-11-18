@@ -22,7 +22,7 @@ const EventFormModal = ({ eventIdToEdit, isModalOpen, closeModal, onEventSaved }
 
     const isEditMode = !!eventIdToEdit;
 
-    // Cargar datos del evento a editar
+    // Cargar datos evento a editar
     useEffect(() => {
         if (!isModalOpen) {
             setFormData(initialFormState);
@@ -40,14 +40,12 @@ const EventFormModal = ({ eventIdToEdit, isModalOpen, closeModal, onEventSaved }
                 const response = await api.get(`/events/id/${eventIdToEdit}`);
                 const eventData = response.data.event;
 
-                // Obtener los luchadores asignados a este evento
+                // Obtener luchadores asignados a evento
                 const fightersResponse = await api.get(`/events/id/${eventIdToEdit}/fighters`);
                 const assignedFighters = fightersResponse.data.roster || [];
-                
-                // Extraer solo los IDs de los luchadores asignados
-                const fighterIds = assignedFighters.map(f => f.fighter_id);
 
-                console.log('Luchadores asignados:', fighterIds); // Para debug
+                // Extraer ID de luchadores asignados
+                const fighterIds = assignedFighters.map(f => f.fighter_id);
 
                 setFormData({
                     name: eventData.name || '',
@@ -102,16 +100,19 @@ const EventFormModal = ({ eventIdToEdit, isModalOpen, closeModal, onEventSaved }
         if (type === 'file') {
             setImageFile(files[0]);
             setValidationErrors(prev => ({ ...prev, poster_file: '' }));
+            
         } else if (type === 'checkbox') {
+
             const fighterId = parseInt(value);
             setFormData(prev => {
                 let newFighterIds;
+
                 if (checked) {
                     newFighterIds = [...prev.fighter_ids, fighterId];
                 } else {
                     newFighterIds = prev.fighter_ids.filter(id => id !== fighterId);
                 }
-                console.log('Fighter IDs actualizados:', newFighterIds); // Para debug
+
                 return { ...prev, fighter_ids: newFighterIds };
             });
         } else {
@@ -143,14 +144,7 @@ const EventFormModal = ({ eventIdToEdit, isModalOpen, closeModal, onEventSaved }
             formPayload.append(key, formData[key]);
         }
 
-        // IMPORTANTE: Agregar fighter_ids correctamente
-        // Opción 1: Si tu backend espera un array JSON
         formPayload.append('fighter_ids', JSON.stringify(formData.fighter_ids));
-        
-        // Opción 2: Si tu backend espera múltiples campos con el mismo nombre
-        // formData.fighter_ids.forEach(id => {
-        //     formPayload.append('fighter_ids', id);
-        // });
 
         // Agregar imagen si existe
         if (imageFile) {
@@ -159,8 +153,6 @@ const EventFormModal = ({ eventIdToEdit, isModalOpen, closeModal, onEventSaved }
             formPayload.append('poster_url', '');
         }
 
-        // Debug: Ver qué se está enviando
-        console.log('Datos a enviar:');
         for (let [key, value] of formPayload.entries()) {
             console.log(key, value);
         }
@@ -219,7 +211,10 @@ const EventFormModal = ({ eventIdToEdit, isModalOpen, closeModal, onEventSaved }
                                 required
                                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
                             />
-                            {validationErrors.name && <p className="text-red-500 text-xs mt-1">{validationErrors.name}</p>}
+                            {validationErrors.name &&
+                                <p className="text-red-500 text-xs mt-1">
+                                    {validationErrors.name}
+                                </p>}
                         </div>
                     </div>
 
@@ -260,7 +255,8 @@ const EventFormModal = ({ eventIdToEdit, isModalOpen, closeModal, onEventSaved }
                                 setImageFile(file);
                                 if (file) setFormData(prev => ({ ...prev, poster_url: URL.createObjectURL(file) }));
                             }}
-                            className="mt-1 block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 p-2"
+                            className="mt-1 block w-full text-sm text-gray-900 border border-gray-300
+                             rounded-lg cursor-pointer bg-gray-50 p-2"
                         />
                         {formData.poster_url && (
                             <div className="mt-3">
@@ -277,12 +273,16 @@ const EventFormModal = ({ eventIdToEdit, isModalOpen, closeModal, onEventSaved }
                         <label className="block text-sm font-medium text-gray-700 mb-2">
                             Selecciona luchadores ({formData.fighter_ids.length} seleccionados)
                         </label>
-                        <div className="grid grid-cols-2 gap-2 max-h-64 overflow-y-auto border p-2 rounded bg-gray-50">
+                        <div className="grid grid-cols-2 gap-2 max-h-64 overflow-y-auto border p-2 rounded
+                         bg-gray-50">
                             {fighters.map(f => (
-                                <label 
-                                    key={f.fighter_id} 
-                                    className={`flex items-center space-x-2 p-2 rounded hover:bg-gray-100 cursor-pointer
-                                        ${formData.fighter_ids.includes(f.fighter_id) ? 'bg-blue-100 font-semibold' : ''}`}
+                                <label
+                                    key={f.fighter_id}
+                                    className={`flex items-center space-x-2 p-2 rounded hover:bg-gray-100
+                                         cursor-pointer
+                                        ${formData.fighter_ids.includes(f.fighter_id)
+                                            ? 'bg-blue-100 font-semibold'
+                                            : ''}`}
                                 >
                                     <input
                                         type="checkbox"
@@ -300,7 +300,8 @@ const EventFormModal = ({ eventIdToEdit, isModalOpen, closeModal, onEventSaved }
                     <button
                         type="submit"
                         disabled={isLoading}
-                        className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 disabled:bg-gray-400"
+                        className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700
+                         disabled:bg-gray-400"
                     >
                         {isLoading ? 'Guardando...' : isEditMode ? 'Guardar Cambios' : 'Crear Evento'}
                     </button>
