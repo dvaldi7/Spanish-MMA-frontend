@@ -4,7 +4,7 @@ const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3001";
 import avatar from "/images/companies/avatar.jpg";
 
 const CompanyDetail = () => {
-  const { slug } = useParams(); 
+  const { slug } = useParams();
   const [company, setCompany] = useState(null);
   const [fighters, setFighters] = useState([]); // <-- NUEVO ESTADO
   const [loading, setLoading] = useState(true);
@@ -52,8 +52,8 @@ const CompanyDetail = () => {
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
-      <Link 
-        to="/promotoras" 
+      <Link
+        to="/promotoras"
         className="gradiant-color streetFighterTypo hover:underline mb-4 
         inline-block font-semibold hover:scale-105 transition duration-300 cursor-pointer text-3xl"
       >
@@ -112,7 +112,7 @@ const CompanyDetail = () => {
                 key={fighter.fighter_id}
                 className="bg-gray-200 bg-opacity-70 p-4 rounded-xl shadow-md hover:shadow-xl
                  hover:scale-105 transition duration-300 flex flex-col items-center text-center border-l-2
-      border-l-custom-red border-b-2 border-b-custom-gold"
+                 border-l-custom-red border-b-2 border-b-custom-gold"
               >
                 <img
                   src={getFighterPhotoUrl(fighter.photo_url)}
