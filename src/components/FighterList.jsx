@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import useFetchFighters from '../hooks/useFetchFighters';
-import avatar from "../../public/images/fighters/avatar.png";
+import avatar from "/images/fighters/avatar.png";
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
 
 const FighterList = () => {
 
-    const [ searchTerm, setSearchTerm ] = useState('');
+    const [searchTerm, setSearchTerm] = useState('');
+    const navigate = useNavigate();
 
     const {
         fighters,
@@ -37,14 +40,22 @@ const FighterList = () => {
                 key={i}
                 onClick={() => handleGoToPage(i)}
                 className={`px-4 py-2 mx-1 rounded-full transition duration-150 text-sm ${i === current_page
-                        ? 'bg-custom-red text-custom-gold font-bold shadow-md'
-                        : 'bg-gray-200 text-gray-800 hover:bg-blue-200'
+                    ? 'bg-custom-red text-custom-gold font-bold shadow-md'
+                    : 'bg-gray-200 text-gray-800 hover:bg-blue-200'
                     }`}
             >
                 {i}
             </button>
         );
     }
+
+    const getImageUrl = (photoUrl) => {
+        if (photoUrl && (photoUrl.startsWith('http') || photoUrl.startsWith('https'))) {
+            return photoUrl;
+        }
+
+        return `${BACKEND_URL}/${photoUrl}`;
+    };
 
 
     return (
@@ -55,18 +66,19 @@ const FighterList = () => {
             </h2>
 
             {/* FORMULARIO DE BÚSQUEDA */}
-            <form onSubmit={handleSearch} className="mb-8 flex justify-center">
+            <form onSubmit={handleSearch} className="mb-8 flex justify-center ">
                 <input
                     type="text"
-                    placeholder="Buscar por nombre, apellido o alias..."
+                    placeholder="Buscar peleador"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full max-w-lg p-3 border border-gray-300 rounded-l-lg
-                     focus:ring-blue-500 focus:border-blue-500 text-gray-800"
+                    className="w-full max-w-lg h-9 p-3 border border-gray-300 rounded-l-lg
+                    text-gray-800 opacity-65"
                 />
                 <button
                     type="submit"
-                    className="bg-blue-600 text-white px-6 py-3 rounded-r-lg hover:bg-blue-700 transition"
+                    className="bg-gradient-to-b from-custom-red to-custom-gold px-6 py-1 rounded-r-lg 
+                    transition h-9 font-medium"
                 >
                     Buscar
                 </button>
@@ -75,15 +87,22 @@ const FighterList = () => {
             {/* TARJETA DE LOS LUCHADORES */}
             <div className="card mt-12 mb-20">
                 {fighters.map(fighter => (
-                    <div key={fighter.fighter_id} className="bg-gray-200 p-5 shadow-xl rounded-xl border-l-4
-                   hover:shadow-2xl hover:scale-105 transition duration-300 cursor-pointer ">
+                    <div key={fighter.fighter_id}
+                        onClick={() => navigate(`/peleadores/${fighter.slug}`)}
+                        className="bg-gray-200 bg-opacity-65 p-5 shadow-xl rounded-xl 
+                    border-l-2 border-l-custom-red border-b-2  border-b-custom-gold hover:shadow-2xl hover:scale-105 
+                    transition duration-300 cursor-pointer ">
                         <h3 className="text-base font-bold text-custom-black mb-5 text-center">
-                            {fighter.first_name} "{fighter.nickname}" {fighter.last_name}
+                            {fighter.nickname
+                                ? `${fighter.first_name} "${fighter.nickname}" ${fighter.last_name}`
+                                : `${fighter.first_name} ${fighter.last_name}`
+                            }
+
                         </h3>
                         <div className="mb-3 flex justify-center items-center">
                             {fighter.photo_url ? (
                                 <img
-                                    src={fighter.photo_url}
+                                    src={getImageUrl(fighter.photo_url)}
                                     alt={`Foto de ${fighter.first_name}`}
                                     className="card_photo-fighter"
                                 />
@@ -97,11 +116,19 @@ const FighterList = () => {
                         </div>
 
                         <p className="text-sm text-gray-600 font-medium">
-                            Promotora: <span className="text-blue-700">{fighter.company_name || 'Libre'}</span>
+                            Promotora: {" "}
+                            <span className="text-custom-blue font-semibold">
+                                {fighter.company_name || 'Libre'}
+                            </span>
                         </p>
                         <hr className="my-2" />
                         <div className="flex justify-between text-sm text-gray-700">
-                            <span>Peso: {fighter.weight_class}</span>
+                            <span>
+                                Peso: {" "}
+                                <span className='font-semibold'>
+                                    {fighter.weight_class}
+                                </span>
+                            </span>
                             <span className="font-semibold text-green-700">
                                 Récord: {fighter.record_wins}-{fighter.record_losses}-{fighter.record_draws}
                             </span>

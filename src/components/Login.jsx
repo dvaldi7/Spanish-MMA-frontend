@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import useAuth from '../hooks/useAuth';
 import { FiEye, FiEyeOff } from 'react-icons/fi';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
 
+    const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState(null);
     const [message, setMessage] = useState(null);
-
     const [showPassword, setShowPassword] = useState(false);
-
     const { user, login } = useAuth();
 
     const passwordVisibility = () => {
@@ -18,12 +18,8 @@ const Login = () => {
     };
 
     if (user) {
-        return (
-            <div className="p-6 bg-green-100 border-l-4 border-green-500 text-green-700">
-                <p>¡Hola, Admin! Rol: **{user.role}**</p>
-                <p>El login funciona. Ahora deberías ser redirigido a la zona de administración.</p>
-            </div>
-        );
+        navigate('/admin/fighters', { replace: true });
+        return null;
     }
 
     const handleSubmit = async (e) => {
@@ -39,7 +35,8 @@ const Login = () => {
         try {
             await login(email, password);
             setMessage('¡Login exitoso! Token guardado.');
-            // Aquí iría la redirección a /admin o /dashboard
+            
+            navigate('/admin');
 
         } catch (error) {
             setError(error.message);
