@@ -3,6 +3,7 @@ import useFetchCompanies from '../hooks/useFetchCompanies';
 import api from '../services/api';
 import CompanyFormModal from '../components/CompanyFormModal';
 import avatar from "/images/companies/avatar.jpg";
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
 
 
 export const AdminCompanies = () => {
@@ -124,7 +125,7 @@ export const AdminCompanies = () => {
                                 <td className="px-6 py-4 whitespace-nowrap">
                                     <img
                                         src={company.logo_url
-                                            ? `http://localhost:3001/${company.logo_url}`
+                                            ? `${BACKEND_URL}/${company.logo_url}`
                                             : avatar}
                                         alt={`Logo de ${company.name}`}
                                         className="h-10 w-10 rounded-full object-cover"
@@ -164,7 +165,7 @@ export const AdminCompanies = () => {
                             <div className="flex items-center space-x-3">
                                 <img
                                     src={company.logo_url
-                                            ? `http://localhost:3001/${company.logo_url}`
+                                            ? `${BACKEND_URL}/${company.logo_url}`
                                             : avatar}
                                     alt={`Logo de ${company.name}`}
                                     className="h-10 w-10 rounded-full object-cover"

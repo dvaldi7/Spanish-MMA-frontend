@@ -3,6 +3,7 @@ import useFetchFighters from '../hooks/useFetchFighters';
 import api from '../services/api';
 import FighterFormModal from '../components/FighterFormModal';
 import avatar from "/images/fighters/avatar.png";
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
 
 
 const AdminFighters = () => {
@@ -144,7 +145,7 @@ const AdminFighters = () => {
                                 <td className="px-6 py-4 whitespace-nowrap">
                                     <img
                                         src={fighter.photo_url
-                                            ? `http://localhost:3001/${fighter.photo_url}`
+                                            ? `${BACKEND_URL}/${fighter.photo_url}`
                                             : avatar}
                                         alt={`Foto de ${fighter.first_name}`}
                                         className="h-10 w-10 rounded-full object-cover"
@@ -197,7 +198,7 @@ const AdminFighters = () => {
                             <div className="flex items-center space-x-3">
                                 <img
                                     src={fighter.photo_url
-                                            ? `http://localhost:3001/${fighter.photo_url}`
+                                            ? `${BACKEND_URL}/${fighter.photo_url}`
                                             : avatar}
                                     className="h-10 w-10 rounded-full object-cover"
                                     onError={(e) => {

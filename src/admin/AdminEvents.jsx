@@ -3,6 +3,7 @@ import useFetchEvents from '../hooks/useFetchEvents';
 import api from '../services/api';
 import EventFormModal from '../components/EventFormModal';
 import avatar from "/images/events/avatar.jpg";
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
 
 const AdminEvents = () => {
 
@@ -165,7 +166,7 @@ const AdminEvents = () => {
                                 <td className="px-6 py-4 whitespace-nowrap">
                                     <img
                                         src={event.poster_url
-                                            ? `http://localhost:3001/${event.poster_url}`
+                                            ? `${BACKEND_URL}/${event.poster_url}`
                                             : avatar}
                                         alt={`Logo de ${event.name}`}
                                         className="h-10 w-10 rounded-full object-cover"
@@ -234,7 +235,9 @@ const AdminEvents = () => {
                          hover:bg-gray-50">
                             <div className="flex items-center space-x-3">
                                 <img
-                                    src={event.poster_url || avatar}
+                                    src={event.poster_url
+                                            ? `${BACKEND_URL}/${event.poster_url}`
+                                            : avatar}
                                     alt={`Póster de ${event.name}`}
                                     className="h-10 w-10 rounded-md object-cover"
                                     onError={(e) => {
