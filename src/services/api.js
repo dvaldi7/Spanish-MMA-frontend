@@ -1,7 +1,11 @@
 import axios from 'axios';
 
+const baseURL = process.env.NODE_ENV === 'production' 
+  ? 'https://spanish-mma-backend.onrender.com/api'
+  : 'http://localhost:3001/api';
+
 const api = axios.create({
-    baseURL: 'http://localhost:3001/api',
+    baseURL: baseURL,
     headers: {
         'Content-Type': 'application/json',
     },
