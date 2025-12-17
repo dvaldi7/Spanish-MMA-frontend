@@ -120,7 +120,7 @@ const CompanyDetail = () => {
                   className="w-32 h-32 object-cover rounded-full mb-4 border-2 border-custom-black"
                 />
                 <p className="text-lg font-semibold text-custom-black">
-                  {fighter.nickname ? `"${fighter.nickname}" ` : ""}{fighter.first_name} {fighter.last_name}
+                 {fighter.first_name} {fighter.nickname ? `"${fighter.nickname}" ` : ""} {fighter.last_name}
                 </p>
               </Link>
             ))}
