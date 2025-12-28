@@ -2,9 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
- @layer base {
-    
-    /*FUENTES*/
+@layer base {
+
+  /*FUENTES*/
   @font-face {
     font-family: "streetFighter";
     src: url('/fonts/streetFighter.ttf');
@@ -12,88 +12,92 @@
     font-style: normal;
   }
 
-  .streetFighterTypo{
+  .streetFighterTypo {
     font-family: "streetFighter";
   }
-      
+
 }
 
 @layer components {
 
-     /* ESTILOS DEL MENU */
+  /* ESTILOS DEL MENU */
   .menu-item {
-    @apply  tracking-wider text-lg flex flex-1 justify-center items-center mt-1 font-semibold mr-5 ml-5;
+    @apply tracking-wider text-lg flex flex-1 justify-center items-center mt-1 font-semibold mr-5 ml-5;
   }
 
   .menu-item-a {
-    @apply block transition duration-200 hover:text-custom-gold transform hover:scale-105
-    ;
+    @apply block transition duration-200 hover:text-custom-gold transform hover:scale-105;
   }
 
-    /*TARJETAS*/
-    .card {
-        @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6
-    }
-
-    .card_photo-fighter{
-        @apply w-72 md:w-full h-72 sm:h-80 object-cover md:object-cover rounded-md mb-2 border border-gray-200
-    }
-
-    .card_photo-avatar{
-        @apply w-72 md:w-full h-72 sm:h-80 rounded-md mb-2 border border-gray-400
-    }
-
-      .card_logo-company{
-        @apply w-72 md:w-full h-64 sm:h-80 object-fill rounded-md mb-2 border border-gray-200
-    }
-
-      .card_logo-avatar{
-        @apply w-72 md:w-full h-64 sm:h-80 object-fill rounded-md mb-2 border border-gray-200
-    }
-
-    .card_poster-event{
-         @apply w-72 md:w-full h-64 sm:h-80 object-fill rounded-md mb-2 border border-gray-200
-    }
-
-    .card_poster-avatar{
-        @apply w-72 md:w-full h-64 sm:h-80 object-fill rounded-md mb-2 border border-gray-200
-    }
-
-    /* COLORES PERSONALIZADOS */
-
-    .gradiant-color{
-        @apply bg-gradient-to-b from-custom-red to-custom-gold bg-clip-text text-transparent
-    }
-
-    /* ARTICULOS */
-
-    .articles-header{
-    @apply w-full h-20 block text-center text-4xl font-medium tracking-widest pt-5 border
+  /*TARJETAS*/
+  .card {
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6
   }
 
-  .articles-item{
-    @apply w-full h-auto border border-gray-200 m-10 mx-auto p-2.5 bg-white 
-                    text-black shadow-md 
+  .card_photo-fighter {
+    @apply w-72 md:w-full h-72 sm:h-80 object-cover md:object-cover rounded-md mb-2 border border-gray-200
   }
 
-  .articles-data{
-    @apply float-right bg-gray-800 h-10 leading-6 p-2 text-white -m-2.5
-                        text-sm rounded-bl-lg;
+  .card_photo-avatar {
+    @apply w-72 md:w-full h-72 sm:h-80 rounded-md mb-2 border border-gray-400
   }
 
-  .articles-data span{
+  .card_logo-company {
+    @apply w-72 md:w-full h-64 sm:h-80 object-fill rounded-md mb-2 border border-gray-200
+  }
+
+  .card_logo-avatar {
+    @apply w-72 md:w-full h-64 sm:h-80 object-fill rounded-md mb-2 border border-gray-200
+  }
+
+  .card_poster-event {
+    @apply w-72 md:w-full h-64 sm:h-80 object-fill rounded-md mb-2 border border-gray-200
+  }
+
+  .card_poster-avatar {
+    @apply w-72 md:w-full h-64 sm:h-80 object-fill rounded-md mb-2 border border-gray-200
+  }
+
+  .card_photo-news {
+
+    @apply w-full md:w-80 h-52 md:h-60 object-cover rounded-md border border-gray-200;
+  }
+
+  /* COLORES PERSONALIZADOS */
+
+  .gradiant-color {
+    @apply bg-gradient-to-b from-custom-red to-custom-gold bg-clip-text text-transparent
+  }
+
+  /* ARTICULOS */
+
+  .articles-header {
+    @apply w-full h-20 text-center text-4xl font-medium tracking-widest pt-5 border
+  }
+
+  .articles-item {
+
+    @apply w-full border border-gray-200 p-6 bg-white text-black shadow-md;
+  }
+
+  .articles-data {
+
+    @apply bg-gray-800 leading-none p-2 text-white text-xs rounded-lg flex items-center justify-center whitespace-nowrap;
+  }
+
+  .articles-data span {
     @apply m-2.5;
   }
 
-  .articles-head{
-    @apply block text-2xl m-1 ;
+  .articles-head {
+    @apply text-2xl m-1 flex flex-row flex-wrap w-56;
   }
 
-  .articles-head a{
+  .articles-head a {
     @apply font-semibold text-custom-red hover:underline;
   }
 
-  .articles-description{
-    @apply block mt-3 mb-3 font-sans font-normal text-base;
+  .articles-description {
+    @apply block font-sans font-normal text-base text-justify;
   }
 }
