@@ -49,25 +49,27 @@ export const HomePage = () => {
     return (
         <main className="text-center mt-16 p-4 mx-auto font-serif max-w-6xl">
             {/* Título Principal */}
-            <h1 className="text-5xl md:text-6xl font-extrabold mb-6 leading-tight">
-                <span className="bg-gradient-to-r from-red-600 to-amber-500 bg-clip-text text-transparent ">
-                    El Catálogo definitivo de MMA en Español
-                </span>
-            </h1>
+            <div className='bg-gray-200 bg-opacity-65 p-6 
+                        shadow-xl rounded-xl border-l-2 border-l-custom-red border-b-2 border-b-custom-gold 
+                        hover:shadow-2xl text-left transition-all'>
+                <h1 className="text-5xl md:text-6xl font-extrabold mb-6 leading-tight text-center">
+                    <span className="text-custom-black">
+                        El Catálogo definitivo de MMA en Español
+                    </span>
+                </h1>
 
-            {/* Subtítulo */}
-            <h2 className="text-xl md:text-2xl bg-gradient-to-r from-red-600 to-amber-500 bg-clip-text 
-                text-transparent font-extrabold mb-8 ">
-                Explora la comunidad española de las Artes Marciales Mixtas de España
-            </h2>
-
+                {/* Subtítulo */}
+                <h2 className="text-xl md:text-2xl text-custom-red font-extrabold mb-8 text-center">
+                    Explora la comunidad española de las Artes Marciales Mixtas de España
+                </h2>
+            </div>
             {/* SECCIÓN NOTICIAS */}
             <section className="grid grid-cols-1 gap-10 mt-20">
 
                 <div className='flex justify-center'>
                     <h2 className="bg-gray-200 bg-opacity-65 p-5 shadow-xl rounded-xl 
                         border-l-2 border-l-custom-red border-b-2 border-b-custom-gold 
-                        text-3xl font-bold w-auto">
+                        text-3xl font-bold w-auto text-custom-red">
                         ÚLTIMAS NOTICIAS
                     </h2>
                 </div>
@@ -79,12 +81,15 @@ export const HomePage = () => {
                 {/* ARTÍCULO  */}
                 {!loading && !error && news && news.length > 0 ? (
                     news.map((item) => (
-                        <article key={item.news_id} className="articles-item bg-gray-200 bg-opacity-65 p-6 shadow-xl rounded-xl border-l-2 border-l-custom-red border-b-2 border-b-custom-gold hover:shadow-2xl text-left transition-all">
-                            <div className="flex flex-col md:flex-row md:justify-between items-center mb-6 border-b border-gray-300 pb-2">
+                        <article key={item.news_id} className="articles-item bg-gray-200 bg-opacity-65 p-6 
+                        shadow-xl rounded-xl border-l-2 border-l-custom-red border-b-2 border-b-custom-gold 
+                        hover:shadow-2xl text-left transition-all">
+                            <div className="flex flex-col md:flex-row md:justify-between items-center mb-6 border-b
+                             border-gray-300 pb-2">
                                 <h2 className="text-2xl font-bold text-gray-800 mb-2 md:mb-0">
                                     {item.title}
                                 </h2>
-                                <div className="articles-data text-gray-600 font-sans italic">
+                                <div className="articles-data text-white font-sans italic">
                                     <span>{formatDate(item.published_at)}</span>
                                 </div>
                             </div>
@@ -118,7 +123,8 @@ export const HomePage = () => {
                         <button
                             onClick={() => handleGoToPage(current_page - 1)}
                             disabled={current_page === 1}
-                            className="px-3 py-2 bg-gray-700 text-white rounded-md hover:bg-gray-800 transition disabled:opacity-50 text-sm"
+                            className="px-3 py-2 bg-gray-700 text-white rounded-md hover:bg-gray-800 
+                            transition disabled:opacity-50 text-sm"
                         >
                             Anterior
                         </button>
@@ -130,7 +136,8 @@ export const HomePage = () => {
                         <button
                             onClick={() => handleGoToPage(current_page + 1)}
                             disabled={current_page === total_pages}
-                            className="px-3 py-2 bg-gray-700 text-white rounded-md hover:bg-gray-800 transition disabled:opacity-50 text-sm"
+                            className="px-3 py-2 bg-gray-700 text-white rounded-md hover:bg-gray-800 
+                            transition disabled:opacity-50 text-sm"
                         >
                             Siguiente
                         </button>
