@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react';
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3001";
 import useFetchNews from '../hooks/useFetchNews';
+import { useNavigate } from 'react-router-dom';
 
 export const HomePage = () => {
+
+    const navigate = useNavigate();
 
     const {
         news,
@@ -106,7 +109,8 @@ export const HomePage = () => {
                                     <p className="articles-description text-gray-700 leading-relaxed">
                                         {item.content.length > 300 ? `${item.content.substring(0, 300)}...` : item.content}
                                     </p>
-                                    <button className="mt-4 text-red-600 font-bold hover:underline">
+                                    <button className="mt-4 text-red-600 font-bold hover:underline"
+                                    onClick={() => navigate(`/news/${item.slug}`)}>
                                         Leer más...
                                     </button>
                                 </div>

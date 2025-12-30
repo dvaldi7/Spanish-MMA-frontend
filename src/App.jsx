@@ -16,6 +16,7 @@ import EventDetail from './components/EventDetail.jsx';
 import { useNavigate } from 'react-router-dom';
 import { Error404 } from './components/404.jsx';
 import { HomePage } from './components/HomePage.jsx';
+import { NewsDetail } from './components/NewsDetail.jsx';
 
 
 function App() {
@@ -33,6 +34,7 @@ function App() {
           <Route path="/peleadores/:slug" element={<FighterDetail />} />
           <Route path="/promotoras/:slug" element={<CompanyDetail />} />
           <Route path="/eventos/:slug" element={<EventDetail />} />
+          <Route path="/news/:slug" element={<NewsDetail />} />
 
           <Route path="*" element={<Error404 />} />
 
