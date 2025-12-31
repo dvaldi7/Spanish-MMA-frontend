@@ -17,6 +17,7 @@ import { useNavigate } from 'react-router-dom';
 import { Error404 } from './components/404.jsx';
 import { HomePage } from './components/HomePage.jsx';
 import { NewsDetail } from './components/NewsDetail.jsx';
+import { AdminNews } from './admin/AdminNews.jsx';
 
 
 function App() {
@@ -48,10 +49,11 @@ function App() {
             }
           >
             {/* RUTAS HIJAS dentro del AdminLayout */}
-            <Route index element={<AdminFighters />} />
+            <Route index element={<AdminNews />} />
             <Route path="fighters" element={<AdminFighters />} />
             <Route path="companies" element={<AdminCompanies />} />
             <Route path="events" element={<AdminEvents />} />
+            <Route path="news" element={<AdminNews />} />
           </Route>
 
         </Route>

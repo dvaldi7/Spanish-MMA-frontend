@@ -36,7 +36,8 @@ export const NewsDetail = () => {
         <main className="mt-20 p-4 mx-auto max-w-6xl font-serif">
             {/* Botón Volver */}
             <div className="mb-8 text-left">
-                <Link to="/" className="text-custom-red hover:underline font-bold flex items-center gap-2">
+                <Link to="/" className="gradiant-color streetFighterTypo hover:underline mb-4 
+      inline-block font-semibold hover:scale-105 transition duration-300 cursor-pointer text-3xl">
                     ← Volver a Inicio
                 </Link>
             </div>
@@ -58,7 +59,7 @@ export const NewsDetail = () => {
                     {/* COLUMNA DERECHA: TEXTO */}
                     <div className="lg:w-1/2 w-full p-8 md:p-12 flex flex-col justify-center text-left">
                         
-                        <span className="text-gray-500 text-sm mb-2 font-sans uppercase tracking-widest">
+                        <span className="text-custom-red font-bold text-sm mb-2 font-sans uppercase tracking-widest">
                             {new Date(item.published_at).toLocaleDateString('es-ES', { 
                                 day: 'numeric', month: 'long', year: 'numeric' 
                             })}

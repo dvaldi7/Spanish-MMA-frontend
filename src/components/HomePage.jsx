@@ -102,7 +102,9 @@ export const HomePage = () => {
                                     <img
                                         src={item.image_url ? `${BACKEND_URL}/${item.image_url}` : '/images/Error404.jpg'}
                                         alt={item.title}
-                                        className='card_photo-news w-full md:w-80 h-48 object-cover rounded-lg shadow-md'
+                                        className='card_photo-news w-full md:w-80 h-48 object-cover rounded-lg shadow-md
+                                        cursor-pointer'
+                                        onClick={() => navigate(`/news/${item.slug}`)}
                                     />
                                 </div>
                                 <div className="flex-1">
