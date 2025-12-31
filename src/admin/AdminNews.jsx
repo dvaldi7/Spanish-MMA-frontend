@@ -81,7 +81,7 @@ export const AdminNews = () => {
     return (
         <div className="p-6 max-w-6xl mx-auto mt-10 font-sans">
 
-            <h1 className="text-3xl font-bold mb-8 border-b-2 border-custom-red pb-2">
+            <h1 className="text-3xl font-bold mb-8 border-b-2 border-custom-red pb-2 gradiant-color">
                 {editingId ? 'Editando Noticia' : 'Panel de Noticias'}
             </h1>
 
