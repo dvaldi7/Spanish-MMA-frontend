@@ -57,7 +57,9 @@ export const HomePage = () => {
                         hover:shadow-2xl text-left transition-all'>
                 <h1 className="text-5xl md:text-6xl font-extrabold mb-6 leading-tight text-center">
                     <span className="text-custom-black">
-                        El Catálogo definitivo de MMA en Español
+                        El <span className='gradiant-color'>Catálogo</span> definitivo de  
+                        <span className='gradiant-color'> MMA </span> 
+                        en <span className='gradiant-color'> Español</span>
                     </span>
                 </h1>
 
@@ -72,8 +74,8 @@ export const HomePage = () => {
                 <div className='flex justify-center'>
                     <h2 className="bg-gray-200 bg-opacity-65 p-5 shadow-xl rounded-xl 
                         border-l-2 border-l-custom-red border-b-2 border-b-custom-gold 
-                        text-3xl font-bold w-auto text-custom-red">
-                        ÚLTIMAS NOTICIAS
+                        text-3xl font-bold w-auto text-custom-black">
+                        ÚLTI<span className='gradiant-color'>MMA</span>S NOTICIAS
                     </h2>
                 </div>
 
