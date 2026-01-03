@@ -28,7 +28,7 @@ const FighterList = () => {
         goToPage(pageNumber, searchTerm);
     }
 
-    if (loading) return <p className="text-center text-xl p-6 text-custom-blue">Cargando luchadores...</p>;
+    if (loading) return <p className="text-center text-xl p-6 text-blue-600">Cargando luchadores...</p>;
     if (error) return <p className="text-center text-custom-red text-xl p-6">{error}</p>;
 
     const { current_page, total_pages, total_items } = pagination;

@@ -7,9 +7,10 @@ const AdminLayout = () => {
     const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
     const adminLinks = [
+        { to: '/admin/news', label: 'Noticias' },
         { to: '/admin/fighters', label: 'Peleadores' },
         { to: '/admin/companies', label: 'Compañías' },
-        { to: '/admin/events', label: 'Eventos' },
+        { to: '/admin/events', label: 'Eventos' },   
     ];
 
     const navLinkClass = ({ isActive }) =>
