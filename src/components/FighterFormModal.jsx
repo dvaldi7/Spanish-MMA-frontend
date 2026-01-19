@@ -311,11 +311,11 @@ const FighterFormModal = ({ fighterIdToEdit, isModalOpen, closeModal, onFighterS
                             <div className="mt-3">
                                 <img
                                     src={
-                                        imageFile
+                                        formData.photo_url.startsWith('blob:') || formData.photo_url.startsWith('http')
                                             ? formData.photo_url
                                             : `http://localhost:3001/${formData.photo_url}`
                                     }
-                                    alt={`imagen de ${formData.name || 'peleador'}`}
+                                    alt={`imagen de ${formData.first_name || 'peleador'}`}
                                     className="h-40 w-40 object-cover rounded-lg border border-gray-300 shadow-md"
                                 />
                             </div>
