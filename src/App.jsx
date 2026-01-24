@@ -18,7 +18,8 @@ import { Error404 } from './components/404.jsx';
 import { HomePage } from './components/HomePage.jsx';
 import { NewsDetail } from './components/NewsDetail.jsx';
 import { AdminNews } from './admin/AdminNews.jsx';
-import { AnalyticsTracker } from '../AnalyticsTracker.jsx';
+import AnalyticsTracker from '../AnalyticsTracker.jsx';
+
 
 
 function App() {
