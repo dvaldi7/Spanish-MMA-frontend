@@ -153,10 +153,6 @@ const EventFormModal = ({ eventIdToEdit, isModalOpen, closeModal, onEventSaved }
             formPayload.append('poster_url', '');
         }
 
-        for (let [key, value] of formPayload.entries()) {
-            console.log(key, value);
-        }
-
         try {
             if (isEditMode) {
                 await api.put(`/events/id/${eventIdToEdit}`, formPayload, {
@@ -253,15 +249,22 @@ const EventFormModal = ({ eventIdToEdit, isModalOpen, closeModal, onEventSaved }
                             onChange={e => {
                                 const file = e.target.files[0];
                                 setImageFile(file);
-                                if (file) setFormData(prev => ({ ...prev, poster_url: URL.createObjectURL(file) }));
+                                if (file) {
+                                    const previewUrl = URL.createObjectURL(file);
+                                    setFormData(prev => ({ ...prev, poster_url: previewUrl }));
+                                }
                             }}
                             className="mt-1 block w-full text-sm text-gray-900 border border-gray-300
-                             rounded-lg cursor-pointer bg-gray-50 p-2"
+                               rounded-lg cursor-pointer bg-gray-50 p-2"
                         />
                         {formData.poster_url && (
                             <div className="mt-3">
                                 <img
-                                    src={imageFile ? formData.poster_url : `http://localhost:3001/${formData.poster_url}`}
+                                    src={
+                                        formData.poster_url.startsWith('blob:') || formData.poster_url.startsWith('http')
+                                            ? formData.poster_url
+                                            : `http://localhost:3001/${formData.poster_url}`
+                                    }
                                     alt={`imagen de ${formData.name || 'evento'}`}
                                     className="h-40 w-40 object-cover rounded-lg border border-gray-300 shadow-md"
                                 />

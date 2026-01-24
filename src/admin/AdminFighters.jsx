@@ -75,6 +75,14 @@ const AdminFighters = () => {
         }
     };
 
+    const getImageUrl = (photoUrl) => {
+        if (!photoUrl) return avatar;
+        if (photoUrl.startsWith('http')) {
+            return photoUrl;
+        }
+        return `${BACKEND_URL}/${photoUrl}`;
+    };
+
     if (loading) return <div className="p-6 text-gray-600">Cargando peleadores...</div>;
     if (error) return <div className="p-6 text-red-600 font-semibold">Error al cargar: {error.message}</div>;
 
@@ -144,14 +152,12 @@ const AdminFighters = () => {
 
                                 <td className="px-6 py-4 whitespace-nowrap">
                                     <img
-                                        src={fighter.photo_url
-                                            ? `${BACKEND_URL}/${fighter.photo_url}`
-                                            : avatar}
+                                        src={getImageUrl(fighter.photo_url)}
                                         alt={`Foto de ${fighter.first_name}`}
                                         className="h-10 w-10 rounded-full object-cover"
                                         onError={(e) => {
                                             e.target.onerror = null;
-                                            e.target.src = { avatar };
+                                            e.target.src = avatar;
                                         }}
                                     />
                                 </td>
@@ -197,13 +203,11 @@ const AdminFighters = () => {
                          hover:bg-gray-50">
                             <div className="flex items-center space-x-3">
                                 <img
-                                    src={fighter.photo_url
-                                            ? `${BACKEND_URL}/${fighter.photo_url}`
-                                            : avatar}
+                                    src={getImageUrl(fighter.photo_url)}
                                     className="h-10 w-10 rounded-full object-cover"
                                     onError={(e) => {
                                         e.target.onerror = null;
-                                        e.target.src = { avatar };
+                                        e.target.src = avatar;
                                     }}
                                 />
                                 <div>

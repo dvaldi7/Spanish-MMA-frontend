@@ -89,6 +89,14 @@ const AdminEvents = () => {
         }
     };
 
+      const getImageUrl = (photoUrl) => {
+            if (!photoUrl) return avatar;
+            if (photoUrl.startsWith('http')) {
+                return photoUrl;
+            }
+            return `${BACKEND_URL}/${photoUrl}`;
+        };
+
     if (loading) return <div className="p-6 text-gray-600">Cargando eventos...</div>;
     if (error) return <div className="p-6 text-red-600 font-semibold">Error al cargar eventos: {error.message}</div>;
 
@@ -165,9 +173,7 @@ const AdminEvents = () => {
                                 {/* Póster */}
                                 <td className="px-6 py-4 whitespace-nowrap">
                                     <img
-                                        src={event.poster_url
-                                            ? `${BACKEND_URL}/${event.poster_url}`
-                                            : avatar}
+                                        src={getImageUrl(event.poster_url)}
                                         alt={`Logo de ${event.name}`}
                                         className="h-10 w-10 rounded-full object-cover"
                                         onError={(e) => {
@@ -235,9 +241,7 @@ const AdminEvents = () => {
                          hover:bg-gray-50">
                             <div className="flex items-center space-x-3">
                                 <img
-                                    src={event.poster_url
-                                            ? `${BACKEND_URL}/${event.poster_url}`
-                                            : avatar}
+                                    src={getImageUrl(event.poster_url)}
                                     alt={`Póster de ${event.name}`}
                                     className="h-10 w-10 rounded-md object-cover"
                                     onError={(e) => {

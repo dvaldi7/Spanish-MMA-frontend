@@ -74,6 +74,14 @@ export const AdminCompanies = () => {
         }
     };
 
+      const getImageUrl = (photoUrl) => {
+            if (!photoUrl) return avatar;
+            if (photoUrl.startsWith('http')) {
+                return photoUrl;
+            }
+            return `${BACKEND_URL}/${photoUrl}`;
+        };
+
     
 
     if (loading) return <div className="p-6 text-gray-600">Cargando compañías...</div>;
@@ -124,9 +132,7 @@ export const AdminCompanies = () => {
                             <tr key={company.company_id} className="hover:bg-gray-50">
                                 <td className="px-6 py-4 whitespace-nowrap">
                                     <img
-                                        src={company.logo_url
-                                            ? `${BACKEND_URL}/${company.logo_url}`
-                                            : avatar}
+                                        src={getImageUrl(company.logo_url)}
                                         alt={`Logo de ${company.name}`}
                                         className="h-10 w-10 rounded-full object-cover"
                                     />
@@ -164,9 +170,7 @@ export const AdminCompanies = () => {
                          bg-white hover:bg-gray-50">
                             <div className="flex items-center space-x-3">
                                 <img
-                                    src={company.logo_url
-                                            ? `${BACKEND_URL}/${company.logo_url}`
-                                            : avatar}
+                                    src={getImageUrl(company.logo_url)}
                                     alt={`Logo de ${company.name}`}
                                     className="h-10 w-10 rounded-full object-cover"
                                 />

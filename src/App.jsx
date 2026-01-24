@@ -23,6 +23,9 @@ import { AdminNews } from './admin/AdminNews.jsx';
 function App() {
   return (
     <Router>
+      
+      <AnalyticsTracker />
+
       <Routes>
         <Route path="/" element={<Layout />}>
 
