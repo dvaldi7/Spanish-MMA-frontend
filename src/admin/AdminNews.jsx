@@ -34,49 +34,49 @@ export const AdminNews = () => {
     };
 
     // CREAR O EDITAR NOTICIA
-   const handleSubmit = async (e) => {
-    e.preventDefault();
-    const data = new FormData();
-    data.append('title', formData.title);
-    data.append('content', formData.content);
-    if (image) data.append('image', image);
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const data = new FormData();
+        data.append('title', formData.title);
+        data.append('content', formData.content);
+        if (image) data.append('image', image);
 
-    try {
-        if (editingId) {
-            // EDITAR
-            await api.put(`/news/${editingId}`, data, {
-                headers: { 'Content-Type': 'multipart/form-data' }
-            });
-            alert("Noticia actualizada con éxito");
-        } else {
-            // CREAR
-            await api.post('/news', data, {
-                headers: { 'Content-Type': 'multipart/form-data' }
-            });
-            alert("Noticia creada con éxito");
+        try {
+            if (editingId) {
+                // EDITAR
+                await api.put(`/news/${editingId}`, data, {
+                    headers: { 'Content-Type': 'multipart/form-data' }
+                });
+                alert("Noticia actualizada con éxito");
+            } else {
+                // CREAR
+                await api.post('/news', data, {
+                    headers: { 'Content-Type': 'multipart/form-data' }
+                });
+                alert("Noticia creada con éxito");
+            }
+
+            cancelEdit();
+            fetchNews();
+        } catch (err) {
+            console.error("Error en la operación:", err);
+            alert(err.response?.data?.message || "Error en el servidor");
         }
-        
-        cancelEdit();
-        fetchNews();
-    } catch (err) {
-        console.error("Error en la operación:", err);
-        alert(err.response?.data?.message || "Error en el servidor");
-    }
-};
+    };
 
     // BORRAR NOTICIA
-   const handleDelete = async (id) => {
-    if (!window.confirm("¿Seguro que quieres borrar esta noticia?")) return;
+    const handleDelete = async (id) => {
+        if (!window.confirm("¿Seguro que quieres borrar esta noticia?")) return;
 
-    try {
-        await api.delete(`/news/${id}`);
-        alert("Noticia eliminada correctamente");
-        fetchNews();
-    } catch (err) {
-        console.error("Error al borrar:", err);
-        alert(err.response?.data?.message || "Error al eliminar");
-    }
-};
+        try {
+            await api.delete(`/news/${id}`);
+            alert("Noticia eliminada correctamente");
+            fetchNews();
+        } catch (err) {
+            console.error("Error al borrar:", err);
+            alert(err.response?.data?.message || "Error al eliminar");
+        }
+    };
 
     return (
         <div className="p-6 max-w-6xl mx-auto mt-10 font-sans">
@@ -107,56 +107,58 @@ export const AdminNews = () => {
 
             {/* TABLA DE GESTIÓN */}
             <div className="overflow-x-auto">
-    <table className="w-full text-left border-collapse bg-white shadow-lg rounded-lg">
-        <thead className="bg-gray-800 text-white">
-            <tr>
-                <th className="p-4">Imagen</th>
-                <th className="p-4">Título</th>
-                <th className="p-4 hidden md:table-cell">Fecha</th>
-                <th className="p-4 text-center">Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            {news.map(item => (
-                <tr key={item.news_id} className="border-b hover:bg-gray-50">
-                    <td className="p-4">
-                        <img
-                            src={item.image_url ? `${BACKEND_URL}/${item.image_url}` : '/images/Error404.jpg'}
-                            className="w-12 h-10 md:w-16 md:h-12 object-cover rounded shadow-sm"
-                            alt="Noticia"
-                        />
-                    </td>
-                    {/* El título se verá más pequeño en móvil para ahorrar espacio */}
-                    <td className="p-2 md:p-4 font-semibold text-sm md:text-base">
-                        {item.title}
-                    </td>
-                    {/* Ocultamos la celda de la fecha en móvil */}
-                    <td className="p-4 text-sm text-gray-500 hidden md:table-cell">
-                        {new Date(item.published_at).toLocaleDateString()}
-                    </td>
-                    <td className="p-2 md:p-4">
-                        <div className="flex flex-col md:flex-row justify-center gap-2">
-                            <button 
-                                onClick={() => startEdit(item)} 
-                                className="bg-green-600 text-white px-2 py-1 md:px-3 md:py-1 rounded 
+                <table className="w-full text-left border-collapse bg-white shadow-lg rounded-lg">
+                    <thead className="bg-gray-800 text-white">
+                        <tr>
+                            <th className="p-4">Imagen</th>
+                            <th className="p-4">Título</th>
+                            <th className="p-4 hidden md:table-cell">Fecha</th>
+                            <th className="p-4 text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {news.map(item => (
+                            <tr key={item.news_id} className="border-b hover:bg-gray-50">
+                                <td className="p-4">
+                                    <img
+                                        src={item.image_url
+                                            ? (item.image_url.startsWith('http') ? item.image_url : `${BACKEND_URL}/${item.image_url}`)
+                                            : '/images/Error404.jpg'}
+                                        className="w-12 h-10 md:w-16 md:h-12 object-cover rounded shadow-sm"
+                                        alt="Noticia"
+                                    />
+                                </td>
+                                {/* El título se verá más pequeño en móvil para ahorrar espacio */}
+                                <td className="p-2 md:p-4 font-semibold text-sm md:text-base">
+                                    {item.title}
+                                </td>
+                                {/* Ocultamos la celda de la fecha en móvil */}
+                                <td className="p-4 text-sm text-gray-500 hidden md:table-cell">
+                                    {new Date(item.published_at).toLocaleDateString()}
+                                </td>
+                                <td className="p-2 md:p-4">
+                                    <div className="flex flex-col md:flex-row justify-center gap-2">
+                                        <button
+                                            onClick={() => startEdit(item)}
+                                            className="bg-green-600 text-white px-2 py-1 md:px-3 md:py-1 rounded 
                                 text-xs md:text-sm hover:bg-green-800 transition"
-                            >
-                                Editar
-                            </button>
-                            <button 
-                                onClick={() => handleDelete(item.news_id)} 
-                                className="bg-red-500 text-white px-2 py-1 md:px-3 md:py-1 rounded 
+                                        >
+                                            Editar
+                                        </button>
+                                        <button
+                                            onClick={() => handleDelete(item.news_id)}
+                                            className="bg-red-500 text-white px-2 py-1 md:px-3 md:py-1 rounded 
                                 text-xs md:text-sm hover:bg-red-700 transition"
-                            >
-                                Borrar
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-            ))}
-        </tbody>
-    </table>
-</div>
+                                        >
+                                            Borrar
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
         </div>
     );
 };

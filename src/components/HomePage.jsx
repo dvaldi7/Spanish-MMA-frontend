@@ -57,8 +57,8 @@ export const HomePage = () => {
                         hover:shadow-2xl text-left transition-all'>
                 <h1 className="text-5xl md:text-6xl font-extrabold mb-6 leading-tight text-center">
                     <span className="text-custom-black">
-                        El <span className='gradiant-color'>Catálogo</span> definitivo de  
-                        <span className='gradiant-color'> MMA </span> 
+                        El <span className='gradiant-color'>Catálogo</span> definitivo de
+                        <span className='gradiant-color'> MMA </span>
                         en <span className='gradiant-color'> Español</span>
                     </span>
                 </h1>
@@ -102,7 +102,9 @@ export const HomePage = () => {
                             <div className="flex flex-col md:flex-row md:justify-between gap-6 items-start">
                                 <div className="shrink-0 mx-auto md:mx-0">
                                     <img
-                                        src={item.image_url ? `${BACKEND_URL}/${item.image_url}` : '/images/Error404.jpg'}
+                                        src={item.image_url
+                                            ? (item.image_url.startsWith('http') ? item.image_url : `${BACKEND_URL}/${item.image_url}`)
+                                            : '/images/Error404.jpg'}
                                         alt={item.title}
                                         className='card_photo-news w-full md:w-80 h-48 object-cover rounded-lg shadow-md
                                         cursor-pointer'
@@ -114,7 +116,7 @@ export const HomePage = () => {
                                         {item.content.length > 300 ? `${item.content.substring(0, 300)}...` : item.content}
                                     </p>
                                     <button className="mt-4 text-red-600 font-bold hover:underline"
-                                    onClick={() => navigate(`/news/${item.slug}`)}>
+                                        onClick={() => navigate(`/news/${item.slug}`)}>
                                         Leer más...
                                     </button>
                                 </div>
