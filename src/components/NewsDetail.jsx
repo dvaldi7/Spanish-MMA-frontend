@@ -15,7 +15,7 @@ export const NewsDetail = () => {
                 setLoading(true);
                 const response = await fetch(`${BACKEND_URL}/api/news/slug/${slug}`);
                 if (!response.ok) throw new Error("No se pudo encontrar la noticia");
-                
+
                 const data = await response.json();
                 setItem(data);
             } catch (err) {
@@ -44,24 +44,26 @@ export const NewsDetail = () => {
 
             {/* Contenedor Principal (Estilo FighterDetail) */}
             <article className="bg-gray-200 bg-opacity-65 shadow-2xl rounded-2xl overflow-hidden border-l-4 border-l-custom-red border-b-4 border-b-custom-gold">
-                
+
                 <div className="flex flex-col lg:flex-row">
-                    
+
                     {/* COLUMNA IZQUIERDA: IMAGEN */}
                     <div className="lg:w-1/2 w-full h-[400px] lg:h-auto overflow-hidden">
-                        <img 
-                            src={item.image_url ? `${BACKEND_URL}/${item.image_url}` : '/images/Error404.jpg'} 
-                            alt={item.title} 
+                        <img
+                            src={item.image_url
+                                ? (item.image_url.startsWith('http') ? item.image_url : `${BACKEND_URL}/${item.image_url}`)
+                                : '/images/Error404.jpg'}
+                            alt={item.title}
                             className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
                         />
                     </div>
 
                     {/* COLUMNA DERECHA: TEXTO */}
                     <div className="lg:w-1/2 w-full p-8 md:p-12 flex flex-col justify-center text-left">
-                        
+
                         <span className="text-custom-red font-bold text-sm mb-2 font-sans uppercase tracking-widest">
-                            {new Date(item.published_at).toLocaleDateString('es-ES', { 
-                                day: 'numeric', month: 'long', year: 'numeric' 
+                            {new Date(item.published_at).toLocaleDateString('es-ES', {
+                                day: 'numeric', month: 'long', year: 'numeric'
                             })}
                         </span>
 
