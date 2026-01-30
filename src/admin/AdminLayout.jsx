@@ -1,10 +1,17 @@
 import React from 'react';
-import { Outlet, NavLink } from 'react-router-dom';
+import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 
 const AdminLayout = () => {
 
 
     const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        localStorage.removeItem('token'); // Borrar el token
+        navigate('/');                   // Envía al usuario a la Home
+        setIsMenuOpen(false);            // Cierra el menú
+    };
 
     const adminLinks = [
         { to: '/admin/news', label: 'Noticias' },
