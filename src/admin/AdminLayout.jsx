@@ -1,16 +1,26 @@
-import React from 'react';
-import { Outlet, NavLink } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Outlet, NavLink, useNavigate, replace } from 'react-router-dom';
 
 const AdminLayout = () => {
 
 
     const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        localStorage.removeItem('jwtToken'); // Borrar el token
+        localStorage.removeItem('userRole') //Borra el usuario
+
+        navigate('/', {replace: true});
+
+        //window.location.href = '/'; //Recargar la pagina para asegurar que se limpie         
+    };
 
     const adminLinks = [
         { to: '/admin/news', label: 'Noticias' },
         { to: '/admin/fighters', label: 'Peleadores' },
         { to: '/admin/companies', label: 'Compañías' },
-        { to: '/admin/events', label: 'Eventos' },   
+        { to: '/admin/events', label: 'Eventos' },
     ];
 
     const navLinkClass = ({ isActive }) =>
@@ -61,6 +71,15 @@ const AdminLayout = () => {
                             {link.label}
                         </NavLink>
                     ))}
+                    <button
+                        onClick={handleLogout}
+                        className="px-4 py-2 mt-6 rounded-lg transition duration-150 block font-bold 
+                   text-custom-red hover:bg-red-50 border border-transparent 
+                   hover:border-red-200 text-left w-full"
+                    >
+                        Cerrar Sesión
+                    </button>
+
                 </nav>
             </aside>
 
