@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import useAuth from '../hooks/useAuth';
 import { FiEye, FiEyeOff } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
@@ -17,10 +17,11 @@ const Login = () => {
         setShowPassword(!showPassword);
     };
 
-    if (user) {
-        navigate('/admin/fighters', { replace: true });
-        return null;
-    }
+    useEffect(() => {
+        if (user) {
+            navigate('/admin/news', { replace: true });
+        }
+    }, [user, navigate]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -35,7 +36,7 @@ const Login = () => {
         try {
             await login(email, password);
             setMessage('¡Login exitoso! Token guardado.');
-            
+
             navigate('/admin');
 
         } catch (error) {
@@ -80,8 +81,8 @@ const Login = () => {
                             aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
                         >
 
-                           {showPassword ? <FiEyeOff size={15} /> : <FiEye size={15} />}
-                
+                            {showPassword ? <FiEyeOff size={15} /> : <FiEye size={15} />}
+
                         </button>
                     </div>
                 </div>
