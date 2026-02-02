@@ -17,6 +17,10 @@ const initialFormState = {
     weight_class: '',
     company_id: null,
     photo_url: '',
+    team: '',
+    city: '',
+    bio: '',
+    recent_fights: '',
 };
 
 // Recibe la ID del peleador a editar o null para crear
@@ -41,7 +45,7 @@ const FighterFormModal = ({ fighterIdToEdit, isModalOpen, closeModal, onFighterS
             return;
         }
 
-        if (isEditMode) {
+        if (isEditMode && isModalOpen) {
 
             const fetchFighterData = async () => {
                 setIsLoading(true);
@@ -61,6 +65,10 @@ const FighterFormModal = ({ fighterIdToEdit, isModalOpen, closeModal, onFighterS
                         record_draws: response.data.record_draws || 0,
                         company_id: response.data.company_id || '',
                         photo_url: fighterData.photo_url || '',
+                        team: fighterData.team || '',
+                        city: fighterData.city || '',
+                        bio: fighterData.bio || '',
+                        recent_fights: fighterData.recent_fights || ''
                     };
 
                     setFormData(loadedData);
@@ -248,7 +256,9 @@ const FighterFormModal = ({ fighterIdToEdit, isModalOpen, closeModal, onFighterS
                     {/* Apodo y Clase de Peso */}
                     <div className="grid grid-cols-2 gap-4">
                         <div>
-                            <label htmlFor="nickname" className="block text-sm font-medium text-gray-700">
+                            <label
+                                htmlFor="nickname"
+                                className="block text-sm font-medium text-gray-700">
                                 Apodo
                             </label>
                             <input
@@ -261,7 +271,9 @@ const FighterFormModal = ({ fighterIdToEdit, isModalOpen, closeModal, onFighterS
                         </div>
 
                         <div>
-                            <label htmlFor="weight_class" className="block text-sm font-medium text-gray-700">
+                            <label
+                                htmlFor="weight_class"
+                                className="block text-sm font-medium text-gray-700">
                                 Clase de Peso
                             </label>
                             <select
@@ -281,6 +293,67 @@ const FighterFormModal = ({ fighterIdToEdit, isModalOpen, closeModal, onFighterS
                                 {validationErrors.weight_class}
                             </p>}
                         </div>
+                    </div>
+
+                    {/* ORIGEN Y EQUIPO */}
+                    <div className="grid grid-cols-2 gap-4 p-3 bg-gray-50 rounded-lg border border-gray-200">
+                        <div>
+                            <label className="block text-sm font-bold text-gray-700">
+                                Ciudad/Origen
+                            </label>
+                            <input
+                                type="text"
+                                name="city"
+                                value={formData.city}
+                                onChange={handleChange}
+                                placeholder="Ej: Alicante, España"
+                                className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-bold text-gray-700">
+                                Equipo/Gimnasio
+                            </label>
+                            <input
+                                type="text"
+                                name="team"
+                                value={formData.team}
+                                onChange={handleChange}
+                                placeholder="Ej: Climent Club"
+                                className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                            />
+                        </div>
+                    </div>
+
+                    {/* BIOGRAFÍA*/}
+                    <div>
+                        <label className="block text-sm font-bold text-gray-700">Biografía / Información Extra</label>
+                        <textarea
+                            name="bio"
+                            value={formData.bio}
+                            onChange={handleChange}
+                            rows="4"
+                            placeholder="Escribe aquí la historia del peleador..."
+                            className="mt-1 block w-full border border-gray-300 rounded-md p-2 text-sm"
+                        ></textarea>
+                    </div>
+
+                    {/* ÚLTIMAS PELEAS*/}
+                    <div className="border-t pt-4">
+                        <label className="block text-sm font-bold text-gray-700 mb-2">
+                            Últimas Peleas
+                        </label>
+                        <p className="text-xs text-gray-500 mb-2 italic">
+                            "Rival | Resultado | Método"
+                        </p>
+                        <textarea
+                            name="recent_fights"
+                            value={formData.recent_fights}
+                            onChange={handleChange}
+                            rows="3"
+                            placeholder="Ej: Max Holloway | Gana | KO&#10;Volkanovski | Gana | Decisión"
+                            className="mt-1 block w-full border border-gray-300 rounded-md p-2 text-sm font-mono bg-blue-50"
+                        ></textarea>
                     </div>
 
                     {/* Foto */}
@@ -337,7 +410,7 @@ const FighterFormModal = ({ fighterIdToEdit, isModalOpen, closeModal, onFighterS
                     {/* Récord  */}
                     <fieldset className="border p-4 rounded-md">
                         <legend className="text-sm font-medium text-gray-700 px-1">
-                            Récord 
+                            Récord
                         </legend>
                         <div className="grid grid-cols-3 gap-4">
 
