@@ -4,7 +4,7 @@ const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3001";
 import avatar from "/images/fighters/avatar.png";
 
 const FighterDetail = () => {
-  const { slug } = useParams(); 
+  const { slug } = useParams();
   const [fighter, setFighter] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -33,6 +33,32 @@ const FighterDetail = () => {
     }
     return `${BACKEND_URL}/${photoUrl}`;
   };
+
+  // PELEAS RECIENTES
+  const renderFights = (fightsText) => {
+    if (!fightsText) {
+      return (
+        <p className="italic text-gray-500">
+          No hay historial reciente.</p>);
+    }
+
+    return fightsText.split('\n').map((line, index) => {
+      const isWin = line.toLowerCase().includes('victoria');
+      const isLoss = line.toLowerCase().includes('derrota');
+
+      return (
+        <div
+          key={index}
+          className={`flex justify-between p-3 mb-2 rounded-lg shadow-sm ${isWin ? 'bg-green-600' :
+            isLoss ? 'bg-red-600' : 'bg-gray-500'
+            }`}
+        >
+          <span className="font-bold">{line}</span>
+        </div>
+      );
+    });
+  };
+
 
   if (loading) return <p className="text-center text-xl p-6 text-blue-600">Cargando...</p>;
   if (error) return <p className="text-center text-red-600 text-xl p-6">{error}</p>;
@@ -72,11 +98,53 @@ const FighterDetail = () => {
             <strong>Récord:</strong>{" "}
             {fighter.record_wins}-{fighter.record_losses}-{fighter.record_draws}
           </p>
+          <p>
+            <strong>Ciudad:</strong>{" "}
+            {fighter.city}
+          </p>
+          <p>
+            <strong>Equipo:</strong>{" "}
+            {fighter.team}
+          </p>
         </div>
-        <div className="text-lg space-y-2 text-gray-800 mt-10">
-            <h2>Más información muy pronto</h2>
+
+        <div className="mt-4 flex justify-center gap-2 flex-wrap">
+          {/* RÉCORD EN COLORES */}
+          <span className="bg-green-600 text-white px-1 md:px-3 py-1 rounded-lg md:rounded-full font-bold">
+            {fighter.record_wins} Victorias
+          </span>
+          <span className="bg-red-600 text-white px-1 md:px-3 py-1 rounded-lg md:rounded-full font-bold">
+            {fighter.record_losses} Derrotas
+          </span>
+          <span className="bg-gray-500 text-white px-1 md:px-3 py-1 rounded-lg md:rounded-full font-bold">
+            {fighter.record_draws} Empates
+          </span>
         </div>
+
+        {/* BIOGRAFÍA */}
+        <div className="md:col-span-2 space-y-6 text-left mt-10">
+          <div className="bg-white bg-opacity-50 p-4 rounded-lg italic text-gray-700">
+            <h3 className="font-bold not-italic mb-2 border-b border-gray-300">
+              Biografía
+            </h3>
+            <p className="whitespace-pre-wrap">
+              {fighter.bio || "Más información, muy pronto"}
+            </p>
+          </div>
+        </div>
+
+        {/* HISTORIAL DE COMBATES  */}
+        <div className="mt-10 max-w-5xl mx-auto">
+          <h3 className="text-2xl font-bold mb-6 text-center font-sans text-custom-red">
+            ÚLTIMOS COMBATES
+          </h3>
+          <div className="grid grid-cols-1 gap-2 text-left">
+            {renderFights(fighter.recent_fights)}
+          </div>
+        </div>
+
       </div>
+
     </div>
   );
 };
