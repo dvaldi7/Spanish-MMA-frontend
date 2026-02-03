@@ -1,14 +1,30 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import api from '../services/api';
 
 const useAuth = () => {
 
-    const [user, setUser] = useState(() => {
-        const token = localStorage.getItem('jwtToken');
-        const role = localStorage.getItem('userRole');
-  
-        return token && role ? { role } : null; 
-    });
+    const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const verifyToken = async () => {
+            const token = localStorage.getItem('jwtToken');
+            const role = localStorage.getItem('userRole');
+
+            if (token && role) {
+                try {
+                    await api.get('/fighters/auth/verify'); 
+                    setUser({ role });
+                } catch (error) {
+                    console.error("Token no válido al arrancar");
+                    logout();
+                }
+            }
+            setLoading(false);
+        };
+
+        verifyToken();
+    }, []);
 
     const login = async (email, password) => {
         try {
@@ -36,7 +52,12 @@ const useAuth = () => {
         setUser(null);
     };
 
-    return { user, login, logout };
+    return {
+        user,
+        login,
+        logout,
+        loading,
+     };
 };
 
 
