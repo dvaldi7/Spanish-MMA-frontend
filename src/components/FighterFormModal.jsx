@@ -344,15 +344,16 @@ const FighterFormModal = ({ fighterIdToEdit, isModalOpen, closeModal, onFighterS
                             Últimas Peleas
                         </label>
                         <p className="text-xs text-gray-500 mb-2 italic">
-                            "Rival | Resultado | Método"
+                            "Rival | Resultado | Método | Compañía"
                         </p>
                         <textarea
                             name="recent_fights"
                             value={formData.recent_fights}
                             onChange={handleChange}
-                            rows="3"
+                            rows="6"
                             placeholder="Ej: Max Holloway | Gana | KO&#10;Volkanovski | Gana | Decisión"
                             className="mt-1 block w-full border border-gray-300 rounded-md p-2 text-sm font-mono bg-blue-50"
+                            style={{ whiteSpace: 'pre-wrap' }}
                         ></textarea>
                     </div>
 

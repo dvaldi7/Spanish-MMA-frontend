@@ -41,8 +41,10 @@ const FighterDetail = () => {
         <p className="italic text-gray-500">
           No hay historial reciente.</p>);
     }
+    // Esta línea limpia espacios vacíos y entiende cualquier tipo de salto de línea (\n o \r)
+    const lines = fightsText.split(/\r?\n/).filter(line => line.trim() !== "");
 
-    return fightsText.split('\n').map((line, index) => {
+    return lines.map((line, index) => {
       const isWin = line.toLowerCase().includes('victoria');
       const isLoss = line.toLowerCase().includes('derrota');
 
