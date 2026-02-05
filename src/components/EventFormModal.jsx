@@ -10,6 +10,9 @@ const initialFormState = {
     is_completed: 'false',
     date: '',
     fighter_ids: [],
+    // NOTA: Si no tienes este campo en tu BBDD, el backend lo ignorará al guardar.
+    // Pero lo dejamos listo por si decides añadirlo (se suele llamar 'description' o 'bouts')
+    description: '', 
 };
 
 const EventFormModal = ({ eventIdToEdit, isModalOpen, closeModal, onEventSaved }) => {
@@ -22,12 +25,10 @@ const EventFormModal = ({ eventIdToEdit, isModalOpen, closeModal, onEventSaved }
 
     const isEditMode = !!eventIdToEdit;
 
-    // Cargar datos evento a editar
     useEffect(() => {
         if (!isModalOpen) {
             setFormData(initialFormState);
             setError(null);
-            setValidationErrors({});
             setImageFile(null);
             return;
         }
@@ -36,15 +37,11 @@ const EventFormModal = ({ eventIdToEdit, isModalOpen, closeModal, onEventSaved }
             if (!isEditMode) return;
             setIsLoading(true);
             try {
-                // Obtener datos del evento
                 const response = await api.get(`/events/id/${eventIdToEdit}`);
                 const eventData = response.data.event;
 
-                // Obtener luchadores asignados a evento
                 const fightersResponse = await api.get(`/events/id/${eventIdToEdit}/fighters`);
                 const assignedFighters = fightersResponse.data.roster || [];
-
-                // Extraer ID de luchadores asignados
                 const fighterIds = assignedFighters.map(f => f.fighter_id);
 
                 setFormData({
@@ -55,28 +52,25 @@ const EventFormModal = ({ eventIdToEdit, isModalOpen, closeModal, onEventSaved }
                     poster_url: eventData.poster_url || '',
                     is_completed: String(eventData.is_completed || false),
                     fighter_ids: fighterIds,
+                    description: eventData.description || '', // Cargamos la cartelera manual
                 });
             } catch (err) {
-                console.error('Error al cargar datos del evento:', err);
-                setError("No se pudieron cargar los datos para editar");
+                console.error('Error:', err);
+                setError("Error al cargar datos");
             } finally {
                 setIsLoading(false);
             }
         };
-
         fetchEventData();
     }, [isModalOpen, eventIdToEdit, isEditMode]);
 
-    // Cargar todos los luchadores
     useEffect(() => {
         if (!isModalOpen) return;
-
         const fetchAllFighters = async () => {
             try {
                 let allFighters = [];
                 let page = 1;
                 let hasMore = true;
-
                 while (hasMore) {
                     const res = await api.get(`/fighters?page=${page}`);
                     const pageFighters = res.data.fighters || [];
@@ -84,94 +78,54 @@ const EventFormModal = ({ eventIdToEdit, isModalOpen, closeModal, onEventSaved }
                     hasMore = pageFighters.length > 0;
                     page++;
                 }
-
                 setFighters(allFighters);
-            } catch (err) {
-                console.error("Error al cargar los luchadores", err);
-            }
+            } catch (err) { console.error(err); }
         };
-
         fetchAllFighters();
     }, [isModalOpen]);
 
     const handleChange = e => {
         const { name, value, type, checked, files } = e.target;
-
         if (type === 'file') {
             setImageFile(files[0]);
-            setValidationErrors(prev => ({ ...prev, poster_file: '' }));
-            
         } else if (type === 'checkbox') {
-
             const fighterId = parseInt(value);
-            setFormData(prev => {
-                let newFighterIds;
-
-                if (checked) {
-                    newFighterIds = [...prev.fighter_ids, fighterId];
-                } else {
-                    newFighterIds = prev.fighter_ids.filter(id => id !== fighterId);
-                }
-
-                return { ...prev, fighter_ids: newFighterIds };
-            });
+            setFormData(prev => ({
+                ...prev,
+                fighter_ids: checked 
+                    ? [...prev.fighter_ids, fighterId] 
+                    : prev.fighter_ids.filter(id => id !== fighterId)
+            }));
         } else {
             setFormData(prev => ({ ...prev, [name]: value }));
-            setValidationErrors(prev => ({ ...prev, [name]: '' }));
         }
-    };
-
-    const validateForm = () => {
-        const errors = {};
-        if (!formData.name.trim()) errors.name = "El campo nombre es obligatorio";
-        setValidationErrors(errors);
-        return Object.keys(errors).length === 0;
     };
 
     const handleSubmit = async e => {
         e.preventDefault();
-        if (!validateForm()) return setError('Por favor, corrige los errores en el formulario');
-
         setIsLoading(true);
-        setError(null);
-
         const formPayload = new FormData();
+        
+        // Excluimos campos que tratamos aparte
         const fieldsToExclude = ['poster_url', 'event_id', 'fighter_ids'];
-
-        // Agregar campos básicos
         for (const key in formData) {
             if (fieldsToExclude.includes(key)) continue;
             formPayload.append(key, formData[key]);
         }
-
         formPayload.append('fighter_ids', JSON.stringify(formData.fighter_ids));
 
-        // Agregar imagen si existe
-        if (imageFile) {
-            formPayload.append('poster', imageFile);
-        } else if (isEditMode && !formData.poster_url) {
-            formPayload.append('poster_url', '');
-        }
+        if (imageFile) formPayload.append('poster', imageFile);
 
         try {
             if (isEditMode) {
-                await api.put(`/events/id/${eventIdToEdit}`, formPayload, {
-                    headers: { 'Content-Type': 'multipart/form-data' },
-                });
-                alert('Evento actualizado con éxito!');
+                await api.put(`/events/id/${eventIdToEdit}`, formPayload);
             } else {
-                await api.post('/events', formPayload, {
-                    headers: { 'Content-Type': 'multipart/form-data' },
-                });
-                alert('Evento creado con éxito!');
+                await api.post('/events', formPayload);
             }
-
             onEventSaved();
             closeModal();
         } catch (err) {
-            console.error('Error completo:', err.response?.data);
-            const msg = err.response?.data?.message || 'Error desconocido al guardar el evento';
-            setError(msg);
+            setError('Error al guardar. ¿Has añadido el campo description en la BBDD?');
         } finally {
             setIsLoading(false);
         }
@@ -183,130 +137,57 @@ const EventFormModal = ({ eventIdToEdit, isModalOpen, closeModal, onEventSaved }
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50">
             <div className="bg-white p-6 rounded-lg shadow-xl w-full max-w-lg overflow-y-auto max-h-[90vh]">
                 <div className="flex justify-between items-center border-b pb-3 mb-4">
-                    <h2 className="text-2xl font-bold">
-                        {isEditMode ? `Editar Evento ID: ${eventIdToEdit}` : 'Crear Nuevo Evento'}
+                    <h2 className="text-xl font-bold uppercase tracking-tight">
+                        {isEditMode ? 'Editar Evento' : 'Nuevo Evento'}
                     </h2>
-                    <button onClick={closeModal} className="text-gray-500 hover:text-gray-800">
-                        <FiX size={24} />
-                    </button>
+                    <button onClick={closeModal} className="text-gray-400 hover:text-black"><FiX size={24} /></button>
                 </div>
 
-                {isLoading && isEditMode && <p>Cargando datos...</p>}
-                {error && <p className="text-red-500 mb-4 font-medium">{error}</p>}
-
                 <form onSubmit={handleSubmit} className="space-y-4">
-
-                    <div className="grid grid-cols-2 gap-4">
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700">Nombre</label>
-                            <input
-                                type="text"
-                                name="name"
-                                value={formData.name}
-                                onChange={handleChange}
-                                required
-                                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
-                            />
-                            {validationErrors.name &&
-                                <p className="text-red-500 text-xs mt-1">
-                                    {validationErrors.name}
-                                </p>}
-                        </div>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4">
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700">Ubicación</label>
-                            <input
-                                type="text"
-                                name="location"
-                                value={formData.location}
-                                onChange={handleChange}
-                                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
-                            />
-                        </div>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4">
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700">Fecha</label>
-                            <input
-                                type="date"
-                                name="date"
-                                value={formData.date}
-                                onChange={handleChange}
-                                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
-                            />
-                        </div>
-                    </div>
-
                     <div>
-                        <label className="block text-sm font-medium text-gray-700">Poster del evento</label>
-                        <input
-                            type="file"
-                            name="poster"
-                            accept="image/*"
-                            onChange={e => {
-                                const file = e.target.files[0];
-                                setImageFile(file);
-                                if (file) {
-                                    const previewUrl = URL.createObjectURL(file);
-                                    setFormData(prev => ({ ...prev, poster_url: previewUrl }));
-                                }
-                            }}
-                            className="mt-1 block w-full text-sm text-gray-900 border border-gray-300
-                               rounded-lg cursor-pointer bg-gray-50 p-2"
+                        <label className="block text-xs font-bold uppercase text-gray-500">Nombre del Evento</label>
+                        <input type="text" name="name" value={formData.name} onChange={handleChange} required className="mt-1 block w-full border border-gray-300 rounded p-2 text-sm" placeholder="Ej: PFL Madrid" />
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                        <div>
+                            <label className="block text-xs font-bold uppercase text-gray-500">Fecha</label>
+                            <input type="date" name="date" value={formData.date} onChange={handleChange} className="mt-1 block w-full border border-gray-300 rounded p-2 text-sm" />
+                        </div>
+                        <div>
+                            <label className="block text-xs font-bold uppercase text-gray-500">Ubicación</label>
+                            <input type="text" name="location" value={formData.location} onChange={handleChange} className="mt-1 block w-full border border-gray-300 rounded p-2 text-sm" placeholder="Madrid, España" />
+                        </div>
+                    </div>
+
+                    {/* CARTELERA */}
+                    <div>
+                        <label className="block text-xs font-bold uppercase text-red-600">Cartelera Completa (Manual)</label>
+                        <textarea 
+                            name="description" 
+                            value={formData.description} 
+                            onChange={handleChange}
+                            rows="5"
+                            className="mt-1 block w-full border border-gray-300 rounded p-2 text-sm font-mono"
+                            placeholder="Franco Tenaglia VS Oscar Fernandez&#10;Ibrahim El Lobo VS Anas Bahssain"
                         />
-                        {formData.poster_url && (
-                            <div className="mt-3">
-                                <img
-                                    src={
-                                        formData.poster_url.startsWith('blob:') || formData.poster_url.startsWith('http')
-                                            ? formData.poster_url
-                                            : `http://localhost:3001/${formData.poster_url}`
-                                    }
-                                    alt={`imagen de ${formData.name || 'evento'}`}
-                                    className="h-40 w-40 object-cover rounded-lg border border-gray-300 shadow-md"
-                                />
-                            </div>
-                        )}
+                        <p className="text-[10px] text-gray-400 mt-1 italic">* Escribe cada combate en una línea nueva.</p>
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Selecciona luchadores ({formData.fighter_ids.length} seleccionados)
-                        </label>
-                        <div className="grid grid-cols-2 gap-2 max-h-64 overflow-y-auto border p-2 rounded
-                         bg-gray-50">
+                        <label className="block text-xs font-bold uppercase text-gray-500">Peleadores Españoles Participantes</label>
+                        <div className="grid grid-cols-2 gap-2 max-h-32 overflow-y-auto border p-2 rounded bg-gray-50 mt-1">
                             {fighters.map(f => (
-                                <label
-                                    key={f.fighter_id}
-                                    className={`flex items-center space-x-2 p-2 rounded hover:bg-gray-100
-                                         cursor-pointer
-                                        ${formData.fighter_ids.includes(f.fighter_id)
-                                            ? 'bg-blue-100 font-semibold'
-                                            : ''}`}
-                                >
-                                    <input
-                                        type="checkbox"
-                                        value={f.fighter_id}
-                                        checked={formData.fighter_ids.includes(f.fighter_id)}
-                                        onChange={handleChange}
-                                        className="h-4 w-4"
-                                    />
-                                    <span>{f.first_name} {f.last_name}</span>
+                                <label key={f.fighter_id} className="flex items-center space-x-2 text-xs p-1 hover:bg-gray-100 cursor-pointer">
+                                    <input type="checkbox" value={f.fighter_id} checked={formData.fighter_ids.includes(f.fighter_id)} onChange={handleChange} />
+                                    <span className={formData.fighter_ids.includes(f.fighter_id) ? "font-bold" : ""}>{f.first_name} {f.last_name}</span>
                                 </label>
                             ))}
                         </div>
                     </div>
 
-                    <button
-                        type="submit"
-                        disabled={isLoading}
-                        className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700
-                         disabled:bg-gray-400"
-                    >
-                        {isLoading ? 'Guardando...' : isEditMode ? 'Guardar Cambios' : 'Crear Evento'}
+                    <button type="submit" disabled={isLoading} className="w-full bg-black text-white py-3 rounded font-bold uppercase hover:bg-gray-800 disabled:bg-gray-400">
+                        {isLoading ? 'Guardando...' : 'Guardar Evento'}
                     </button>
                 </form>
             </div>

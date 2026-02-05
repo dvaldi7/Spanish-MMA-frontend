@@ -85,6 +85,43 @@ const EventDetail = () => {
     return eventDate < today;
   };
 
+  // busca si el peleador existe en tu DB
+  const renderBout = (line, index) => {
+    if (!line.trim()) return null;
+
+    
+    const matchedFighters = fighters.filter(f => 
+      line.toLowerCase().includes(f.first_name.toLowerCase()) || 
+      line.toLowerCase().includes(f.last_name.toLowerCase())
+    );
+
+    return (
+      <div key={index} className="flex flex-col items-center bg-white bg-opacity-40 p-4 rounded-lg 
+      shadow-sm border border-black">
+        <div className="flex items-center justify-center gap-4 w-full">
+          {/* Si hay un match, muestra foto a la izquierda */}
+          {matchedFighters.length > 0 && (
+            <div className="flex -space-x-3 overflow-hidden">
+              {matchedFighters.map(f => (
+                <Link to={`/peleadores/${f.slug}`} key={f.fighter_id}>
+                  <img 
+                    src={getFighterPhotoUrl(f.photo_url)} 
+                    className="inline-block h-20 w-20 rounded-full hover:scale-110 
+                    transition"
+                    alt={`foto de ${f.first_name}${f.last_name}`}
+                    title={`${f.first_name} (Ver Perfil)`}
+                  />
+                </Link>
+              ))}
+            </div>
+          )}
+          
+          <span className="text-lg font-bold text-custom-black italic">{line}</span>
+        </div>
+      </div>
+    );
+  };
+
 
   if (loading) return <p className="text-center text-xl p-6 text-blue-600">Cargando evento...</p>;
   if (error) return <p className="text-center text-red-600 text-xl p-6">{error}</p>;
@@ -124,7 +161,21 @@ const EventDetail = () => {
             <strong>Completado:</strong> {completedStatus ? "Sí" : "No"}
           </p>
         </div>
+
+        {/* CARTELERA  */}
+      {event.description && (
+        <div className="mb-12 mt-10">
+          <h2 className="text-4xl font-bold gradiant-color streetFighterTypo mb-8 text-center uppercase">
+            Cartelera
+          </h2>
+          <div className="space-y-4">
+            {event.description.split('\n').map((line, idx) => renderBout(line, idx))}
+          </div>
+        </div>
+      )}
       </div>
+
+      
 
       {/* PELEADORES DEL EVENTO */}
       {fighters.length > 0 ? (
