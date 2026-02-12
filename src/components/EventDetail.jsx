@@ -212,7 +212,7 @@ const EventDetail = () => {
           <h2 className="text-4xl font-bold gradiant-color streetFighterTypo mb-6">
             Peleadores del evento
           </h2>
-          <p className="text-black">Aún no hay peleadores asignados a este evento.</p>
+          <p className="text-black">Aún no hay peleadores asignados a este evento</p>
         </div>
       )}
     </div>
