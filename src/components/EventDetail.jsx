@@ -64,7 +64,7 @@ const EventDetail = () => {
       year: 'numeric',
       month: 'long',
       day: 'numeric',
-      timeZone: 'UTC' 
+      timeZone: 'UTC'
     };
 
     return date.toLocaleDateString('es-ES', options);
@@ -87,58 +87,74 @@ const EventDetail = () => {
 
   // busca si el peleador existe en tu DB para la cartelera
   const renderBout = (line, index) => {
-  if (!line.trim()) return null;
+    if (!line.trim()) return null;
 
-  // Separamos por "VS" ignorando mayúsculas/minúsculas
-  const parts = line.split(/\s+VS\s+/i);
-  
-  const findFighterPhoto = (namePart) => {
-    const found = fighters.find(f => 
-      namePart.toLowerCase().includes(f.first_name.toLowerCase()) || 
-      namePart.toLowerCase().includes(f.last_name.toLowerCase())
-    );
-    return found ? getFighterPhotoUrl(found.photo_url) : fightersAvatar;
-  };
+    const boutFighterName = line.split(/\s+VS\s+/i);
 
-  return (
-    <div key={index} className="bg-white bg-opacity-40 p-3 rounded-lg shadow-sm border border-gray-300 mb-2">
-      <div className="flex items-center justify-center w-full max-w-2xl mx-auto">
-        
-        {/* PELEADOR 1 (Izquierda) */}
-        <div className="flex items-center justify-end flex-1 gap-4">
-          <span className="text-md font-bold text-gray-700 uppercase italic text-right truncate">
-            {parts[0]}
-          </span>
-          <img 
-            src={findFighterPhoto(parts[0] || "")} 
-            className="h-20 w-20 object-center rounded-lg shadow-md hover:scale-105 
-            transition duration-300 flex-shrink-0 hover:cursor-pointer"
-            alt="Peleador 1"
-          />
+    // Modificamos esta función para saber si es avatar
+    const getFighterData = (namePart) => {
+      const found = fighters.find(f =>
+        namePart.toLowerCase().includes(f.first_name.toLowerCase()) ||
+        namePart.toLowerCase().includes(f.last_name.toLowerCase())
+      );
+      return {
+        url: found ? getFighterPhotoUrl(found.photo_url) : fightersAvatar,
+        isAvatar: !found
+      };
+    };
+
+    const fighter1 = getFighterData(boutFighterName[0] || "");
+    const fighter2 = getFighterData(boutFighterName[1] || "");
+
+    return (
+      <div key={index} className="bg-white bg-opacity-40 p-3 rounded-lg shadow-sm border border-gray-300
+       mb-2">
+        <div className="flex flex-col md:flex-row items-center justify-center w-full max-w-3xl mx-auto">
+
+          {/* PELEADOR 1 */}
+          <div className="flex flex-col md:flex-row items-center justify-center md:justify-end flex-1 
+          gap-4 w-full">
+            <span className="text-sm md:text-md font-bold text-gray-700 uppercase italic text-center 
+            md:text-right truncate order-2 md:order-1">
+              {boutFighterName[0]}
+            </span>
+            <img
+              src={fighter1.url}
+              className={`h-20 w-20 rounded-lg shadow-md hover:scale-105 transition duration-300 
+                flex-shrink-0 hover:cursor-pointer order-1 md:order-2 
+                ${fighter1.isAvatar ? "object-fill" : "object-cover"
+              }`}
+              alt="Peleador 1"
+            />
+          </div>
+
+          {/* VS */}
+          <div className="flex justify-center items-center min-w-[100px] py-4 md:py-0">
+            <span className="text-4xl md:text-5xl italic gradiant-color streetFighterTypo">
+              VS
+            </span>
+          </div>
+
+          {/* PELEADOR 2 */}
+          <div className="flex flex-col md:flex-row items-center justify-center md:justify-start flex-1 
+          gap-4 w-full">
+            <img
+              src={fighter2.url}
+              className={`h-20 w-20 rounded-lg shadow-md hover:scale-105 transition duration-300 
+                flex-shrink-0 hover:cursor-pointer ${fighter2.isAvatar ? "object-fill" : "object-cover"
+              }`}
+              alt="Peleador 2"
+            />
+            <span className="text-sm md:text-md font-bold text-gray-700 uppercase italic text-center 
+            md:text-left truncate">
+              {boutFighterName[1]}
+            </span>
+          </div>
+
         </div>
-
-        {/* CONTENEDOR CENTRAL VS */}
-        <div className="px-6">
-          <span className="text-5xl italic gradiant-color streetFighterTypo">VS</span>
-        </div>
-
-        {/* PELEADOR 2 (Derecha) */}
-        <div className="flex items-center justify-start flex-1 gap-4">
-          <img 
-            src={findFighterPhoto(parts[1] || "")} 
-            className="h-20 w-20 object-center rounded-lg shadow-md hover:scale-105 
-            transition duration-300 flex-shrink-0 hover:cursor-pointer"
-            alt="Peleador 2"
-          />
-          <span className="text-md font-bold text-gray-700 uppercase italic truncate">
-            {parts[1]}
-          </span>
-        </div>
-
       </div>
-    </div>
-  );
-};
+    );
+  };
 
 
   if (loading) return <p className="text-center text-xl p-6 text-blue-600">Cargando evento...</p>;
@@ -163,14 +179,14 @@ const EventDetail = () => {
         <h2 className="text-3xl font-bold mb-6 text-custom-black">{event.name}</h2>
 
         {/* Poster del evento */}
-          <div className="flex justify-center mb-6 ">
-            <img
-              src={event.poster_url ? getPosterUrl(event.poster_url) : avatar}
-              alt={`Poster de ${event.name}`}
-              className="w-48 h-48 object-fill rounded-full shadow-lg border-2 border-custom-black"
-            />
-          </div>
-        
+        <div className="flex justify-center mb-6 ">
+          <img
+            src={event.poster_url ? getPosterUrl(event.poster_url) : avatar}
+            alt={`Poster de ${event.name}`}
+            className="w-48 h-48 object-fill rounded-full shadow-lg border-2 border-custom-black"
+          />
+        </div>
+
 
         <div className="text-lg space-y-2 text-gray-800">
           <p><strong>Ubicación:</strong> {event.location || "No disponible"}</p>
@@ -181,20 +197,20 @@ const EventDetail = () => {
         </div>
 
         {/* CARTELERA  */}
-      {event.description && (
-        <div className="mb-12 mt-10">
-          <h2 className="text-4xl font-bold text-custom-red italic font-sans 
+        {event.description && (
+          <div className="mb-12 mt-10">
+            <h2 className="text-4xl font-bold text-custom-red italic font-sans 
            mb-10 text-center uppercase">
-            Cartelera
-          </h2>
-          <div className="space-y-4">
-            {event.description.split('\n').map((line, idx) => renderBout(line, idx))}
+              Cartelera
+            </h2>
+            <div className="space-y-4">
+              {event.description.split('\n').map((line, idx) => renderBout(line, idx))}
+            </div>
           </div>
-        </div>
-      )}
+        )}
       </div>
 
-      
+
 
       {/* PELEADORES DEL EVENTO */}
       {fighters.length > 0 ? (
