@@ -85,42 +85,53 @@ const EventDetail = () => {
     return eventDate < today;
   };
 
-  // busca si el peleador existe en tu DB
+  // busca si el peleador existe en tu DB para la cartelera
   const renderBout = (line, index) => {
-    if (!line.trim()) return null;
+  if (!line.trim()) return null;
 
-    
-    const matchedFighters = fighters.filter(f => 
-      line.toLowerCase().includes(f.first_name.toLowerCase()) || 
-      line.toLowerCase().includes(f.last_name.toLowerCase())
+  // Dividimos la línea por "VS" (o "vs") para separar a los dos contendientes
+  const parts = line.split(/\s+VS\s+/i);
+  
+  // Función interna para buscar la foto de un peleador por su nombre
+  const findFighterPhoto = (namePart) => {
+    const found = fighters.find(f => 
+      namePart.toLowerCase().includes(f.first_name.toLowerCase()) || 
+      namePart.toLowerCase().includes(f.last_name.toLowerCase())
     );
-
-    return (
-      <div key={index} className="flex flex-col items-center bg-white bg-opacity-40 p-4 rounded-lg 
-      shadow-sm border border-black">
-        <div className="flex items-center justify-center gap-4 w-full">
-          {/* Si hay un match, muestra foto a la izquierda */}
-          {matchedFighters.length > 0 && (
-            <div className="flex -space-x-3 overflow-hidden">
-              {matchedFighters.map(f => (
-                <Link to={`/peleadores/${f.slug}`} key={f.fighter_id}>
-                  <img 
-                    src={getFighterPhotoUrl(f.photo_url)} 
-                    className="inline-block h-20 w-20 rounded-full hover:scale-110 
-                    transition"
-                    alt={`foto de ${f.first_name}${f.last_name}`}
-                    title={`${f.first_name} (Ver Perfil)`}
-                  />
-                </Link>
-              ))}
-            </div>
-          )}
-          
-          <span className="text-lg font-bold text-custom-black italic">{line}</span>
-        </div>
-      </div>
-    );
+    return found ? getFighterPhotoUrl(found.photo_url) : fightersAvatar;
   };
+
+  return (
+    <div key={index} className="bg-white bg-opacity-40 p-3 rounded-lg shadow-sm border border-gray-300 mb-2">
+      <div className="flex items-center justify-between px-4">
+        
+        {/* PELEADOR 1 (Izquierda) */}
+        <div className="flex items-center gap-3 flex-1 justify-end">
+          <span className="text-sm font-bold text-gray-700 text-right">{parts[0]}</span>
+          <img 
+            src={findFighterPhoto(parts[0] || "")} 
+            className="h-10 w-10 rounded-full border-2 border-custom-red object-cover shadow-sm"
+            alt="Fighter"
+          />
+        </div>
+
+        {/* SEPARADOR VS */}
+        <div className="mx-4 font-black italic text-custom-red">VS</div>
+
+        {/* PELEADOR 2 (Derecha) */}
+        <div className="flex items-center gap-3 flex-1">
+          <img 
+            src={findFighterPhoto(parts[1] || "")} 
+            className="h-10 w-10 rounded-full border-2 border-custom-red object-cover shadow-sm"
+            alt="Fighter"
+          />
+          <span className="text-sm font-bold text-gray-700">{parts[1]}</span>
+        </div>
+
+      </div>
+    </div>
+  );
+};
 
 
   if (loading) return <p className="text-center text-xl p-6 text-blue-600">Cargando evento...</p>;
