@@ -99,7 +99,8 @@ const EventDetail = () => {
       );
       return {
         url: found ? getFighterPhotoUrl(found.photo_url) : fightersAvatar,
-        isAvatar: !found
+        isAvatar: !found,
+        slug: found ? found.slug : null,
       };
     };
 
@@ -112,20 +113,36 @@ const EventDetail = () => {
         <div className="flex flex-col md:flex-row items-center justify-center w-full max-w-3xl mx-auto">
 
           {/* PELEADOR 1 */}
-          <div className="flex flex-col md:flex-row items-center justify-center md:justify-end flex-1 
-          gap-4 w-full">
-            <span className="text-sm md:text-md font-bold text-gray-700 uppercase italic text-center 
-            md:text-right truncate order-2 md:order-1">
+          <div className="flex flex-col md:flex-row items-center justify-center md:justify-end flex-1 gap-4 w-full">
+            <span className="text-sm md:text-md font-bold text-gray-700 uppercase italic text-center md:text-right truncate order-2 md:order-1">
               {boutFighterName[0]}
             </span>
-            <img
-              src={fighter1.url}
-              className={`h-20 w-20 rounded-lg shadow-md hover:scale-105 transition duration-300 
-                flex-shrink-0 hover:cursor-pointer order-1 md:order-2 
-                ${fighter1.isAvatar ? "object-fill" : "object-cover"
-              }`}
-              alt={`Imagen de ${boutFighterName[0]}`}
-            />
+
+            {/* si está en la BBDD */}
+            {fighter1.slug ? (
+              <Link
+                to={`/peleadores/${fighter1.slug}`}
+                className="order-1 md:order-2">
+                <img
+                  src={fighter1.url}
+                  className={`h-20 w-20 rounded-lg shadow-md hover:scale-105 transition 
+                    duration-300 flex-shrink-0 hover:cursor-pointer border-2 border-transparent
+                    ${fighter1.isAvatar ? "object-fill" : "object-cover"
+                    }`}
+                  alt={`Imagen de ${boutFighterName[0]}`}
+                />
+              </Link>
+            ) : (
+              /* Si la imagen es la de avatar porque no está */
+              <img
+                src={fighter1.url}
+                className={`h-20 w-20 rounded-lg shadow-md flex-shrink-0 hover:scale-105 transition 
+                    duration-300 order-1 
+                  md:order-2 ${fighter1.isAvatar ? "object-fill" : "object-cover"
+                  }`}
+                alt={`Imagen de ${boutFighterName[0]}`}
+              />
+            )}
           </div>
 
           {/* VS */}
@@ -136,15 +153,35 @@ const EventDetail = () => {
           </div>
 
           {/* PELEADOR 2 */}
-          <div className="flex flex-col md:flex-row items-center justify-center md:justify-start flex-1 
-          gap-4 w-full">
-            <img
-              src={fighter2.url}
-              className={`h-20 w-20 rounded-lg shadow-md hover:scale-105 transition duration-300 
-                flex-shrink-0 hover:cursor-pointer ${fighter2.isAvatar ? "object-fill" : "object-cover"
-              }`}
-              alt={`Imagen de ${boutFighterName[1]}`}
-            />
+          <div className="flex flex-col md:flex-row items-center justify-center md:justify-start 
+          flex-1 gap-4 w-full">
+
+            {/* si el peleador existe en la BBDD */}
+            {fighter2.slug ? (
+              <Link
+                to={`/peleadores/${fighter2.slug}`}
+                className="flex-shrink-0"
+              >
+                <img
+                  src={fighter2.url}
+                  className={`h-20 w-20 rounded-lg shadow-md hover:scale-105 transition 
+                    duration-300 hover:cursor-pointer border-2 
+                    border-transparent ${fighter2.isAvatar ? "object-fill" : "object-cover"
+                    }`}
+                  alt={`Imagen de ${boutFighterName[1]}`}
+                />
+              </Link>
+            ) : (
+              /* si no existe */
+              <img
+                src={fighter2.url}
+                className={`h-20 w-20 rounded-lg shadow-md flex-shrink-0 hover:scale-105 
+                  transition duration-300 ${fighter2.isAvatar ? "object-fill" : "object-cover"
+                  }`}
+                alt={`Imagen de ${boutFighterName[1]}`}
+              />
+            )}
+
             <span className="text-sm md:text-md font-bold text-gray-700 uppercase italic text-center 
             md:text-left truncate">
               {boutFighterName[1]}
