@@ -10,9 +10,7 @@ const initialFormState = {
     is_completed: 'false',
     date: '',
     fighter_ids: [],
-    // NOTA: Si no tienes este campo en tu BBDD, el backend lo ignorará al guardar.
-    // Pero lo dejamos listo por si decides añadirlo (se suele llamar 'description' o 'bouts')
-    description: '', 
+    description: '',
 };
 
 const EventFormModal = ({ eventIdToEdit, isModalOpen, closeModal, onEventSaved }) => {
@@ -52,7 +50,7 @@ const EventFormModal = ({ eventIdToEdit, isModalOpen, closeModal, onEventSaved }
                     poster_url: eventData.poster_url || '',
                     is_completed: String(eventData.is_completed || false),
                     fighter_ids: fighterIds,
-                    description: eventData.description || '', // Cargamos la cartelera manual
+                    description: eventData.description || '',
                 });
             } catch (err) {
                 console.error('Error:', err);
@@ -92,8 +90,8 @@ const EventFormModal = ({ eventIdToEdit, isModalOpen, closeModal, onEventSaved }
             const fighterId = parseInt(value);
             setFormData(prev => ({
                 ...prev,
-                fighter_ids: checked 
-                    ? [...prev.fighter_ids, fighterId] 
+                fighter_ids: checked
+                    ? [...prev.fighter_ids, fighterId]
                     : prev.fighter_ids.filter(id => id !== fighterId)
             }));
         } else {
@@ -105,7 +103,7 @@ const EventFormModal = ({ eventIdToEdit, isModalOpen, closeModal, onEventSaved }
         e.preventDefault();
         setIsLoading(true);
         const formPayload = new FormData();
-        
+
         // Excluimos campos que tratamos aparte
         const fieldsToExclude = ['poster_url', 'event_id', 'fighter_ids'];
         for (const key in formData) {
@@ -145,40 +143,60 @@ const EventFormModal = ({ eventIdToEdit, isModalOpen, closeModal, onEventSaved }
 
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
-                        <label className="block text-xs font-bold uppercase text-gray-500">Nombre del Evento</label>
-                        <input type="text" name="name" value={formData.name} onChange={handleChange} required className="mt-1 block w-full border border-gray-300 rounded p-2 text-sm" placeholder="Ej: PFL Madrid" />
+                        <label className="block text-xs font-bold uppercase text-gray-500">
+                            Nombre del Evento
+                        </label>
+                        <input type="text" name="name" value={formData.name} onChange={handleChange}
+                            required className="mt-1 block w-full border border-gray-300 rounded p-2 text-sm"
+                            placeholder="Ej: PFL Madrid" />
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
                         <div>
-                            <label className="block text-xs font-bold uppercase text-gray-500">Fecha</label>
-                            <input type="date" name="date" value={formData.date} onChange={handleChange} className="mt-1 block w-full border border-gray-300 rounded p-2 text-sm" />
+                            <label className="block text-xs font-bold uppercase text-gray-500">
+                                Fecha
+                            </label>
+                            <input type="date" name="date" value={formData.date} onChange={handleChange}
+                                className="mt-1 block w-full border border-gray-300 rounded p-2 text-sm" />
                         </div>
                         <div>
-                            <label className="block text-xs font-bold uppercase text-gray-500">Ubicación</label>
-                            <input type="text" name="location" value={formData.location} onChange={handleChange} className="mt-1 block w-full border border-gray-300 rounded p-2 text-sm" placeholder="Madrid, España" />
+                            <label className="block text-xs font-bold uppercase text-gray-500">
+                                Ubicación
+                            </label>
+                            <input type="text" name="location" value={formData.location}
+                                onChange={handleChange} className="mt-1 block w-full border
+                             border-gray-300 rounded p-2 text-sm" placeholder="Madrid, España" />
                         </div>
                     </div>
 
                     {/* CARTELERA */}
                     <div>
-                        <label className="block text-xs font-bold uppercase text-red-600">Cartelera Completa (Manual)</label>
-                        <textarea 
-                            name="description" 
-                            value={formData.description} 
+                        <label className="block text-xs font-bold uppercase text-red-600">
+                            Cartelera Completa
+                        </label>
+                        <textarea
+                            name="description"
+                            value={formData.description}
                             onChange={handleChange}
                             rows="5"
-                            className="mt-1 block w-full border border-gray-300 rounded p-2 text-sm font-mono"
-                            placeholder="Franco Tenaglia VS Oscar Fernandez&#10;Ibrahim El Lobo VS Anas Bahssain"
+                            className="mt-1 block w-full border border-gray-300 rounded p-2 text-sm 
+                            font-mono"
+                            placeholder="Ilia Topuria VS Joel Álvarez&#10;Hecher Sosa VS Anderson Silva"
                         />
-                        <p className="text-[10px] text-gray-400 mt-1 italic">* Escribe cada combate en una línea nueva.</p>
+                        <p className="text-[10px] text-gray-400 mt-1 italic">
+                            * Escribe cada combate en una línea nueva.
+                        </p>
                     </div>
 
                     <div>
-                        <label className="block text-xs font-bold uppercase text-gray-500">Peleadores Españoles Participantes</label>
-                        <div className="grid grid-cols-2 gap-2 max-h-32 overflow-y-auto border p-2 rounded bg-gray-50 mt-1">
+                        <label className="block text-xs font-bold uppercase text-gray-500">
+                            Peleadores Españoles Participantes
+                        </label>
+                        <div className="grid grid-cols-2 gap-2 max-h-32 overflow-y-auto border p-2 
+                        rounded bg-gray-50 mt-1">
                             {fighters.map(f => (
-                                <label key={f.fighter_id} className="flex items-center space-x-2 text-xs p-1 hover:bg-gray-100 cursor-pointer">
+                                <label key={f.fighter_id} className="flex items-center space-x-2 text-xs
+                                 p-1 hover:bg-gray-100 cursor-pointer">
                                     <input type="checkbox" value={f.fighter_id} checked={formData.fighter_ids.includes(f.fighter_id)} onChange={handleChange} />
                                     <span className={formData.fighter_ids.includes(f.fighter_id) ? "font-bold" : ""}>{f.first_name} {f.last_name}</span>
                                 </label>

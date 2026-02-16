@@ -124,7 +124,7 @@ const EventDetail = () => {
                 flex-shrink-0 hover:cursor-pointer order-1 md:order-2 
                 ${fighter1.isAvatar ? "object-fill" : "object-cover"
               }`}
-              alt="Peleador 1"
+              alt={`Imagen de ${boutFighterName[0]}`}
             />
           </div>
 
@@ -143,7 +143,7 @@ const EventDetail = () => {
               className={`h-20 w-20 rounded-lg shadow-md hover:scale-105 transition duration-300 
                 flex-shrink-0 hover:cursor-pointer ${fighter2.isAvatar ? "object-fill" : "object-cover"
               }`}
-              alt="Peleador 2"
+              alt={`Imagen de ${boutFighterName[1]}`}
             />
             <span className="text-sm md:text-md font-bold text-gray-700 uppercase italic text-center 
             md:text-left truncate">
