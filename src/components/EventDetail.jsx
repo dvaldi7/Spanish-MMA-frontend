@@ -10,7 +10,33 @@ const EventDetail = () => {
   const [fighters, setFighters] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [timeLeft, setTimeLeft] = useState({ dias: 0, horas: 0, minutos: 0, segundos: 0 });
 
+  //UseEffect para el reloj de cuenta atrás
+  useEffect(() => {
+    if (!event || !event.date) return;
+
+    const timer = setInterval(() => {
+      const targetDate = new Date(event.date).getTime();
+      const now = new Date().getTime();
+      const difference = targetDate - now;
+
+      if (difference > 0) {
+        setTimeLeft({
+          dias: Math.floor(difference / (1000 * 60 * 60 * 24)),
+          horas: Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+          minutos: Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60)),
+          segundos: Math.floor((difference % (1000 * 60)) / 1000),
+        });
+      } else {
+        clearInterval(timer);
+      }
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [event]);
+
+  //buscar eventos y el roster
   useEffect(() => {
     const fetchEventAndRoster = async () => {
       try {
@@ -223,6 +249,35 @@ const EventDetail = () => {
             className="w-48 h-48 object-fill rounded-full shadow-lg border-2 border-custom-black"
           />
         </div>
+
+        {/* RELOJ DE TIEMPO ATRÁS */}
+        {/* Solo se muestra si el evento NO ha terminado */}
+        {!completedStatus && (
+          <div className="my-8">
+            <h3 className="text-custom-red font-bold uppercase italic mb-2 tracking-widest text-sm">
+              El evento comienza en:
+            </h3>
+            <div className="grid grid-cols-4 sm:flex justify-center gap-4 text-custom-black
+            max-w-[250px] sm:max-w-none mx-auto">
+              {[
+                { label: "Días", value: timeLeft.dias },
+                { label: "Horas", value: timeLeft.horas },
+                { label: "Mins", value: timeLeft.minutos },
+                { label: "Segs", value: timeLeft.segundos },
+              ].map((item, i) => (
+                <div key={i} className="flex flex-col items-center">
+                  <div className=" bg-gray-800 text-white text-xl md:text-4xl font-black p-2 md:p-3 
+                  rounded-lg min-w-[60px] md:min-w-[70px] shadow-inner border-b-4 border-custom-red">
+                    {String(item.value).padStart(2, '0')}
+                  </div>
+                  <span className="text-[10px] uppercase font-bold mt-1 text-gray-600">
+                    {item.label}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
 
         <div className="text-lg space-y-2 text-gray-800">
