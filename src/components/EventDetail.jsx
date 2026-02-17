@@ -134,8 +134,9 @@ const EventDetail = () => {
     const fighter2 = getFighterData(boutFighterName[1] || "");
 
     return (
-      <div key={index} className="bg-white bg-opacity-40 p-3 rounded-lg shadow-sm border border-gray-300
-       mb-2 border-l-2 border-l-custom-black border-b-2 border-b-custom-black">
+      <div key={index} className="bg-white bg-opacity-40 p-3 rounded-lg mb-2 border border-gray-300 
+      border-l-4 border-l-custom-black border-b-2 border-b-custom-black hover:border-l-red-600 
+      hover:shadow-lg hover:border-b-custom-gold transition-all duration-300 hover:scale-105">
         <div className="flex flex-col md:flex-row items-center justify-center w-full max-w-3xl mx-auto">
 
           {/* PELEADOR 1 */}
