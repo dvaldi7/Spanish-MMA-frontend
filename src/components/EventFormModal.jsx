@@ -169,6 +169,45 @@ const EventFormModal = ({ eventIdToEdit, isModalOpen, closeModal, onEventSaved }
                         </div>
                     </div>
 
+                    {/* IMAGEN DEL PÓSTER */}
+                    <div className="border-t pt-4">
+                        <label className="block text-xs font-bold uppercase text-gray-500 mb-2">
+                            Póster del Evento
+                        </label>
+
+                        <div className="flex items-center space-x-4">
+                            {/* Previsualización */}
+                            <div className="h-16 w-16 bg-gray-100 rounded border overflow-hidden 
+                            flex-shrink-0">
+                                {imageFile ? (
+                                    <img src={URL.createObjectURL(imageFile)}
+                                        className="h-full w-full object-cover"
+                                        alt="Preview" />
+                                ) : formData.poster_url ? (
+                                    <img src={formData.poster_url.startsWith('http') ?
+                                        formData.poster_url : `http://localhost:3001/${formData.poster_url}`}
+                                        className="h-full w-full object-cover" alt="Actual" />
+                                ) : (
+                                    <div className="h-full w-full flex items-center justify-center
+                                                     text-gray-400 text-[10px] text-center p-1">
+                                        Sin foto
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Input de archivo */}
+                            <input
+                                type="file"
+                                name="poster"
+                                accept="image/*"
+                                onChange={handleChange}
+                                className="text-xs text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-full 
+            file:border-0 file:text-xs file:font-semibold file:bg-black file:text-white
+             hover:file:bg-gray-800 cursor-pointer w-full"
+                            />
+                        </div>
+                    </div>
+
                     {/* CARTELERA */}
                     <div>
                         <label className="block text-xs font-bold uppercase text-red-600">
