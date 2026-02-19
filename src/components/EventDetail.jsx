@@ -144,7 +144,6 @@ const EventDetail = () => {
             <span className="text-sm md:text-md font-bold text-gray-700 uppercase italic text-center md:text-right truncate order-2 md:order-1">
               {boutFighterName[0]}
             </span>
-
             {/* si está en la BBDD */}
             {fighter1.slug ? (
               <Link
