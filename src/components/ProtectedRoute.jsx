@@ -6,7 +6,7 @@ const ProtectedRoute = ({ children, requiredRole }) => {
     const { user, loading } = useAuth(); 
 
     if (loading) {
-        return <p className="text-center mt-20">Verificando acceso...</p>; 
+        return <p className="text-center mt-20 text-white">Verificando acceso...</p>; 
     }
 
     if (!user) {
