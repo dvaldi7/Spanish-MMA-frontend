@@ -99,31 +99,40 @@ const EventFormModal = ({ eventIdToEdit, isModalOpen, closeModal, onEventSaved }
         }
     };
 
+    //Para enviar datos en las fotos
     const handleSubmit = async e => {
         e.preventDefault();
         setIsLoading(true);
+
+        // contenedor de datos
         const formPayload = new FormData();
 
-        // Excluimos campos que tratamos aparte
-        const fieldsToExclude = ['poster_url', 'event_id', 'fighter_ids'];
-        for (const key in formData) {
-            if (fieldsToExclude.includes(key)) continue;
-            formPayload.append(key, formData[key]);
-        }
+        // datos de texto uno a uno
+        formPayload.append('name', formData.name);
+        formPayload.append('location', formData.location);
+        formPayload.append('date', formData.date);
+        formPayload.append('description', formData.description);
+        formPayload.append('is_completed', formData.is_completed);
         formPayload.append('fighter_ids', JSON.stringify(formData.fighter_ids));
 
-        if (imageFile) formPayload.append('poster', imageFile);
+        if (imageFile) {
+            formPayload.append('poster', imageFile);
+        }
 
         try {
+            const config = { headers: { 'Content-Type': 'multipart/form-data' } };
+
             if (isEditMode) {
-                await api.put(`/events/id/${eventIdToEdit}`, formPayload);
+                await api.put(`/events/id/${eventIdToEdit}`, formPayload, config);
             } else {
-                await api.post('/events', formPayload);
+                await api.post('/events', formPayload, config);
             }
+
             onEventSaved();
             closeModal();
         } catch (err) {
-            setError('Error al guardar. ¿Has añadido el campo description en la BBDD?');
+            console.error('Error:', err.response?.data);
+            setError('Error al guardar: revisa que la columna description existe en la BBDD');
         } finally {
             setIsLoading(false);
         }
