@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import api from '../services/api';
 import { FiX } from 'react-icons/fi';
-import FightCardRender from '../utils/FightCardRender';
+
 
 const initialFormState = {
     name: '',
@@ -236,18 +236,6 @@ const EventFormModal = ({ eventIdToEdit, isModalOpen, closeModal, onEventSaved }
                             * Escribe cada combate en una línea nueva.
                             Pon un asterisco (*) al lado del ganador del combate.
                         </p>
-
-                        {/* PREVISUALIZACIÓN EN TIEMPO REAL */}
-                        {formData.description && (
-                            <div className="mt-3 p-3 border border-dashed border-gray-200
-                             bg-gray-50 rounded">
-                                <p className="text-[9px] font-bold uppercase text-gray-400
-                                 mb-2 tracking-widest">
-                                    Vista previa de resultados
-                                </p>
-                                <FightCardRender description={formData.description} />
-                            </div>
-                        )}
                     </div>
 
                     <div>
