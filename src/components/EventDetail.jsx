@@ -119,6 +119,13 @@ const EventDetail = () => {
 
     // Modificamos esta función para saber si es avatar
     const getFighterData = (namePart) => {
+      //Si tiene asterisco es el ganador del combate (viene del modal en la descripción)
+      const isWinner = namePart.includes('*');
+      const isLoser = namePart.includes('#');
+
+      //Limpiamos para que no salga el asterisco y almohadilla
+      const cleanName = namePart.replace(/[*#]/g, '').trim();
+
       const found = fighters.find(f =>
         namePart.toLowerCase().includes(f.first_name.toLowerCase()) ||
         namePart.toLowerCase().includes(f.last_name.toLowerCase())
@@ -127,6 +134,9 @@ const EventDetail = () => {
         url: found ? getFighterPhotoUrl(found.photo_url) : fightersAvatar,
         isAvatar: !found,
         slug: found ? found.slug : null,
+        isWinner: isWinner,
+        isLoser: isLoser,
+        cleanName: cleanName,
       };
     };
 
@@ -140,35 +150,54 @@ const EventDetail = () => {
         <div className="flex flex-col md:flex-row items-center justify-center w-full max-w-3xl mx-auto">
 
           {/* PELEADOR 1 */}
-          <div className="flex flex-col md:flex-row items-center justify-center md:justify-end flex-1 gap-4 w-full">
-            <span className="text-sm md:text-md font-bold text-gray-700 uppercase italic text-center md:text-right truncate order-2 md:order-1">
-              {boutFighterName[0]}
-            </span>
-            {/* si está en la BBDD */}
-            {fighter1.slug ? (
-              <Link
-                to={`/peleadores/${fighter1.slug}`}
-                className="order-1 md:order-2">
+          <div className="flex flex-col md:flex-row items-center justify-center md:justify-end flex-1 
+          gap-4 w-full">
+
+            <div className="flex flex-col items-center md:items-end order-2 md:order-1">
+              <span className={`text-sm md:text-md font-bold uppercase italic text-center md:text-right
+               truncate 
+               ${fighter1.isWinner ? "text-green-600"
+                  : fighter1.isLoser ? "text-red-600" : "text-gray-700"}`
+              }>
+                {fighter1.cleanName}
+              </span>
+
+              {/* Etiquetas para victoris y derrotas */}
+              {fighter1.isWinner && <span className="text-[10px] font-black text-green-600">
+                VICTORIA 🏆
+              </span>}
+              {fighter1.isLoser && <span className="text-[10px] font-black text-red-600">
+                DERROTA ✘
+              </span>}
+            </div>
+
+            {/* Imagen P1 */}
+            <div className="relative order-1 md:order-2">
+              {fighter1.slug ? ( //si está en la BBDD
+                <Link to={`/peleadores/${fighter1.slug}`}>
+                  <img
+                    src={fighter1.url}
+                    className={`h-20 w-20 rounded-lg shadow-md hover:scale-105 transition 
+                      duration-300 flex-shrink-0 hover:cursor-pointer border-2 
+                      ${fighter1.isWinner ? "border-green-500" :
+                        fighter1.isLoser ? "border-custom-red" :
+                          "border-transparent"}
+                      ${fighter1.isAvatar ? "object-fill" : "object-cover"}`}
+                    alt={`Imagen de ${fighter1.cleanName}`}
+                  />
+                </Link>
+              ) : ( //si no está
                 <img
                   src={fighter1.url}
-                  className={`h-20 w-20 rounded-lg shadow-md hover:scale-105 transition 
-                    duration-300 flex-shrink-0 hover:cursor-pointer border-2 border-transparent
-                    ${fighter1.isAvatar ? "object-fill" : "object-cover"
-                    }`}
-                  alt={`Imagen de ${boutFighterName[0]}`}
+                  className={`h-20 w-20 rounded-lg shadow-md flex-shrink-0 border-2
+                    ${fighter1.isWinner ? "border-green-500" :
+                      fighter1.isLoser ? "border-custom-red" :
+                        "border-transparent"}
+                    ${fighter1.isAvatar ? "object-fill" : "object-cover"}`}
+                  alt={`Imagen de ${fighter1.cleanName}`}
                 />
-              </Link>
-            ) : (
-              /* Si la imagen es la de avatar porque no está */
-              <img
-                src={fighter1.url}
-                className={`h-20 w-20 rounded-lg shadow-md flex-shrink-0 hover:scale-105 transition 
-                    duration-300 order-1 
-                  md:order-2 ${fighter1.isAvatar ? "object-fill" : "object-cover"
-                  }`}
-                alt={`Imagen de ${boutFighterName[0]}`}
-              />
-            )}
+              )}
+            </div>
           </div>
 
           {/* VS */}
@@ -182,43 +211,59 @@ const EventDetail = () => {
           <div className="flex flex-col md:flex-row items-center justify-center md:justify-start 
           flex-1 gap-4 w-full">
 
-            {/* si el peleador existe en la BBDD */}
-            {fighter2.slug ? (
-              <Link
-                to={`/peleadores/${fighter2.slug}`}
-                className="flex-shrink-0"
-              >
+            {/* Imagen P2 */}
+            <div className="relative">
+              {fighter2.slug ? ( //si está en la BBDD
+                <Link to={`/peleadores/${fighter2.slug}`}>
+                  <img
+                    src={fighter2.url}
+                    className={`h-20 w-20 rounded-lg shadow-md hover:scale-105 transition 
+                      duration-300 hover:cursor-pointer border-2 
+                      ${fighter2.isWinner ? "border-green-500" :
+                        fighter2.isLoser ? "border-custom-red" :
+                          "border-transparent"}
+                      ${fighter2.isAvatar ? "object-fill" : "object-cover"}`}
+                    alt={`Imagen de ${fighter2.cleanName}`}
+                  />
+                </Link>
+              ) : ( //si no está
                 <img
                   src={fighter2.url}
-                  className={`h-20 w-20 rounded-lg shadow-md hover:scale-105 transition 
-                    duration-300 hover:cursor-pointer border-2 
-                    border-transparent ${fighter2.isAvatar ? "object-fill" : "object-cover"
-                    }`}
-                  alt={`Imagen de ${boutFighterName[1]}`}
+                  className={`h-20 w-20 rounded-lg shadow-md flex-shrink-0 border-2
+                    ${fighter2.isWinner ? "border-green-500" :
+                      fighter2.isLoser ? "border-custom-red" :
+                        "border-transparent"}
+                    ${fighter2.isAvatar ? "object-fill" : "object-cover"}`}
+                  alt={`Imagen de ${fighter2.cleanName}`}
                 />
-              </Link>
-            ) : (
-              /* si no existe */
-              <img
-                src={fighter2.url}
-                className={`h-20 w-20 rounded-lg shadow-md flex-shrink-0 hover:scale-105 
-                  transition duration-300 ${fighter2.isAvatar ? "object-fill" : "object-cover"
-                  }`}
-                alt={`Imagen de ${boutFighterName[1]}`}
-              />
-            )}
+              )}
+            </div>
 
-            <span className="text-sm md:text-md font-bold text-gray-700 uppercase italic text-center 
-            md:text-left truncate">
-              {boutFighterName[1]}
-            </span>
+            <div className="flex flex-col items-center md:items-start">
+              <span className={`text-sm md:text-md font-bold uppercase italic text-center md:text-left truncate
+                ${fighter2.isWinner ? "text-green-600" :
+                  fighter2.isLoser ? "text-red-600" : "text-gray-700"}`}>
+                {fighter2.cleanName}
+              </span>
+
+              {/* Etiquetas para victorias y derrotas */}
+              {fighter2.isWinner && (
+                <span className="text-[10px] font-black text-green-600">
+                  VICTORIA 🏆
+                </span>
+              )}
+              {fighter2.isLoser && (
+                <span className="text-[10px] font-black text-red-600">
+                  DERROTA ✘
+                </span>
+              )}
+            </div>
           </div>
 
         </div>
       </div>
     );
   };
-
 
   if (loading) return <p className="text-center text-xl p-6 text-blue-600">Cargando evento...</p>;
   if (error) return <p className="text-center text-red-600 text-xl p-6">{error}</p>;

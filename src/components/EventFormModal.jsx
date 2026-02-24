@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import api from '../services/api';
 import { FiX } from 'react-icons/fi';
 
+
 const initialFormState = {
     name: '',
     poster_url: '',
@@ -233,6 +234,7 @@ const EventFormModal = ({ eventIdToEdit, isModalOpen, closeModal, onEventSaved }
                         />
                         <p className="text-[10px] text-gray-400 mt-1 italic">
                             * Escribe cada combate en una línea nueva.
+                            Pon un asterisco (*) al lado del ganador del combate.
                         </p>
                     </div>
 
@@ -245,8 +247,12 @@ const EventFormModal = ({ eventIdToEdit, isModalOpen, closeModal, onEventSaved }
                             {fighters.map(f => (
                                 <label key={f.fighter_id} className="flex items-center space-x-2 text-xs
                                  p-1 hover:bg-gray-100 cursor-pointer">
-                                    <input type="checkbox" value={f.fighter_id} checked={formData.fighter_ids.includes(f.fighter_id)} onChange={handleChange} />
-                                    <span className={formData.fighter_ids.includes(f.fighter_id) ? "font-bold" : ""}>{f.first_name} {f.last_name}</span>
+                                    <input type="checkbox" value={f.fighter_id}
+                                        checked={formData.fighter_ids.includes(f.fighter_id)}
+                                        onChange={handleChange} />
+                                    <span className={formData.fighter_ids.includes(f.fighter_id) ? "font-bold"
+                                        : ""}>{f.first_name} {f.last_name}
+                                    </span>
                                 </label>
                             ))}
                         </div>
