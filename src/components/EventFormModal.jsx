@@ -234,7 +234,12 @@ const EventFormModal = ({ eventIdToEdit, isModalOpen, closeModal, onEventSaved }
                         />
                         <p className="text-[10px] text-gray-400 mt-1 italic">
                             * Escribe cada combate en una línea nueva.
+                        </p>
+                        <p className="text-[10px] text-gray-400 mt-1 italic">
                             Pon un asterisco (*) al lado del ganador del combate.
+                        </p>
+                        <p className="text-[10px] text-gray-400 mt-1 italic">
+                            Pon una almohadilla (#) al lado del perdedor del combate.
                         </p>
                     </div>
 
