@@ -127,8 +127,8 @@ const EventDetail = () => {
       const cleanName = namePart.replace(/[*#]/g, '').trim();
 
       const found = fighters.find(f =>
-        namePart.toLowerCase().includes(f.first_name.toLowerCase()) ||
-        namePart.toLowerCase().includes(f.last_name.toLowerCase())
+        cleanName.toLowerCase().includes(f.first_name.toLowerCase()) &&
+        cleanName.toLowerCase().includes(f.last_name.toLowerCase())
       );
       return {
         url: found ? getFighterPhotoUrl(found.photo_url) : fightersAvatar,

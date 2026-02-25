@@ -58,6 +58,7 @@ export const NewsDetail = () => {
                             className="w-full md:w-1/2 md:h-auto lg:w-3/5 h-full object-fill md:object-contain mt-10 "
                         />
                     </div>
+                    
 
                     {/* TEXTO */}
                     <div className=" w-full p-8 md:p-12 flex flex-col justify-center text-left">
