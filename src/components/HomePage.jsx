@@ -106,8 +106,8 @@ export const HomePage = () => {
                                             ? (item.image_url.startsWith('http') ? item.image_url : `${BACKEND_URL}/${item.image_url}`)
                                             : '/images/Error404.jpg'}
                                         alt={item.title}
-                                        className='card_photo-news w-full md:w-80 h-48 object-cover rounded-lg shadow-md
-                                        cursor-pointer'
+                                        className='card_photo-news w-full md:w-80 h-48 object-cover md:object-contain rounded-lg 
+                                        shadow-md cursor-pointer'
                                         onClick={() => navigate(`/news/${item.slug}`)}
                                     />
                                 </div>

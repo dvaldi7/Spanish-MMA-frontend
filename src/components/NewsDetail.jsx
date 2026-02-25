@@ -43,23 +43,25 @@ export const NewsDetail = () => {
             </div>
 
             {/* Contenedor Principal (Estilo FighterDetail) */}
-            <article className="bg-gray-200 bg-opacity-65 shadow-2xl rounded-2xl overflow-hidden border-l-4 border-l-custom-red border-b-4 border-b-custom-gold">
+            <article className="bg-gray-200 bg-opacity-65 shadow-2xl rounded-2xl overflow-hidden border-l-4
+             border-l-custom-red border-b-4 border-b-custom-gold">
 
-                <div className="flex flex-col lg:flex-row">
+                <div className="flex flex-col ">
 
-                    {/* COLUMNA IZQUIERDA: IMAGEN */}
-                    <div className="lg:w-1/2 w-full h-[400px] lg:h-auto overflow-hidden">
+                    {/* IMAGEN */}
+                    <div className=" w-full h-[400px] lg:h-auto overflow-hidden flex md:items-center md:justify-center">
                         <img
                             src={item.image_url
                                 ? (item.image_url.startsWith('http') ? item.image_url : `${BACKEND_URL}/${item.image_url}`)
                                 : '/images/Error404.jpg'}
                             alt={item.title}
-                            className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                            className="w-full md:w-1/2 md:h-auto lg:w-3/5 h-full object-fill md:object-contain mt-10 "
                         />
                     </div>
+                    
 
-                    {/* COLUMNA DERECHA: TEXTO */}
-                    <div className="lg:w-1/2 w-full p-8 md:p-12 flex flex-col justify-center text-left">
+                    {/* TEXTO */}
+                    <div className=" w-full p-8 md:p-12 flex flex-col justify-center text-left">
 
                         <span className="text-custom-red font-bold text-sm mb-2 font-sans uppercase tracking-widest">
                             {new Date(item.published_at).toLocaleDateString('es-ES', {
