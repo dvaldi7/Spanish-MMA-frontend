@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3001";
 import useFetchNews from '../hooks/useFetchNews';
 import { useNavigate } from 'react-router-dom';
+import { Helmet } from "react-helmet-async";
 
 export const HomePage = () => {
 
@@ -48,9 +49,30 @@ export const HomePage = () => {
         });
     };
 
+    useEffect(() => {
+        // Scroll al inicio para mejorar UX al navegar
+        window.scrollTo(0, 0);
+
+        // Forzamos el título manualmente como respaldo
+        document.title = "MMA España: Resultados, Noticias y Base de Datos | Spanish MMA";
+    }, []);
+
 
     return (
         <main className="text-center mt-16 p-4 mx-auto font-serif max-w-6xl">
+
+            {/* HELMET PARA EL SEO */}
+            <Helmet key="home-page-seo">
+                <title>MMA España: Resultados, Noticias y Base de Datos | Spanish MMA</title>
+                <meta name="description" content="La mayor enciclopedia de MMA en España. Resultados de WOW FC, 
+                AFL, WAR, PFL y récords de peleadores españoles. Toda la información de las artes marciales mixtas 
+                en español." />
+                <meta name="keywords" content="mma españa, mma en español, spanish mma, resultados mma, peleadores
+                 españoles, wow fc madrid, pfl madrid, war, afl" />
+                <meta property="og:title" content="Spanish MMA - El portal de las MMA en España" />
+                <meta property="og:image" content="/images/logo-seo.png" />
+            </Helmet>
+
             {/* Título Principal */}
             <div className='bg-gray-200 bg-opacity-65 p-6 
                         shadow-xl rounded-xl border-l-2 border-l-custom-red border-b-2 border-b-custom-gold 
@@ -65,8 +87,20 @@ export const HomePage = () => {
 
                 {/* Subtítulo */}
                 <h2 className="text-xl md:text-2xl text-custom-red font-extrabold mb-8 text-center">
-                    Explora la comunidad española de las Artes Marciales Mixtas de España
+                    Explora la comunidad de las Artes Marciales Mixtas de España
                 </h2>
+
+                {/* Texto de Autoridad para Google */}
+                <section className="mt-8 text-gray-800 text-lg max-w-3xl mx-auto leading-relaxed italic">
+                    <p>
+                        Bienvenido a <strong>Spanish MMA</strong>, el catálogo definitivo y la base de datos más completa de las
+                        Artes Marciales Mixtas en España. Aquí encontrarás los perfiles actualizados de tus luchadores favoritos,
+                        desde la élite de la <strong>UFC</strong> hasta las promesas de <strong>WOW FC</strong>, <strong>WAR</strong>, <strong>PFL</strong> y <strong>AFL</strong>.
+                        Nuestro compromiso es ofrecerte resultados en directo, noticias de actualidad y un análisis profundo del
+                        panorama nacional de las MMA en español.
+                    </p>
+                </section>
+
             </div>
             {/* SECCIÓN NOTICIAS */}
             <section className="grid grid-cols-1 gap-10 mt-20">
@@ -91,9 +125,9 @@ export const HomePage = () => {
                         hover:shadow-2xl text-left transition-all">
                             <div className="flex flex-col md:flex-row md:justify-between items-center mb-6 border-b
                              border-gray-300 pb-2">
-                                <h2 className="text-2xl font-bold text-gray-800 mb-2 md:mb-0">
+                                <h3 className="text-2xl font-bold text-gray-800 mb-2 md:mb-0">
                                     {item.title}
-                                </h2>
+                                </h3>
                                 <div className="articles-data text-white font-sans italic">
                                     <span>{formatDate(item.published_at)}</span>
                                 </div>
@@ -105,10 +139,11 @@ export const HomePage = () => {
                                         src={item.image_url
                                             ? (item.image_url.startsWith('http') ? item.image_url : `${BACKEND_URL}/${item.image_url}`)
                                             : '/images/Error404.jpg'}
-                                        alt={item.title}
+                                        alt={`Noticia MMA España: ${item.title}`}
                                         className='card_photo-news w-full md:w-80 h-48 object-cover md:object-contain rounded-lg 
                                         shadow-md cursor-pointer'
                                         onClick={() => navigate(`/news/${item.slug}`)}
+                                        loading='lazy'
                                     />
                                 </div>
                                 <div className="flex-1">
