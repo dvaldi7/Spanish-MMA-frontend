@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3001";
 import avatar from "/images/fighters/avatar.png";
+import { Helmet } from "react-helmet-async";
 
 const FighterDetail = () => {
   const { slug } = useParams();
@@ -61,13 +62,34 @@ const FighterDetail = () => {
     });
   };
 
-
+  
   if (loading) return <p className="text-center text-xl p-6 text-blue-600">Cargando...</p>;
   if (error) return <p className="text-center text-red-600 text-xl p-6">{error}</p>;
   if (!fighter) return <p>No se encontró al peleador.</p>;
 
+  //  Nombre con apodo si existe para el SEO
+  const fullName = fighter.nickname
+    ? `${fighter.first_name} "${fighter.nickname}" ${fighter.last_name}`
+    : `${fighter.first_name} ${fighter.last_name}`;
+
   return (
     <div className="p-6 max-w-4xl mx-auto">
+
+      {/* HELMET PARA EL SEO */}
+      <Helmet>
+        <title>{`${fullName} | Récord y Perfil MMA | Spanish MMA`}</title>
+        <meta
+          name="description"
+          content={`Perfil de ${fullName}. Récord: ${fighter.record_wins}-${fighter.record_losses}.
+           Equipo: ${fighter.team || 'Independiente'}. Descubre su biografía y últimos
+            combates en la base de datos de MMA en España.`}
+        />
+        <meta property="og:title" content={`${fullName} - Spanish MMA`} />
+        <meta property="og:description" content={`Estadísticas y resultados de ${fullName} en MMA.`} />
+        <meta property="og:image" content={fighter.photo_url ? getImageUrl(fighter.photo_url) : avatar} />
+      </Helmet>
+
+      {/* CABECERA PARA VOLVER */}
       <Link to="/peleadores" className="gradiant-color streetFighterTypo hover:underline mb-4 
       inline-block font-semibold hover:scale-105 transition duration-300 cursor-pointer text-3xl">
         ← VOLVER A PELEADORES
@@ -76,9 +98,7 @@ const FighterDetail = () => {
       <div className="bg-gray-200 bg-opacity-70 p-8 rounded-xl shadow-lg text-center border-l-2
       border-l-custom-red border-b-2 border-b-custom-gold">
         <h2 className="text-3xl font-bold mb-6 text-custom-black">
-          {fighter.nickname
-            ? `${fighter.first_name} "${fighter.nickname}" ${fighter.last_name}`
-            : `${fighter.first_name} ${fighter.last_name}`}
+          {fullName}
         </h2>
 
         <div className="flex justify-center mb-6">
