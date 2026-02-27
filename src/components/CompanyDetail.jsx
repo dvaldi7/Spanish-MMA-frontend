@@ -2,11 +2,12 @@ import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3001";
 import avatar from "/images/companies/avatar.jpg";
+import { Helmet } from "react-helmet-async";
 
 const CompanyDetail = () => {
   const { slug } = useParams();
   const [company, setCompany] = useState(null);
-  const [fighters, setFighters] = useState([]); // <-- NUEVO ESTADO
+  const [fighters, setFighters] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -34,6 +35,15 @@ const CompanyDetail = () => {
     fetchCompanyAndFighters();
   }, [slug]);
 
+  // Doble seguridad para la carga del titulo del SEO
+  useEffect(() => {
+    if (company) {
+      document.title = `${company.name} | Promotora de MMA en España | Spanish MMA`;
+      window.scrollTo(0, 0);
+    }
+  }, [company]);
+
+  //Helpers de imagen
   const getLogoUrl = (logoUrl) => {
     if (logoUrl && (logoUrl.startsWith("http") || logoUrl.startsWith("https"))) {
       return logoUrl;
@@ -52,6 +62,19 @@ const CompanyDetail = () => {
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
+
+      {/* HELMET PARA SEO */}
+      <Helmet>
+        <title>{`${company.name} | Promotora y Eventos MMA España`}</title>
+        <meta
+          name="description"
+          content={`Descubre todo sobre ${company.name}. Sede en ${company.headquarters || 'España'}. 
+          Consulta su roster de peleadores y próximos eventos de MMA.`}
+        />
+        <meta property="og:title" content={`${company.name} - Promotora de MMA`} />
+        <meta property="og:image" content={company.logo_url ? getLogoUrl(company.logo_url) : avatar} />
+      </Helmet>
+
       <Link
         to="/promotoras"
         className="gradiant-color streetFighterTypo hover:underline mb-4 
@@ -120,7 +143,7 @@ const CompanyDetail = () => {
                   className="w-32 h-32 object-cover rounded-full mb-4 border-2 border-custom-black"
                 />
                 <p className="text-lg font-semibold text-custom-black">
-                 {fighter.first_name} {fighter.nickname ? `"${fighter.nickname}" ` : ""} {fighter.last_name}
+                  {fighter.first_name} {fighter.nickname ? `"${fighter.nickname}" ` : ""} {fighter.last_name}
                 </p>
               </Link>
             ))}
