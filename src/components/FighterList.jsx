@@ -28,6 +28,13 @@ const FighterList = () => {
         goToPage(pageNumber, searchTerm);
     }
 
+    // Hook para para el SEO
+    useEffect(() => {
+        document.title = "Peleadores de MMA en España | Luchadores Spanish MMA";
+        window.scrollTo(0, 0);
+    }, []);
+
+
     if (loading) return <p className="text-center text-xl p-6 text-white">Cargando luchadores...</p>;
     if (error) return <p className="text-center text-custom-red text-xl p-6">{error}</p>;
 
@@ -60,6 +67,26 @@ const FighterList = () => {
 
     return (
         <div className="p-6">
+
+            {/* HELMET: SEO */}
+            <Helmet>
+                <title>Peleadores de MMA en España | Lista Completa y Récords</title>
+                <meta
+                    name="description"
+                    content={`Explora nuestra base de datos con más de ${fighters.length} peleadores de MMA en España. 
+                    Récords, estadísticas y próximos combates de las estrellas de WOW, AFL y UFC.`}
+                />
+                <meta name="keywords" content="MMA España, peleadores españoles, ranking mma españa, luchadores 
+                mma, ufc españa, wow fc, afl mma" />
+
+                {/* Open Graph para que al compartir la lista en Twitter/WhatsApp se vea profesional */}
+                <meta property="og:title" content="Directorio Oficial de Peleadores MMA España" />
+                <meta property="og:description" content="Consulta el roster completo de luchadores que 
+                compiten en las promotoras españolas." />
+                <meta property="og:type" content="website" />
+                <meta property="og:url" content={window.location.href} />
+            </Helmet>
+
             <h2 className="text-4xl sm:text-6xl mb-16 gradiant-color border-b pb-10 flex items-center justify-center 
             streetFighterTypo">
                 PELEADORES
