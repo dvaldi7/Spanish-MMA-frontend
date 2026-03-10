@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3001";
 
@@ -28,12 +29,32 @@ export const NewsDetail = () => {
         fetchNewsDetail();
     }, [slug]);
 
+    // Hook para el SEO (ux y google)
+    useEffect(() => {
+        if (item) {
+            document.title = `${item.title} | Noticias MMA España | Spanish MMA`;
+            window.scrollTo(0, 0);
+        }
+    }, [item]);
+
     if (loading) return <div className="text-center mt-20 text-xl font-serif">Cargando noticia...</div>;
     if (error) return <div className="text-center mt-20 text-red-500 font-serif">{error}</div>;
     if (!item) return null;
 
     return (
         <main className="mt-20 p-4 mx-auto max-w-6xl font-serif">
+
+            {/* HELMET PARA SEO DE NOTICIAS */}
+            <Helmet>
+                <title>{`${item.title} | Spanish MMA`}</title>
+                <meta name="description" content={item.content.substring(0, 160)} />
+                <meta property="og:type" content="article" />
+                <meta property="og:title" content={item.title} />
+                <meta property="og:image" content={item.image_url?.startsWith('http') ? 
+                    item.image_url : `${BACKEND_URL}/${item.image_url}`} />
+                <meta name="twitter:card" content="summary_large_image" />
+            </Helmet>
+
             {/* Botón Volver */}
             <div className="mb-8 text-left">
                 <Link to="/" className="gradiant-color streetFighterTypo hover:underline mb-4 
@@ -58,7 +79,7 @@ export const NewsDetail = () => {
                             className="w-full md:w-1/2 md:h-auto lg:w-3/5 h-full object-fill md:object-contain mt-10 "
                         />
                     </div>
-                    
+
 
                     {/* TEXTO */}
                     <div className=" w-full p-8 md:p-12 flex flex-col justify-center text-left">

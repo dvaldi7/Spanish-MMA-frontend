@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3001";
 import avatar from "/images/events/avatar.jpg";
 import fightersAvatar from "/images/fighters/avatar.png";
+import { Helmet } from "react-helmet-async";
 
 const EventDetail = () => {
   const { slug } = useParams();
@@ -64,6 +65,16 @@ const EventDetail = () => {
 
     fetchEventAndRoster();
   }, [slug]);
+
+  // Hook para el SEO 
+  useEffect(() => {
+    if (event) {
+      const isPast = new Date(event.date) < new Date().setHours(0, 0, 0, 0);
+      const titlePrefix = isPast ? "Resultados: " : "Cartelera: ";
+      document.title = `${titlePrefix}${event.name} | Spanish MMA`;
+      window.scrollTo(0, 0);
+    }
+  }, [event]);
 
   //Obtener la foto de los peleadores y si no el avatar de peleadores
   const getFighterPhotoUrl = (photoUrl) => {
@@ -269,11 +280,29 @@ const EventDetail = () => {
   if (error) return <p className="text-center text-red-600 text-xl p-6">{error}</p>;
   if (!event) return <p>No se encontró el evento.</p>;
 
+  // título para el SEO del evento
+  const eventTitle = `${event.name}: ${event.tagline || 'Resultados y Cartelera'}`;
+
   // Determinar el estado 'Completado'
   const completedStatus = event.is_completed || isEventCompleted(event.date);
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
+
+      {/* HELMET PARA EL SEO */}
+      <Helmet>
+        <title>{`${eventTitle} | Spanish MMA`}</title>
+        <meta
+          name="description"
+          content={`Toda la información sobre ${event.name}. Lugar: ${event.location}. 
+          Fecha: ${event.date}. No te pierdas la cartelera completa y los resultados en directo.`}
+        />
+        {/* para las Redes Sociales */}
+        <meta property="og:title" content={eventTitle} />
+        <meta property="og:image" content={event.poster_url || "/default-event.jpg"} />
+      </Helmet>
+
+      {/* CABECERA PARA VOLVER */}
       <Link
         to="/eventos"
         className="gradiant-color streetFighterTypo hover:underline mb-4 
