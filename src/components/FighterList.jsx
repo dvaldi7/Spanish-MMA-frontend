@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import useFetchFighters from '../hooks/useFetchFighters';
 import avatar from "/images/fighters/avatar.png";
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
