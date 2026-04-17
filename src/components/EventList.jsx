@@ -61,6 +61,28 @@ export const EventList = () => {
 
     return (
         <div className="p-6">
+
+            {/* HELMET SEO EVENTOS MMA */}
+            <Helmet>
+                <title>Calendario MMA España 2026 | Próximos Eventos y Carteleras</title>
+                <meta
+                    name="description"
+                    content={`📅 Actualizado hoy: Consulta los próximos eventos de MMA en España. 
+                        Carteleras de WOW FC, AFL y War MMA, UFC, horarios y dónde comprar entradas oficiales.`}
+                />
+                <meta name="keywords" content="MMA España, próximos eventos MMA, cartelera WOW FC, AFL MMA 
+                entradas, artes marciales mixtas España, ver MMA online, calendario combates 2026" />
+                <meta property="og:title" content="Próximas Veladas de MMA en España: No te pierdas ni un KO" />
+                <meta property="og:description" content="Toda la información sobre sedes, pesajes y venta de entradas de las 
+                principales promotoras españolas." />
+                <meta property="og:type" content="website" />
+                <meta property="og:url" content={window.location.href} />
+                <meta property="og:image" content="https://tu-dominio.com/assets/seo/banner-eventos-mma.jpg" />
+                <meta property="og:site_name" content="TuNombreDeWeb" />
+                <link rel="canonical" href={window.location.href} />
+                <meta name="robots" content="index, follow" />
+            </Helmet>
+
             <h2 className="text-4xl sm:text-6xl mb-16 gradiant-color border-b pb-10 flex items-center justify-center 
                     streetFighterTypo">
                 EVENTOS
@@ -88,9 +110,9 @@ export const EventList = () => {
             {/* TARJETA DE LAS COMPAÑÍAS */}
             <div className="card mt-12 mb-20">
                 {events.map(event => (
-                    <div key={event.event_id} 
-                    onClick={() => navigate(`/eventos/${event.slug}`)}
-                    className="bg-gray-200 bg-opacity-65 p-5 shadow-xl rounded-xl 
+                    <div key={event.event_id}
+                        onClick={() => navigate(`/eventos/${event.slug}`)}
+                        className="bg-gray-200 bg-opacity-65 p-5 shadow-xl rounded-xl 
                     border-l-2 border-l-custom-red border-b-2  border-b-custom-gold hover:shadow-2xl hover:scale-105 
                     transition duration-300 cursor-pointer ">
                         <h3 className="text-base font-bold text-custom-black mb-5 text-center">

@@ -76,7 +76,7 @@ const FighterDetail = () => {
   };
 
 
-  if (loading) return <p className="text-center text-xl p-6 text-blue-600">Cargando...</p>;
+  if (loading) return <p className="text-center text-xl p-6 text-white">Cargando...</p>;
   if (error) return <p className="text-center text-red-600 text-xl p-6">{error}</p>;
   if (!fighter) return <p>No se encontró al peleador.</p>;
 
