@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import useFetchEvents from '../hooks/useFetchEvents';
 import { useNavigate } from 'react-router-dom';
 import avatar from "/images/events/avatar.jpg";
+import { Helmet } from "react-helmet-async";
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
 
 export const EventList = () => {
@@ -67,18 +68,17 @@ export const EventList = () => {
                 <title>Calendario MMA España 2026 | Próximos Eventos y Carteleras</title>
                 <meta
                     name="description"
-                    content={`📅 Actualizado hoy: Consulta los próximos eventos de MMA en España. 
+                    content={`Actualizado hoy: Consulta los próximos eventos de MMA en España. 
                         Carteleras de WOW FC, AFL y War MMA, UFC, horarios y dónde comprar entradas oficiales.`}
                 />
                 <meta name="keywords" content="MMA España, próximos eventos MMA, cartelera WOW FC, AFL MMA 
                 entradas, artes marciales mixtas España, ver MMA online, calendario combates 2026" />
                 <meta property="og:title" content="Próximas Veladas de MMA en España: No te pierdas ni un KO" />
-                <meta property="og:description" content="Toda la información sobre sedes, pesajes y venta de entradas de las 
+                <meta property="og:description" content="Toda la información sobre sedes, pesajes y venta de 
+                entradas de las 
                 principales promotoras españolas." />
                 <meta property="og:type" content="website" />
                 <meta property="og:url" content={window.location.href} />
-                <meta property="og:image" content="https://tu-dominio.com/assets/seo/banner-eventos-mma.jpg" />
-                <meta property="og:site_name" content="TuNombreDeWeb" />
                 <link rel="canonical" href={window.location.href} />
                 <meta name="robots" content="index, follow" />
             </Helmet>
