@@ -56,7 +56,7 @@ const CompanyDetail = () => {
     return photoUrl ? `${BACKEND_URL}/${photoUrl}` : avatar;
   };
 
-  if (loading) return <p className="text-center text-xl p-6 text-blue-600">Cargando compañía...</p>;
+  if (loading) return <p className="text-center text-xl p-6 text-white">Cargando compañía...</p>;
   if (error) return <p className="text-center text-red-600 text-xl p-6">{error}</p>;
   if (!company) return <p>No se encontró la compañía.</p>;
 

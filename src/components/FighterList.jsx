@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import useFetchFighters from '../hooks/useFetchFighters';
 import { Helmet } from "react-helmet-async";
 import { getImageUrl } from '../utils/helpers';

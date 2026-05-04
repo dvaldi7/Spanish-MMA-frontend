@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import useFetchCompanies from '../hooks/useFetchCompanies';
 import avatar from "/images/companies/avatar.jpg";
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
@@ -23,6 +24,12 @@ export const CompanyList = () => {
 
         fetchCompanies(1, pagination.limit, searchTerm);
     }
+
+    // Hook para para el SEO
+    useEffect(() => {
+        document.title = "Promotoras de MMA en España | Lista Completa | Spanish MMA";
+        window.scrollTo(0, 0);
+    }, []);
 
     if (loading) return <p className="text-center text-xl p-6 text-white">Cargando compañías...</p>;
     if (error) return <p className="text-center text-red-600 text-xl p-6">{error}</p>;
@@ -57,6 +64,26 @@ export const CompanyList = () => {
 
     return (
         <div className="p-6">
+
+            {/* HELMET: SEO */}
+            <Helmet>
+                <title>Promotoras de MMA en España | Lista Completa y Eventos</title>
+                <meta
+                    name="description"
+                    content={`Explora nuestra base de datos de promotoras de MMA en España. 
+                    WOW FC, AFL, WAR, PFL, UFC y más. Información de eventos, sedes y peleadores.`}
+                />
+                <meta name="keywords" content="MMA España, promotoras mma españa, wow fc, afl mma, war mma, 
+                pfl madrid, ufc españa, eventos mma españa, promotoras de lucha" />
+
+                {/* Open Graph para que al compartir la lista en Twitter/WhatsApp se vea profesional */}
+                <meta property="og:title" content="Directorio de Promotoras MMA España" />
+                <meta property="og:description" content="Consulta el directorio completo de promotoras y 
+                organizaciones de MMA que operan en España." />
+                <meta property="og:type" content="website" />
+                <meta property="og:url" content={window.location.href} />
+            </Helmet>
+
             <h2 className="text-4xl sm:text-6xl mb-16 gradiant-color border-b pb-10 flex items-center justify-center 
                     streetFighterTypo">
                 PROMOTORAS
