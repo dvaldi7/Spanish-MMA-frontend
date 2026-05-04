@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import api from '../services/api';
 
 const useFetchFighters = (initialLimit = 10) => {
@@ -40,7 +40,7 @@ const useFetchFighters = (initialLimit = 10) => {
         } finally {
             setLoading(false);
         }
-    }, [setFighters, setPagination, setLoading, setError]);
+    }, []);
 
     useEffect(() => {
         fetchFighters(1, pagination.limit, currentSearchTerm);

@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import useFetchEvents from '../hooks/useFetchEvents';
 import api from '../services/api';
 import EventFormModal from '../components/EventFormModal';
+import { getImageUrl, formatDate } from '../utils/helpers';
 import avatar from "/images/events/avatar.jpg";
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
 
 const AdminEvents = () => {
 
@@ -173,12 +173,12 @@ const AdminEvents = () => {
                                 {/* Póster */}
                                 <td className="px-6 py-4 whitespace-nowrap">
                                     <img
-                                        src={getImageUrl(event.poster_url)}
+                                        src={getImageUrl(event.poster_url, avatar)}
                                         alt={`Logo de ${event.name}`}
                                         className="h-10 w-10 rounded-full object-cover"
                                         onError={(e) => {
                                             e.target.onerror = null;
-                                            e.target.src = { avatar };
+                                            e.target.src = avatar;
                                         }}
                                     />
                                 </td>
@@ -200,7 +200,7 @@ const AdminEvents = () => {
 
                                 {/* Fecha  */}
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    {formatDate(event.date)}
+                                    {formatDate(event.date, true)}
                                 </td>
 
                                 {/* Estado */}
@@ -241,7 +241,7 @@ const AdminEvents = () => {
                          hover:bg-gray-50">
                             <div className="flex items-center space-x-3">
                                 <img
-                                    src={getImageUrl(event.poster_url)}
+                                    src={getImageUrl(event.poster_url, avatar)}
                                     alt={`Póster de ${event.name}`}
                                     className="h-10 w-10 rounded-md object-cover"
                                     onError={(e) => {
@@ -255,7 +255,7 @@ const AdminEvents = () => {
                                         {event.name || 'N/A'}</div>
                                     {/* Ubicación y Fecha */}
                                     <div className="text-xs text-gray-500">
-                                        {event.location || 'N/A'} - {formatDate(event.date)}
+                                        {event.location || 'N/A'} - {formatDate(event.date, true)}
                                     </div>
                                 </div>
                             </div>

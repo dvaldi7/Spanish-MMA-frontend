@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useFetchFighters from '../hooks/useFetchFighters';
+import { Helmet } from "react-helmet-async";
+import { getImageUrl } from '../utils/helpers';
 import avatar from "/images/fighters/avatar.png";
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
 
 const FighterList = () => {
 
@@ -55,15 +56,6 @@ const FighterList = () => {
             </button>
         );
     }
-
-    const getImageUrl = (photoUrl) => {
-        if (photoUrl && (photoUrl.startsWith('http') || photoUrl.startsWith('https'))) {
-            return photoUrl;
-        }
-
-        return `${BACKEND_URL}/${photoUrl}`;
-    };
-
 
     return (
         <div className="p-6">
@@ -129,7 +121,7 @@ const FighterList = () => {
                         <div className="mb-3 flex justify-center items-center">
                             {fighter.photo_url ? (
                                 <img
-                                    src={getImageUrl(fighter.photo_url)}
+                                    src={getImageUrl(fighter.photo_url, avatar)}
                                     alt={`Foto de ${fighter.first_name}`}
                                     className="card_photo-fighter"
                                 />

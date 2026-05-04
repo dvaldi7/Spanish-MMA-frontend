@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3001";
+import api from "../services/api";
 import avatar from "/images/fighters/avatar.png";
+import { getImageUrl } from "../utils/helpers";
 import { Helmet } from "react-helmet-async";
 
 const FighterDetail = () => {
@@ -13,13 +14,10 @@ const FighterDetail = () => {
   useEffect(() => {
     const fetchFighter = async () => {
       try {
-        const response = await fetch(`${BACKEND_URL}/api/fighters/slug/${slug}`);
-
-        if (!response.ok) throw new Error("Peleador no encontrado");
-        const data = await response.json();
-        setFighter(data);
+        const response = await api.get(`/fighters/slug/${slug}`);
+        setFighter(response.data);
       } catch (err) {
-        setError(err.message);
+        setError(err.response?.data?.message || "Peleador no encontrado");
       } finally {
         setLoading(false);
       }
@@ -40,13 +38,6 @@ const FighterDetail = () => {
       window.scrollTo(0, 0);
     }
   }, [fighter]); // Solo se ejecuta cuando llega el peleador
-
-  const getImageUrl = (photoUrl) => {
-    if (photoUrl && (photoUrl.startsWith("http") || photoUrl.startsWith("https"))) {
-      return photoUrl;
-    }
-    return `${BACKEND_URL}/${photoUrl}`;
-  };
 
   // PELEAS RECIENTES
   const renderFights = (fightsText) => {
@@ -101,7 +92,7 @@ const FighterDetail = () => {
         />
         <meta property="og:title" content={`${fullName} - Spanish MMA`} />
         <meta property="og:description" content={`Estadísticas y resultados de ${fullName} en MMA.`} />
-        <meta property="og:image" content={fighter.photo_url ? getImageUrl(fighter.photo_url) : avatar} />
+        <meta property="og:image" content={getImageUrl(fighter.photo_url, avatar)} />
       </Helmet>
 
       {/* CABECERA PARA VOLVER */}
@@ -119,7 +110,7 @@ const FighterDetail = () => {
 
         <div className="flex justify-center mb-6">
           <img
-            src={fighter.photo_url ? getImageUrl(fighter.photo_url) : avatar}
+            src={getImageUrl(fighter.photo_url, avatar)}
             alt={`Peleador de MMA ${fullName} - Perfil oficial Spanish MMA`}
             className="w-48 h-48 object-cover rounded-full shadow-lg border-2 border-custom-black"
           />

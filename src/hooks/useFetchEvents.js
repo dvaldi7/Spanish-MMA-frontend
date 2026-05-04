@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import api from '../services/api';
 
 const useFetchEvents = (initialLimit = 10) => {
@@ -38,7 +38,7 @@ const useFetchEvents = (initialLimit = 10) => {
         } finally {
             setLoading(false);
         }
-    }, [setEvents, setPagination, setLoading, setError]);
+    }, []);
 
    
     useEffect(() => {
