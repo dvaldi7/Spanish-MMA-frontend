@@ -3,7 +3,7 @@ import useFetchEvents from '../hooks/useFetchEvents';
 import { useNavigate } from 'react-router-dom';
 import avatar from "/images/events/avatar.jpg";
 import { Helmet } from "react-helmet-async";
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
+import { getImageUrl } from '../utils/helpers';
 
 export const EventList = () => {
 
@@ -26,14 +26,10 @@ export const EventList = () => {
         fetchEvents(1, pagination.limit, searchTerm);
     }
 
-    const handleGoToPage = (pageNumber) => {
-        goToPage(pageNumber, searchTerm);
-    }
-
     if (loading) return <p className="text-center text-xl p-6 text-white">Cargando eventos...</p>;
     if (error) return <p className="text-center text-red-600 text-xl p-6">{error}</p>;
 
-    const { current_page, total_pages, total_items } = pagination;
+    const { current_page, total_pages } = pagination;
 
     const pageButtons = [];
     for (let i = 1; i <= total_pages; i++) {
@@ -50,14 +46,6 @@ export const EventList = () => {
             </button>
         );
     }
-
-    const getImageUrl = (posterUrl) => {
-        if (posterUrl && (posterUrl.startsWith('http') || posterUrl.startsWith('https'))) {
-            return posterUrl;
-        }
-
-        return `${BACKEND_URL}/${posterUrl}`;
-    };
 
 
     return (
@@ -121,7 +109,7 @@ export const EventList = () => {
                         {<div className="mb-3 flex justify-center items-center">
                             {event.poster_url ? (
                                 <img
-                                    src={getImageUrl(event.poster_url)}
+                                    src={getImageUrl(event.poster_url, avatar)}
                                     alt={`Foto de ${event.name}`}
                                     className="card_poster-event"
                                 />

@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import useFetchEvents from '../hooks/useFetchEvents';
 import api from '../services/api';
 import EventFormModal from '../components/EventFormModal';
+import { getImageUrl, formatDate } from '../utils/helpers';
 import avatar from "/images/events/avatar.jpg";
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
 
 const AdminEvents = () => {
 
@@ -22,21 +22,6 @@ const AdminEvents = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [eventIdToEdit, setEventIdToEdit] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
-
-    // formatear la fecha
-    const formatDate = (dateString) => {
-        if (!dateString) return 'N/A';
-        try {
-            const date = new Date(dateString);
-            return date.toLocaleDateString('es-ES', {
-                day: '2-digit',
-                month: 'short',
-                year: 'numeric'
-            });
-        } catch (e) {
-            return 'Fecha Inválida';
-        }
-    };
 
     //Para el buscador
     useEffect(() => {
@@ -89,16 +74,8 @@ const AdminEvents = () => {
         }
     };
 
-      const getImageUrl = (photoUrl) => {
-            if (!photoUrl) return avatar;
-            if (photoUrl.startsWith('http')) {
-                return photoUrl;
-            }
-            return `${BACKEND_URL}/${photoUrl}`;
-        };
-
     if (loading) return <div className="p-6 text-gray-600">Cargando eventos...</div>;
-    if (error) return <div className="p-6 text-red-600 font-semibold">Error al cargar eventos: {error.message}</div>;
+    if (error) return <div className="p-6 text-red-600 font-semibold">Error al cargar eventos: {error}</div>;
 
     return (
         <div className="p-4 sm:p-6 bg-gray-50 min-h-screen opacity-85 rounded-lg mt-10">
@@ -173,12 +150,12 @@ const AdminEvents = () => {
                                 {/* Póster */}
                                 <td className="px-6 py-4 whitespace-nowrap">
                                     <img
-                                        src={getImageUrl(event.poster_url)}
+                                        src={getImageUrl(event.poster_url, avatar)}
                                         alt={`Logo de ${event.name}`}
                                         className="h-10 w-10 rounded-full object-cover"
                                         onError={(e) => {
                                             e.target.onerror = null;
-                                            e.target.src = { avatar };
+                                            e.target.src = avatar;
                                         }}
                                     />
                                 </td>
@@ -200,7 +177,7 @@ const AdminEvents = () => {
 
                                 {/* Fecha  */}
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    {formatDate(event.date)}
+                                    {formatDate(event.date, true)}
                                 </td>
 
                                 {/* Estado */}
@@ -241,7 +218,7 @@ const AdminEvents = () => {
                          hover:bg-gray-50">
                             <div className="flex items-center space-x-3">
                                 <img
-                                    src={getImageUrl(event.poster_url)}
+                                    src={getImageUrl(event.poster_url, avatar)}
                                     alt={`Póster de ${event.name}`}
                                     className="h-10 w-10 rounded-md object-cover"
                                     onError={(e) => {
@@ -255,7 +232,7 @@ const AdminEvents = () => {
                                         {event.name || 'N/A'}</div>
                                     {/* Ubicación y Fecha */}
                                     <div className="text-xs text-gray-500">
-                                        {event.location || 'N/A'} - {formatDate(event.date)}
+                                        {event.location || 'N/A'} - {formatDate(event.date, true)}
                                     </div>
                                 </div>
                             </div>

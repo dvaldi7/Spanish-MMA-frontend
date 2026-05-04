@@ -15,7 +15,7 @@ const useAuth = () => {
                 try {
                     await api.get('/fighters/auth/verify'); 
                     setUser({ role });
-                } catch (error) {
+                } catch {
                     console.error("Token no válido al arrancar");
                     logout();
                 }

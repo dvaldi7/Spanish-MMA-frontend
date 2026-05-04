@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import useFetchFighters from '../hooks/useFetchFighters';
 import api from '../services/api';
 import FighterFormModal from '../components/FighterFormModal';
+import { getImageUrl } from '../utils/helpers';
 import avatar from "/images/fighters/avatar.png";
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
 
 
 const AdminFighters = () => {
@@ -73,15 +73,7 @@ const AdminFighters = () => {
         } catch (error) {
             console.error("Error al eliminar al peleador: ", error);
         }
-    };
-
-    const getImageUrl = (photoUrl) => {
-        if (!photoUrl) return avatar;
-        if (photoUrl.startsWith('http')) {
-            return photoUrl;
-        }
-        return `${BACKEND_URL}/${photoUrl}`;
-    };
+};
 
     if (loading) return <div className="p-6 text-gray-600">Cargando peleadores...</div>;
     if (error) return <div className="p-6 text-red-600 font-semibold">Error al cargar: {error.message}</div>;
@@ -152,7 +144,7 @@ const AdminFighters = () => {
 
                                 <td className="px-6 py-4 whitespace-nowrap">
                                     <img
-                                        src={getImageUrl(fighter.photo_url)}
+                                        src={getImageUrl(fighter.photo_url, avatar)}
                                         alt={`Foto de ${fighter.first_name}`}
                                         className="h-10 w-10 rounded-full object-cover"
                                         onError={(e) => {
@@ -203,7 +195,7 @@ const AdminFighters = () => {
                          hover:bg-gray-50">
                             <div className="flex items-center space-x-3">
                                 <img
-                                    src={getImageUrl(fighter.photo_url)}
+                                    src={getImageUrl(fighter.photo_url, avatar)}
                                     className="h-10 w-10 rounded-full object-cover"
                                     onError={(e) => {
                                         e.target.onerror = null;

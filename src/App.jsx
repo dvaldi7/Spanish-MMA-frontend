@@ -1,4 +1,3 @@
-import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import FighterList from './components/FighterList.jsx';
 import Login from './components/Login.jsx';
@@ -13,7 +12,6 @@ import AdminEvents from './admin/AdminEvents.jsx';
 import FighterDetail from './components/FighterDetail.jsx';
 import CompanyDetail from './components/CompanyDetail.jsx';
 import EventDetail from './components/EventDetail.jsx';
-import { useNavigate } from 'react-router-dom';
 import { Error404 } from './components/404.jsx';
 import { HomePage } from './components/HomePage.jsx';
 import { NewsDetail } from './components/NewsDetail.jsx';

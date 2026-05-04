@@ -1,0 +1,18 @@
+name: Mi Config Local
+version: 1.0.0
+schema: v1
+
+# Definimos los modelos que usarás (Gratis y Locales)
+models:
+  - name: Qwen 2.5 Coder 1.5B
+    provider: ollama
+    model: qwen2.5-coder:1.5b
+
+# Esto activa el autocompletado profesional
+tabAutocompleteModel:
+  name: Qwen Autocomplete
+  provider: ollama
+  model: qwen2.5-coder:1.5b
+
+# Herramientas de Agente (MCP)
+mcpServers: []

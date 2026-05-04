@@ -5,7 +5,7 @@ import api from '../services/api';
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3001";
 
 export const AdminNews = () => {
-    const { news, pagination, loading, goToPage, fetchNews } = useFetchNews(10);
+    const { news, fetchNews } = useFetchNews(10);
     const [formData, setFormData] = useState({ title: '', content: '' });
     const [image, setImage] = useState(null);
     const [editingId, setEditingId] = useState(null);

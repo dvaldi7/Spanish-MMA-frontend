@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import useFetchCompanies from '../hooks/useFetchCompanies';
 import avatar from "/images/companies/avatar.jpg";
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
+import { getImageUrl } from '../utils/helpers';
 
 export const CompanyList = () => {
 
@@ -34,7 +34,7 @@ export const CompanyList = () => {
     if (loading) return <p className="text-center text-xl p-6 text-white">Cargando compañías...</p>;
     if (error) return <p className="text-center text-red-600 text-xl p-6">{error}</p>;
 
-    const { current_page, total_pages, total_items } = pagination;
+    const { current_page, total_pages } = pagination;
 
     const pageButtons = [];
     for (let i = 1; i <= total_pages; i++) {
@@ -51,15 +51,6 @@ export const CompanyList = () => {
             </button>
         );
     }
-
-
-    const getLogoUrl = (logoUrl) => {
-        if (logoUrl && (logoUrl.startsWith('http') || logoUrl.startsWith('https'))) {
-            return logoUrl;
-        }
-
-        return `${BACKEND_URL}/${logoUrl}`;
-    };
 
 
     return (
@@ -122,7 +113,7 @@ export const CompanyList = () => {
                         {<div className="mb-3 flex justify-center items-center">
                             {company.logo_url ? (
                                 <img
-                                    src={getLogoUrl(company.logo_url)}
+                                    src={getImageUrl(company.logo_url, avatar)}
                                     alt={`Foto de ${company.name}`}
                                     className="card_logo-company"
                                 />

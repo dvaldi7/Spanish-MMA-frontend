@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3001";
 import useFetchNews from '../hooks/useFetchNews';
 import { useNavigate } from 'react-router-dom';
 import { Helmet } from "react-helmet-async";
+import { formatDate } from '../utils/helpers';
 
 export const HomePage = () => {
 
@@ -14,15 +15,13 @@ export const HomePage = () => {
         error,
         pagination,
         goToPage,
-        fetchNews,
-        searchTerm,
     } = useFetchNews(5);
 
-    const { current_page, total_pages, total_items } = pagination;
+    const { current_page, total_pages } = pagination;
 
 
     const handleGoToPage = (pageNumber) => {
-        goToPage(pageNumber, searchTerm);
+        goToPage(pageNumber);
     }
 
     const pageButtons = [];
@@ -40,14 +39,6 @@ export const HomePage = () => {
             </button>
         );
     }
-
-    const formatDate = (dateString) => {
-        return new Date(dateString).toLocaleDateString('es-ES', {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit'
-        });
-    };
 
     useEffect(() => {
         // Scroll al inicio para mejorar UX al navegar
