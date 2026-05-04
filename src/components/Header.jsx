@@ -1,11 +1,9 @@
-import React, { useState } from 'react'; 
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import useAuth from '../hooks/useAuth';
 import octagonoImage from '/octagono.png';
 import { FiMenu, FiX } from 'react-icons/fi'; 
 
 export const Header = () => {
-    const { user, logout } = useAuth();
     const [isMenuOpen, setIsMenuOpen] = useState(false); 
 
     const toggleMenu = () => setIsMenuOpen(!isMenuOpen);

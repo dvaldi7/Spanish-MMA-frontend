@@ -14,9 +14,8 @@ const useFetchFighters = (initialLimit = 10) => {
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-    const [currentSearchTerm, setCurrentSearchTerm] = useState('');
 
-    const fetchFighters = useCallback(async (page = pagination.current_page, limit = pagination.limit, term = '') => {
+    const fetchFighters = useCallback(async (page = 1, limit = 10, term = '') => {
         setLoading(true);
         setError(null);
 
@@ -43,12 +42,12 @@ const useFetchFighters = (initialLimit = 10) => {
     }, []);
 
     useEffect(() => {
-        fetchFighters(1, pagination.limit, currentSearchTerm);
-    }, [currentSearchTerm, pagination.limit, fetchFighters]);
+        fetchFighters(1, initialLimit, '');
+    }, [initialLimit, fetchFighters]);
 
     const goToPage = (pageNumber) => {
         if (pageNumber > 0 && pageNumber <= pagination.total_pages) {
-            fetchFighters(pageNumber, pagination.limit, currentSearchTerm);
+            fetchFighters(pageNumber, pagination.limit, '');
         }
     };
 
@@ -59,7 +58,6 @@ const useFetchFighters = (initialLimit = 10) => {
         error,
         fetchFighters,
         goToPage,
-        searchTerm: currentSearchTerm,
     };
 };
 

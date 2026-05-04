@@ -17,8 +17,6 @@ const initialFormState = {
 const EventFormModal = ({ eventIdToEdit, isModalOpen, closeModal, onEventSaved }) => {
     const [formData, setFormData] = useState(initialFormState);
     const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState(null);
-    const [validationErrors, setValidationErrors] = useState({});
     const [fighters, setFighters] = useState([]);
     const [imageFile, setImageFile] = useState(null);
 
@@ -27,7 +25,6 @@ const EventFormModal = ({ eventIdToEdit, isModalOpen, closeModal, onEventSaved }
     useEffect(() => {
         if (!isModalOpen) {
             setFormData(initialFormState);
-            setError(null);
             setImageFile(null);
             return;
         }
@@ -54,8 +51,7 @@ const EventFormModal = ({ eventIdToEdit, isModalOpen, closeModal, onEventSaved }
                     description: eventData.description || '',
                 });
             } catch (err) {
-                console.error('Error:', err);
-                setError("Error al cargar datos");
+                console.error('Error al cargar datos del evento:', err);
             } finally {
                 setIsLoading(false);
             }
@@ -132,8 +128,7 @@ const EventFormModal = ({ eventIdToEdit, isModalOpen, closeModal, onEventSaved }
             onEventSaved();
             closeModal();
         } catch (err) {
-            console.error('Error:', err.response?.data);
-            setError('Error al guardar: revisa que la columna description existe en la BBDD');
+            console.error('Error al guardar evento:', err.response?.data);
         } finally {
             setIsLoading(false);
         }

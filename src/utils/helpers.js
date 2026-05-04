@@ -23,7 +23,7 @@ export const formatDate = (dateString, short = false) => {
                 month: '2-digit',
                 day: '2-digit'
               });
-    } catch (e) {
+    } catch {
         return 'Fecha Inválida';
     }
 };

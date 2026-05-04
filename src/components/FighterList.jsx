@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import useFetchFighters from '../hooks/useFetchFighters';
-import { Helmet } from "react-helmet-async";
 import { getImageUrl } from '../utils/helpers';
 import avatar from "/images/fighters/avatar.png";
 
@@ -40,7 +39,7 @@ const FighterList = () => {
     if (loading) return <p className="text-center text-xl p-6 text-white">Cargando luchadores...</p>;
     if (error) return <p className="text-center text-custom-red text-xl p-6">{error}</p>;
 
-    const { current_page, total_pages, total_items } = pagination;
+    const { current_page, total_pages } = pagination;
 
     const pageButtons = [];
     for (let i = 1; i <= total_pages; i++) {

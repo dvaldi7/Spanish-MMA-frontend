@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import api from '../services/api';
 
 const useFetchCompanies = (initialLimit = 10) => {
@@ -14,7 +14,6 @@ const useFetchCompanies = (initialLimit = 10) => {
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-    const [currentSearchTerm, setCurrentSearchTerm] = useState('');
 
     const fetchCompanies = useCallback(async (page = pagination.current_page, limit = pagination.limit, term = '') => {
         setLoading(true);
@@ -33,22 +32,22 @@ const useFetchCompanies = (initialLimit = 10) => {
             setCompanies(response.data.companies);
             setPagination(response.data.pagination);
 
-        } catch (error) {
-            console.error("Error al obtener las compañías: ", error);
+        } catch (err) {
+            console.error("Error al obtener las compañías: ", err);
             setError("No se pudieron cargar los datos de las compañías");
 
         } finally {
             setLoading(false);
         }
-    }, [setCompanies, setPagination, setLoading, setError]);
+    }, []);
 
     useEffect(() => {
-        fetchCompanies(1, pagination.limit, currentSearchTerm);
-    }, [currentSearchTerm, pagination.limit, fetchCompanies]);
+        fetchCompanies(1, pagination.limit, '');
+    }, [pagination.limit, fetchCompanies]);
 
     const goToPage = (pageNumber) => {
         if (pageNumber > 0 && pageNumber <= pagination.total_pages) {
-            fetchCompanies(pageNumber, pagination.limit, currentSearchTerm);
+            fetchCompanies(pageNumber, pagination.limit, '');
         }
     };
 
@@ -59,7 +58,6 @@ const useFetchCompanies = (initialLimit = 10) => {
         error,
         goToPage,
         fetchCompanies,
-        searchTerm: currentSearchTerm,
     };
 };
 

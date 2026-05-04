@@ -23,21 +23,6 @@ const AdminEvents = () => {
     const [eventIdToEdit, setEventIdToEdit] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
 
-    // formatear la fecha
-    const formatDate = (dateString) => {
-        if (!dateString) return 'N/A';
-        try {
-            const date = new Date(dateString);
-            return date.toLocaleDateString('es-ES', {
-                day: '2-digit',
-                month: 'short',
-                year: 'numeric'
-            });
-        } catch (e) {
-            return 'Fecha Inválida';
-        }
-    };
-
     //Para el buscador
     useEffect(() => {
         const delaySearch = setTimeout(() => {
@@ -89,16 +74,8 @@ const AdminEvents = () => {
         }
     };
 
-      const getImageUrl = (photoUrl) => {
-            if (!photoUrl) return avatar;
-            if (photoUrl.startsWith('http')) {
-                return photoUrl;
-            }
-            return `${BACKEND_URL}/${photoUrl}`;
-        };
-
     if (loading) return <div className="p-6 text-gray-600">Cargando eventos...</div>;
-    if (error) return <div className="p-6 text-red-600 font-semibold">Error al cargar eventos: {error.message}</div>;
+    if (error) return <div className="p-6 text-red-600 font-semibold">Error al cargar eventos: {error}</div>;
 
     return (
         <div className="p-4 sm:p-6 bg-gray-50 min-h-screen opacity-85 rounded-lg mt-10">

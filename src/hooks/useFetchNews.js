@@ -11,9 +11,8 @@ const useFetchNews = (initialLimit = 5) => {
     });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-    const [currentSearchTerm, setCurrentSearchTerm] = useState('');
 
-    const fetchNews = useCallback(async (page = 1, limit = initialLimit, term = '') => {
+    const fetchNews = useCallback(async (page = 1, limit = 5, term = '') => {
         setLoading(true);
         setError(null);
         try {
@@ -37,12 +36,12 @@ const useFetchNews = (initialLimit = 5) => {
     }, [initialLimit]); 
 
     useEffect(() => {
-        fetchNews(1, initialLimit, currentSearchTerm);
-    }, [fetchNews, initialLimit, currentSearchTerm]); 
+        fetchNews(1, initialLimit, '');
+    }, [fetchNews, initialLimit]);
 
     const goToPage = (pageNumber) => {
         if (pageNumber > 0 && pageNumber <= pagination.total_pages) {
-            fetchNews(pageNumber, pagination.limit, currentSearchTerm);
+            fetchNews(pageNumber, pagination.limit, '');
         }
     };
 
@@ -53,7 +52,6 @@ const useFetchNews = (initialLimit = 5) => {
         error,
         fetchNews,
         goToPage,
-        searchTerm: currentSearchTerm,
     };
 };
 
