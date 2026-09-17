@@ -1,8 +1,7 @@
 import axios from 'axios';
 
-const baseURL = import.meta.env.PROD
-    ? 'https://spanish-mma-backend.onrender.com/api'
-    : 'http://localhost:3001/api';
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
+const baseURL = `${BACKEND_URL.replace(/\/$/, '')}/api`;
 
 const api = axios.create({
     baseURL: baseURL,
