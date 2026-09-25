@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import useFetchFighters from '../hooks/useFetchFighters';
+import { buildPageWindow } from '../utils/pagination';
 import { getImageUrl } from '../utils/helpers';
 import avatar from "/images/fighters/avatar.png";
 
@@ -29,6 +30,11 @@ const FighterList = () => {
         goToPage(pageNumber, searchTerm);
     }
 
+    const handleClearSearch = () => {
+        setSearchTerm('');
+        fetchFighters(1, pagination.limit, '');
+    }
+
     // Hook para para el SEO
     useEffect(() => {
         document.title = "Peleadores de MMA en España | Luchadores Spanish MMA";
@@ -37,25 +43,13 @@ const FighterList = () => {
 
 
     if (loading) return <p className="text-center text-xl p-6 text-white">Cargando luchadores...</p>;
-    if (error) return <p className="text-center text-custom-red text-xl p-6">{error}</p>;
+    if (error) return <p className="text-center text-custom-red text-xl p-6">{error.message}</p>;
 
-    const { current_page, total_pages } = pagination;
+    const { current_page, total_pages, total_items } = pagination;
+    const hasSearch = searchTerm.trim() !== '';
+    const isEmpty = fighters.length === 0;
 
-    const pageButtons = [];
-    for (let i = 1; i <= total_pages; i++) {
-        pageButtons.push(
-            <button
-                key={i}
-                onClick={() => handleGoToPage(i)}
-                className={`px-4 py-2 mx-1 rounded-full transition duration-150 text-sm ${i === current_page
-                    ? 'bg-custom-red text-custom-gold font-bold shadow-md'
-                    : 'bg-gray-200 text-gray-800 hover:bg-blue-200'
-                    }`}
-            >
-                {i}
-            </button>
-        );
-    }
+    const pageWindow = buildPageWindow(current_page, total_pages, 2);
 
     return (
         <div className="p-6">
@@ -65,7 +59,7 @@ const FighterList = () => {
                 <title>Peleadores de MMA en España | Lista Completa y Récords</title>
                 <meta
                     name="description"
-                    content={`Explora nuestra base de datos con más de ${fighters.length} peleadores de MMA en España. 
+                    content={`Explora nuestra base de datos con ${total_items} peleadores de MMA en España.
                     Récords, estadísticas y próximos combates de las estrellas de WOW, AFL y UFC.`}
                 />
                 <meta name="keywords" content="MMA España, peleadores españoles, ranking mma españa, luchadores 
@@ -103,9 +97,39 @@ const FighterList = () => {
                 </button>
             </form>
 
-            {/* TARJETA DE LOS LUCHADORES */}
+            {/* CONTADOR Y TARJETA DE LOS LUCHADORES */}
+            {!isEmpty && (
+                <p className="text-center text-gray-300 text-sm mb-4">
+                    {total_items} {total_items === 1 ? 'luchador encontrado' : 'luchadores encontrados'}
+                    {hasSearch && <> para <span className="font-semibold text-custom-gold">«{searchTerm.trim()}»</span></>}
+                </p>
+            )}
+
             <div className="card mt-12 mb-20">
-                {fighters.map(fighter => (
+                {isEmpty ? (
+                    <div className="text-center p-10">
+                        <p className="text-xl text-gray-700 mb-2">
+                            {hasSearch
+                                ? 'No se encontraron luchadores'
+                                : 'Aún no hay luchadores registrados'}
+                        </p>
+                        {hasSearch && (
+                            <>
+                                <p className="text-sm text-gray-600 mb-6">
+                                    No hay resultados para «{searchTerm.trim()}». Prueba con otro nombre o apodo.
+                                </p>
+                                <button
+                                    onClick={handleClearSearch}
+                                    className="bg-gradient-to-b from-custom-red to-custom-gold px-6 py-2 rounded-lg
+                                    text-white font-medium transition hover:opacity-90"
+                                >
+                                    Limpiar búsqueda
+                                </button>
+                            </>
+                        )}
+                    </div>
+                ) : (
+                    fighters.map(fighter => (
                     <div key={fighter.fighter_id}
                         onClick={() => navigate(`/peleadores/${fighter.slug}`)}
                         className="bg-gray-200 bg-opacity-65 p-5 shadow-xl rounded-xl 
@@ -152,8 +176,9 @@ const FighterList = () => {
                                 Récord: {fighter.record_wins}-{fighter.record_losses}-{fighter.record_draws}
                             </span>
                         </div>
-                    </div>
-                ))}
+                     </div>
+                 ))
+                )}
             </div>
 
             {/* PAGINACIÓN */}
@@ -162,14 +187,31 @@ const FighterList = () => {
                     <button
                         onClick={() => handleGoToPage(current_page - 1)}
                         disabled={current_page === 1}
-                        className="px-3 py-2 bg-gray-700 text-white rounded-md hover:bg-gray-800 
+                        className="px-3 py-2 bg-gray-700 text-white rounded-md hover:bg-gray-800
                         transition disabled:opacity-50 text-sm"
                     >
                         Anterior
                     </button>
 
                     <div className="flex flex-nowrap justify-center">
-                        {pageButtons}
+                        {pageWindow.map((page, index) =>
+                            page === '…' ? (
+                                <span key={`ellipsis-${index}`} className="px-2 py-2 text-gray-400 text-sm">
+                                    …
+                                </span>
+                            ) : (
+                                <button
+                                    key={page}
+                                    onClick={() => handleGoToPage(page)}
+                                    className={`px-4 py-2 mx-1 rounded-full transition duration-150 text-sm ${page === current_page
+                                        ? 'bg-custom-red text-custom-gold font-bold shadow-md'
+                                        : 'bg-gray-200 text-gray-800 hover:bg-blue-200'
+                                        }`}
+                                >
+                                    {page}
+                                </button>
+                            )
+                        )}
                     </div>
 
                     <button

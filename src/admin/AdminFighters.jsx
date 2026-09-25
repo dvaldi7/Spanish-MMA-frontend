@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import useFetchFighters from '../hooks/useFetchFighters';
 import api from '../services/api';
 import FighterFormModal from '../components/FighterFormModal';
@@ -23,12 +23,19 @@ const AdminFighters = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [fighterIdToEdit, setFighterIdToEdit] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
+    const hasSearch = searchTerm.trim() !== '';
+    const isFirstRender = useRef(true);
 
-    //Para el buscador
+    //Buscador: debounce al escribir; el mount ya carga el listado desde el hook
     useEffect(() => {
+        if (isFirstRender.current) {
+            isFirstRender.current = false;
+            return;
+        }
+
         const delaySearch = setTimeout(() => {
             fetchFighters(1, pagination.limit, searchTerm);
-        }, 500); 
+        }, 500);
 
         return () => clearTimeout(delaySearch);
     }, [searchTerm, fetchFighters, pagination.limit]);
@@ -37,6 +44,10 @@ const AdminFighters = () => {
     const handleSearchChange = (e) => {
         //Este para buscar mientras escribes
         setSearchTerm(e.target.value);
+    };
+
+    const handleGoToPage = (pageNumber) => {
+        goToPage(pageNumber, searchTerm);
     };
 
     const openCreateModal = () => {
@@ -55,7 +66,7 @@ const AdminFighters = () => {
     };
 
     const handleFighterSaved = () => {
-        goToPage(pagination.current_page);
+        goToPage(pagination.current_page, searchTerm);
     };
 
     const handleDelete = async (fighterId) => {
@@ -68,7 +79,7 @@ const AdminFighters = () => {
             await api.delete(`/fighters/id/${fighterId}`);
             console.log("Peleador eliminado con éxito");
 
-            goToPage(pagination.current_page);
+            goToPage(pagination.current_page, searchTerm);
 
         } catch (error) {
             console.error("Error al eliminar al peleador: ", error);
@@ -117,19 +128,19 @@ const AdminFighters = () => {
                              tracking-wider">
                                 Foto
                             </th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase 
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase
                             tracking-wider">
                                 ID
                             </th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase 
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase
                             tracking-wider">
                                 Nombre
                             </th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase 
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase
                             tracking-wider">
                                 Apodo
                             </th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase 
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase
                             tracking-wider">
                                 Compañía
                             </th>
@@ -138,7 +149,21 @@ const AdminFighters = () => {
                     </thead>
 
                     <tbody className="bg-white divide-y divide-gray-200">
-                        {fighters.map(fighter => (
+                        {fighters.length === 0 ? (
+                            <tr>
+                                <td colSpan={5} className="px-6 py-10 text-center text-gray-500">
+                                    <p className="text-base font-medium mb-1">
+                                        {hasSearch ? 'No se encontraron peleadores' : 'Aún no hay peleadores registrados'}
+                                    </p>
+                                    {hasSearch && (
+                                        <p className="text-sm">
+                                            Sin resultados para «{searchTerm.trim()}». Prueba con otro nombre o apodo.
+                                        </p>
+                                    )}
+                                </td>
+                            </tr>
+                        ) : (
+                            fighters.map(fighter => (
 
                             <tr key={fighter.fighter_id} className="hover:bg-gray-50">
 
@@ -183,14 +208,27 @@ const AdminFighters = () => {
                                     </button>
                                 </td>
                             </tr>
-                        ))}
+                        ))
+                        )}
                     </tbody>
 
                 </table>
 
                 {/* Vista Móvil */}
                 <div className="sm:hidden divide-y divide-gray-200">
-                    {fighters.map(fighter => (
+                    {fighters.length === 0 ? (
+                        <div className="p-6 text-center text-gray-500">
+                            <p className="text-base font-medium mb-1">
+                                {hasSearch ? 'No se encontraron peleadores' : 'Aún no hay peleadores registrados'}
+                            </p>
+                            {hasSearch && (
+                                <p className="text-sm">
+                                    Sin resultados para «{searchTerm.trim()}».
+                                </p>
+                            )}
+                        </div>
+                    ) : (
+                        fighters.map(fighter => (
                         <div key={fighter.fighter_id} className="p-4 flex justify-between items-center bg-white
                          hover:bg-gray-50">
                             <div className="flex items-center space-x-3">
@@ -223,16 +261,17 @@ const AdminFighters = () => {
                                 </button>
                             </div>
                         </div>
-                    ))}
+                    ))
+                    )}
                 </div>
 
             </div>
 
             <div className="flex justify-center items-center mt-6">
                 <button
-                    onClick={() => goToPage(currentPage - 1)}
+                    onClick={() => handleGoToPage(currentPage - 1)}
                     disabled={currentPage === 1}
-                    className="px-4 py-2 mr-2 border border-gray-300 rounded-md shadow-sm text-sm 
+                    className="px-4 py-2 mr-2 border border-gray-300 rounded-md shadow-sm text-sm
                     font-medium text-gray-700 bg-white hover:bg-gray-100 disabled:opacity-50"
                 >
                     Anterior
@@ -242,7 +281,7 @@ const AdminFighters = () => {
                     Página {currentPage} de {totalPages}
                 </span>
                 <button
-                    onClick={() => goToPage(currentPage + 1)}
+                    onClick={() => handleGoToPage(currentPage + 1)}
                     disabled={currentPage === totalPages || totalPages === 0}
                     className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium
                      text-gray-700 bg-white hover:bg-gray-100 disabled:opacity-50"

@@ -1,5 +1,10 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import api from '../services/api';
+
+const isAbortError = (error) =>
+    error?.code === 'ERR_CANCELED' ||
+    error?.name === 'CanceledError' ||
+    error?.name === 'AbortError';
 
 const useFetchFighters = (initialLimit = 10) => {
 
@@ -14,30 +19,38 @@ const useFetchFighters = (initialLimit = 10) => {
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const abortRef = useRef(null);
 
     const fetchFighters = useCallback(async (page = 1, limit = 10, term = '') => {
+        if (abortRef.current) abortRef.current.abort();
+
+        const controller = new AbortController();
+        abortRef.current = controller;
+
         setLoading(true);
         setError(null);
 
-        let url = `/fighters?page=${page}&limit=${limit}`;
-
-        if (term) {
-            url += `&search=${term}`;
-        }
-
         try {
+            //El término viaja en params: axios lo codifica correctamente
+            const response = await api.get('/fighters', {
+                params: { page, limit, ...(term ? { search: term } : {}) },
+                signal: controller.signal,
+            });
 
-            const response = await api.get(url);
+            if (abortRef.current !== controller) return;
 
             setFighters(response.data.fighters);
             setPagination(response.data.pagination);
 
-        } catch (error) {
-            console.error("Error al obtener luchadores:", error);
-            setError("No se pudieron cargar los datos de luchadores. Inténtalo de nuevo más tarde");
+        } catch (err) {
+            if (isAbortError(err) || abortRef.current !== controller) return;
+            console.error("Error al obtener luchadores:", err);
+            setError(new Error('No se pudieron cargar los datos de luchadores. Inténtalo de nuevo más tarde'));
 
         } finally {
-            setLoading(false);
+            if (abortRef.current === controller) {
+                setLoading(false);
+            }
         }
     }, []);
 
@@ -45,9 +58,10 @@ const useFetchFighters = (initialLimit = 10) => {
         fetchFighters(1, initialLimit, '');
     }, [initialLimit, fetchFighters]);
 
-    const goToPage = (pageNumber) => {
+    //El término se conserva al paginar o refrescar tras guardar/eliminar
+    const goToPage = (pageNumber, term = '') => {
         if (pageNumber > 0 && pageNumber <= pagination.total_pages) {
-            fetchFighters(pageNumber, pagination.limit, '');
+            fetchFighters(pageNumber, pagination.limit, term);
         }
     };
 
