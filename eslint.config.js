@@ -26,4 +26,13 @@ export default defineConfig([
       'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
     },
   },
+  {
+    // vite.config.js se ejecuta en Node (preview TASK-0036 usa VITE_API_PROXY)
+    files: ['vite.config.js'],
+    languageOptions: {
+      globals: {
+        ...globals.node,
+      },
+    },
+  },
 ])

@@ -6,6 +6,8 @@ export default defineConfig({
   server: {
     port: 5173,
     host: 'localhost',
+    // Preview (TASK-0036): API same-origin cuando preview.sh exporta VITE_API_PROXY
+    ...(process.env.VITE_API_PROXY ? { proxy: { '/api': process.env.VITE_API_PROXY } } : {}),
   },
   build: {
     outDir: 'dist',
