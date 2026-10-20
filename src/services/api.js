@@ -1,11 +1,8 @@
 import axios from 'axios';
-
-// ?? permite sobreescribir con cadena vacía (mismo origen vía proxy de Vite en preview)
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL ?? 'http://localhost:3001';
-const baseURL = `${BACKEND_URL.replace(/\/$/, '')}/api`;
+import { apiBaseUrl } from '../config';
 
 const api = axios.create({
-    baseURL: baseURL,
+    baseURL: apiBaseUrl,
     headers: {
         'Content-Type': 'application/json',
     },

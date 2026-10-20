@@ -1,9 +1,8 @@
 import React, { useEffect } from 'react';
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3001";
 import useFetchNews from '../hooks/useFetchNews';
 import { useNavigate } from 'react-router-dom';
 import { Helmet } from "react-helmet-async";
-import { formatDate } from '../utils/helpers';
+import { formatDate, getImageUrl } from '../utils/helpers';
 
 export const HomePage = () => {
 
@@ -127,9 +126,7 @@ export const HomePage = () => {
                             <div className="flex flex-col md:flex-row md:justify-between gap-6 items-start">
                                 <div className="shrink-0 mx-auto md:mx-0">
                                     <img
-                                        src={item.image_url
-                                            ? (item.image_url.startsWith('http') ? item.image_url : `${BACKEND_URL}/${item.image_url}`)
-                                            : '/images/Error404.jpg'}
+                                        src={getImageUrl(item.image_url, '/images/Error404.jpg')}
                                         alt={`Noticia MMA España: ${item.title}`}
                                         className='card_photo-news w-full md:w-80 h-48 object-cover md:object-contain rounded-lg 
                                         shadow-md cursor-pointer'

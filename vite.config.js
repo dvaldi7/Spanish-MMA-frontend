@@ -6,8 +6,21 @@ export default defineConfig({
   server: {
     port: 5173,
     host: 'localhost',
-    // Preview (TASK-0036): API same-origin cuando preview.sh exporta VITE_API_PROXY
-    ...(process.env.VITE_API_PROXY ? { proxy: { '/api': process.env.VITE_API_PROXY } } : {}),
+    // Preview (TASK-0036/0037): API e imágenes legacy same-origin cuando preview.sh
+    // exporta VITE_API_PROXY. /backend-images se reescribe al /images del backend para
+    // no chocar con los assets estáticos del frontend que viven bajo /images.
+    ...(process.env.VITE_API_PROXY
+      ? {
+          proxy: {
+            '/api': process.env.VITE_API_PROXY,
+            '/backend-images': {
+              target: process.env.VITE_API_PROXY,
+              changeOrigin: true,
+              rewrite: (path) => path.replace(/^\/backend-images/, ''),
+            },
+          },
+        }
+      : {}),
   },
   build: {
     outDir: 'dist',

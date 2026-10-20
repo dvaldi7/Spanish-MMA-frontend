@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import api from '../services/api';
+import { getImageUrl } from '../utils/helpers';
 import { FiX } from 'react-icons/fi';
 
 const initialFormState = {
@@ -207,11 +208,7 @@ const CompanyFormModal = ({ companyIdToEdit, isModalOpen, closeModal, onCompanyS
                         {formData.logo_url && (
                             <div className="mt-3">
                                 <img
-                                    src={
-                                        formData.logo_url.startsWith('blob:') || formData.logo_url.startsWith('http')
-                                            ? formData.logo_url
-                                            : `http://localhost:3001/${formData.logo_url}`
-                                    }
+                                    src={getImageUrl(formData.logo_url, '/images/companies/avatar.jpg')}
                                     alt={`logo de ${formData.name || 'compañía'}`}
                                     className="h-40 w-40 object-contain rounded-lg border border-gray-300 shadow-md p-2 bg-white"
                                 />

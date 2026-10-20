@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3001";
+import api from '../services/api';
+import { getImageUrl } from '../utils/helpers';
 
 export const NewsDetail = () => {
     const { slug } = useParams();
@@ -14,13 +14,12 @@ export const NewsDetail = () => {
         const fetchNewsDetail = async () => {
             try {
                 setLoading(true);
-                const response = await fetch(`${BACKEND_URL}/api/news/slug/${slug}`);
-                if (!response.ok) throw new Error("No se pudo encontrar la noticia");
+                const response = await api.get(`/news/slug/${slug}`);
 
-                const data = await response.json();
+                const data = response.data;
                 setItem(data);
             } catch (err) {
-                setError(err.message);
+                setError(err.response?.data?.message || "No se pudo encontrar la noticia");
             } finally {
                 setLoading(false);
             }
@@ -50,8 +49,7 @@ export const NewsDetail = () => {
                 <meta name="description" content={item.content.substring(0, 160)} />
                 <meta property="og:type" content="article" />
                 <meta property="og:title" content={item.title} />
-                <meta property="og:image" content={item.image_url?.startsWith('http') ? 
-                    item.image_url : `${BACKEND_URL}/${item.image_url}`} />
+                <meta property="og:image" content={getImageUrl(item.image_url, '/images/Error404.jpg')} />
                 <meta name="twitter:card" content="summary_large_image" />
             </Helmet>
 
@@ -72,9 +70,7 @@ export const NewsDetail = () => {
                     {/* IMAGEN */}
                     <div className=" w-full h-[400px] lg:h-auto overflow-hidden flex md:items-center md:justify-center">
                         <img
-                            src={item.image_url
-                                ? (item.image_url.startsWith('http') ? item.image_url : `${BACKEND_URL}/${item.image_url}`)
-                                : '/images/Error404.jpg'}
+                            src={getImageUrl(item.image_url, '/images/Error404.jpg')}
                             alt={item.title}
                             className="w-full md:w-1/2 md:h-auto lg:w-3/5 h-full object-fill md:object-contain mt-10 "
                         />

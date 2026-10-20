@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3001";
+import api from "../services/api";
 import avatar from "/images/companies/avatar.jpg";
+import { getImageUrl } from "../utils/helpers";
 import { Helmet } from "react-helmet-async";
 
 const CompanyDetail = () => {
@@ -15,18 +16,16 @@ const CompanyDetail = () => {
     const fetchCompanyAndFighters = async () => {
       try {
         // 1. Obtener la compañía
-        const responseCompany = await fetch(`${BACKEND_URL}/api/companies/slug/${slug}`);
-        if (!responseCompany.ok) throw new Error("Compañía no encontrada");
-        const dataCompany = await responseCompany.json();
+        const responseCompany = await api.get(`/companies/slug/${slug}`);
+        const dataCompany = responseCompany.data;
         setCompany(dataCompany.company);
 
         // 2. Obtener los peleadores de la compañía
-        const responseFighters = await fetch(`${BACKEND_URL}/api/companies/slug/${slug}/fighters`);
-        if (!responseFighters.ok) throw new Error("No se pudieron obtener los peleadores");
-        const dataFighters = await responseFighters.json();
+        const responseFighters = await api.get(`/companies/slug/${slug}/fighters`);
+        const dataFighters = responseFighters.data;
         setFighters(dataFighters.fighters);
       } catch (err) {
-        setError(err.message);
+        setError(err.response?.data?.message || "Compañía no encontrada");
       } finally {
         setLoading(false);
       }
@@ -44,17 +43,9 @@ const CompanyDetail = () => {
   }, [company]);
 
   //Helpers de imagen
-  const getLogoUrl = (logoUrl) => {
-    if (logoUrl && (logoUrl.startsWith("http") || logoUrl.startsWith("https"))) {
-      return logoUrl;
-    }
-    return `${BACKEND_URL}/${logoUrl}`;
-  };
+  const getLogoUrl = (logoUrl) => getImageUrl(logoUrl, avatar);
 
-  const getFighterPhotoUrl = (photoUrl) => {
-    if (photoUrl && (photoUrl.startsWith("http") || photoUrl.startsWith("https"))) return photoUrl;
-    return photoUrl ? `${BACKEND_URL}/${photoUrl}` : avatar;
-  };
+  const getFighterPhotoUrl = (photoUrl) => getImageUrl(photoUrl, avatar);
 
   if (loading) return <p className="text-center text-xl p-6 text-white">Cargando compañía...</p>;
   if (error) return <p className="text-center text-red-600 text-xl p-6">{error}</p>;

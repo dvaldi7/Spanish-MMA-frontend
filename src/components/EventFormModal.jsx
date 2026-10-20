@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import api from '../services/api';
+import { getImageUrl } from '../utils/helpers';
 import { FiX } from 'react-icons/fi';
 
 
@@ -189,8 +190,7 @@ const EventFormModal = ({ eventIdToEdit, isModalOpen, closeModal, onEventSaved }
                                         className="h-full w-full object-cover"
                                         alt="Preview" />
                                 ) : formData.poster_url ? (
-                                    <img src={formData.poster_url.startsWith('http') ?
-                                        formData.poster_url : `http://localhost:3001/${formData.poster_url}`}
+                                    <img src={getImageUrl(formData.poster_url, '/images/events/avatar.jpg')}
                                         className="h-full w-full object-cover" alt="Actual" />
                                 ) : (
                                     <div className="h-full w-full flex items-center justify-center

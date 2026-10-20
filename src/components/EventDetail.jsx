@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3001";
+import api from "../services/api";
 import avatar from "/images/events/avatar.jpg";
 import fightersAvatar from "/images/fighters/avatar.png";
+import { getImageUrl } from "../utils/helpers";
 import { Helmet } from "react-helmet-async";
 
 const EventDetail = () => {
@@ -42,22 +43,20 @@ const EventDetail = () => {
     const fetchEventAndRoster = async () => {
       try {
 
-        const responseEvent = await fetch(`${BACKEND_URL}/api/events/slug/${slug}`);
-        if (!responseEvent.ok) throw new Error("Evento no encontrado");
+        const responseEvent = await api.get(`/events/slug/${slug}`);
 
-        const dataEvent = await responseEvent.json();
+        const dataEvent = responseEvent.data;
         setEvent(dataEvent.event);
 
         const eventId = dataEvent.event.event_id;
 
-        const responseRoster = await fetch(`${BACKEND_URL}/api/events/id/${eventId}/fighters`);
-        if (!responseRoster.ok) throw new Error("No se pudieron obtener los peleadores del evento");
+        const responseRoster = await api.get(`/events/id/${eventId}/fighters`);
 
-        const dataRoster = await responseRoster.json();
+        const dataRoster = responseRoster.data;
         setFighters(dataRoster.roster || []);
 
       } catch (err) {
-        setError(err.message);
+        setError(err.response?.data?.message || "Evento no encontrado");
       } finally {
         setLoading(false);
       }
@@ -77,20 +76,10 @@ const EventDetail = () => {
   }, [event]);
 
   //Obtener la foto de los peleadores y si no el avatar de peleadores
-  const getFighterPhotoUrl = (photoUrl) => {
-    if (photoUrl && (photoUrl.startsWith("http") || photoUrl.startsWith("https"))) {
-      return photoUrl;
-    }
-    return photoUrl ? `${BACKEND_URL}/${photoUrl}` : fightersAvatar;
-  };
+  const getFighterPhotoUrl = (photoUrl) => getImageUrl(photoUrl, fightersAvatar);
 
   //Obtener la imagen del poster
-  const getPosterUrl = (posterUrl) => {
-    if (posterUrl && (posterUrl.startsWith("http") || posterUrl.startsWith("https"))) {
-      return posterUrl;
-    }
-    return posterUrl ? `${BACKEND_URL}/${posterUrl}` : null;
-  };
+  const getPosterUrl = (posterUrl) => getImageUrl(posterUrl, avatar);
 
   // Fecha estilo de españa
   const formatDateSpanish = (dateString) => {

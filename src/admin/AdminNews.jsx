@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import useFetchNews from '../hooks/useFetchNews';
 import api from '../services/api';
-
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3001";
+import { getImageUrl } from '../utils/helpers';
 
 export const AdminNews = () => {
     const { news, fetchNews } = useFetchNews(10);
@@ -121,9 +120,7 @@ export const AdminNews = () => {
                             <tr key={item.news_id} className="border-b hover:bg-gray-50">
                                 <td className="p-4">
                                     <img
-                                        src={item.image_url
-                                            ? (item.image_url.startsWith('http') ? item.image_url : `${BACKEND_URL}/${item.image_url}`)
-                                            : '/images/Error404.jpg'}
+                                        src={getImageUrl(item.image_url, '/images/Error404.jpg')}
                                         className="w-12 h-10 md:w-16 md:h-12 object-cover rounded shadow-sm"
                                         alt="Noticia"
                                     />

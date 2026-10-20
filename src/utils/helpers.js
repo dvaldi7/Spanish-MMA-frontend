@@ -1,12 +1,6 @@
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
+import { getImageUrl } from '../config';
 
-export const getImageUrl = (photoUrl, defaultImg) => {
-    if (!photoUrl) return defaultImg;
-    if (photoUrl.startsWith('http') || photoUrl.startsWith('https')) {
-        return photoUrl;
-    }
-    return `${BACKEND_URL}/${photoUrl}`;
-};
+export { getImageUrl };
 
 export const formatDate = (dateString, short = false) => {
     if (!dateString) return 'N/A';

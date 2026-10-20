@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import api from '../services/api';
+import { getImageUrl } from '../utils/helpers';
 import { FiX } from 'react-icons/fi';
 
 const WEIGHT_CLASSES = [
@@ -384,11 +385,7 @@ const FighterFormModal = ({ fighterIdToEdit, isModalOpen, closeModal, onFighterS
                         {formData.photo_url && (
                             <div className="mt-3">
                                 <img
-                                    src={
-                                        formData.photo_url.startsWith('blob:') || formData.photo_url.startsWith('http')
-                                            ? formData.photo_url
-                                            : `http://localhost:3001/${formData.photo_url}`
-                                    }
+                                    src={getImageUrl(formData.photo_url, '/images/fighters/avatar.png')}
                                     alt={`imagen de ${formData.first_name || 'peleador'}`}
                                     className="h-40 w-40 object-cover rounded-lg border border-gray-300 shadow-md"
                                 />
