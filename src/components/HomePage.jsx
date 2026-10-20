@@ -127,9 +127,9 @@ export const HomePage = () => {
                             <div className="flex flex-col md:flex-row md:justify-between gap-6 items-start">
                                 <div className="shrink-0 mx-auto md:mx-0">
                                     <FadeImage
-                                        src={getImageUrl(item.image_url, '/images/Error404.webp', { width: 640, height: 384, gravity: 'auto:face' })}
+                                        src={getImageUrl(item.image_url, '/images/Error404.webp', { width: 640 })}
                                         alt={`Noticia MMA España: ${item.title}`}
-                                        className='card_photo-news w-full md:w-80 h-48 object-cover rounded-lg
+                                        className='card_photo-news w-full md:w-80 h-48 object-cover object-top rounded-lg
                                         shadow-md cursor-pointer'
                                         onClick={() => navigate(`/news/${item.slug}`)}
                                         loading='lazy'
