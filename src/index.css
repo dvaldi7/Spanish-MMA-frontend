@@ -73,6 +73,13 @@
       opacity: 1;
       transition: none;
     }
+
+    /* Los efectos hover (zoom de imagen, sombras) saltan sin animación */
+    *, ::before, ::after {
+      transition-duration: 0.01ms !important;
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+    }
   }
 
   .card_photo-news {

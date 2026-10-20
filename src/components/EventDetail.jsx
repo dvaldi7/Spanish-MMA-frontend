@@ -147,7 +147,7 @@ const EventDetail = () => {
     return (
       <div key={index} className="bg-white bg-opacity-40 p-3 rounded-lg mb-2 border border-gray-300 
       border-l-4 border-l-custom-black border-b-2 border-b-custom-black hover:border-l-red-600 
-      hover:shadow-lg hover:border-b-custom-gold transition-all duration-300 hover:scale-105">
+      hover:shadow-lg hover:border-b-custom-gold transition-all duration-300">
         <div className="flex flex-col md:flex-row items-center justify-center w-full max-w-3xl mx-auto">
 
           {/* PELEADOR 1 */}
@@ -304,7 +304,7 @@ const EventDetail = () => {
       <Link
         to="/eventos"
         className="gradiant-color streetFighterTypo hover:underline mb-4 
-         inline-block font-semibold hover:scale-105 transition duration-300 cursor-pointer text-3xl"
+         inline-block font-semibold hover:opacity-75 transition duration-300 cursor-pointer text-3xl"
       >
         ← VOLVER A EVENTOS
       </Link>
@@ -391,7 +391,7 @@ const EventDetail = () => {
                 to={`/peleadores/${fighter.slug}`}
                 key={fighter.fighter_id}
                 className="bg-gray-200 bg-opacity-70 p-4 rounded-xl shadow-md hover:shadow-xl 
-                hover:scale-105 transition duration-300 flex flex-col items-center text-center border-l-2
+                hover:bg-opacity-90 group transition duration-300 flex flex-col items-center text-center border-l-2
                border-l-custom-red border-b-2 border-b-custom-gold"
               >
                 <img

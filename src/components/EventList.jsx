@@ -102,7 +102,7 @@ export const EventList = () => {
                     <div key={event.event_id}
                         onClick={() => navigate(`/eventos/${event.slug}`)}
                         className="bg-gray-200 bg-opacity-65 p-5 shadow-xl rounded-xl 
-                    border-l-2 border-l-custom-red border-b-2  border-b-custom-gold hover:shadow-2xl hover:scale-105 
+                    border-l-2 border-l-custom-red border-b-2  border-b-custom-gold hover:shadow-2xl hover:bg-opacity-90 group overflow-hidden 
                     transition duration-300 cursor-pointer ">
                         <h3 className="text-base font-bold text-custom-black mb-5 text-center">
                             {event.name}
@@ -116,13 +116,13 @@ export const EventList = () => {
                                     loading="lazy"
                                     decoding="async"
                                     alt={`Foto de ${event.name}`}
-                                    className="card_poster-event"
+                                    className="card_poster-event transition-transform duration-300 group-hover:scale-[1.03]"
                                 />
                             ) : (
                                 <img
                                     src={avatar}
                                     alt={`Avatar de peleador`}
-                                    className="card_poster-avatar"
+                                    className="card_poster-avatar transition-transform duration-300 group-hover:scale-[1.03]"
                                 />
                             )}
                         </div>}

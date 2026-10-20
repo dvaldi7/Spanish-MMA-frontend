@@ -57,7 +57,7 @@ export const NewsDetail = () => {
             {/* Botón Volver */}
             <div className="mb-8 text-left">
                 <Link to="/" className="gradiant-color streetFighterTypo hover:underline mb-4 
-      inline-block font-semibold hover:scale-105 transition duration-300 cursor-pointer text-3xl">
+      inline-block font-semibold hover:opacity-75 transition duration-300 cursor-pointer text-3xl">
                     ← Volver a Inicio
                 </Link>
             </div>

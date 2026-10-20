@@ -70,7 +70,7 @@ const CompanyDetail = () => {
       <Link
         to="/promotoras"
         className="gradiant-color streetFighterTypo hover:underline mb-4 
-        inline-block font-semibold hover:scale-105 transition duration-300 cursor-pointer text-3xl"
+        inline-block font-semibold hover:opacity-75 transition duration-300 cursor-pointer text-3xl"
       >
         ← VOLVER A PROMOTORAS
       </Link>
@@ -128,7 +128,7 @@ const CompanyDetail = () => {
                 to={`/peleadores/${fighter.slug}`}
                 key={fighter.fighter_id}
                 className="bg-gray-200 bg-opacity-70 p-4 rounded-xl shadow-md hover:shadow-xl
-                 hover:scale-105 transition duration-300 flex flex-col items-center text-center border-l-2
+                 hover:bg-opacity-90 group transition duration-300 flex flex-col items-center text-center border-l-2
                  border-l-custom-red border-b-2 border-b-custom-gold"
               >
                 <img

@@ -134,7 +134,7 @@ const FighterList = () => {
                     <div key={fighter.fighter_id}
                         onClick={() => navigate(`/peleadores/${fighter.slug}`)}
                         className="bg-gray-200 bg-opacity-65 p-5 shadow-xl rounded-xl 
-                    border-l-2 border-l-custom-red border-b-2  border-b-custom-gold hover:shadow-2xl hover:scale-105 
+                    border-l-2 border-l-custom-red border-b-2  border-b-custom-gold hover:shadow-2xl hover:bg-opacity-90 group overflow-hidden 
                     transition duration-300 cursor-pointer ">
                         <h3 className="text-base font-bold text-custom-black mb-5 text-center min-h-[3rem] flex items-center justify-center">
                             {fighter.nickname
@@ -152,13 +152,13 @@ const FighterList = () => {
                                     loading="lazy"
                                     decoding="async"
                                     alt={`Foto de ${fighter.first_name}`}
-                                    className="card_photo-fighter"
+                                    className="card_photo-fighter transition-transform duration-300 group-hover:scale-[1.03]"
                                 />
                             ) : (
                                 <FadeImage
                                     src={avatar}
                                     alt={`Avatar de peleador`}
-                                    className="card_photo-avatar"
+                                    className="card_photo-avatar transition-transform duration-300 group-hover:scale-[1.03]"
                                 />
                             )}
                         </div>

@@ -106,7 +106,7 @@ export const CompanyList = () => {
                     <div key={company.company_id}
                         onClick={() => navigate(`/promotoras/${company.slug}`)}
                         className="bg-gray-200 bg-opacity-65 p-5 shadow-xl rounded-xl 
-                    border-l-2 border-l-custom-red border-b-2  border-b-custom-gold hover:shadow-2xl hover:scale-105 
+                    border-l-2 border-l-custom-red border-b-2  border-b-custom-gold hover:shadow-2xl hover:bg-opacity-90 group overflow-hidden 
                     transition duration-300 cursor-pointer ">
                         <h3 className="text-base font-bold text-custom-black mb-5 text-center">
                             {company.name}
@@ -120,13 +120,13 @@ export const CompanyList = () => {
                                     loading="lazy"
                                     decoding="async"
                                     alt={`Foto de ${company.name}`}
-                                    className="card_logo-company"
+                                    className="card_logo-company transition-transform duration-300 group-hover:scale-[1.03]"
                                 />
                             ) : (
                                 <img
                                     src={avatar}
                                     alt={`Avatar de compañía`}
-                                    className="card_logo-avatar"
+                                    className="card_logo-avatar transition-transform duration-300 group-hover:scale-[1.03]"
                                 />
                             )}
                         </div>}

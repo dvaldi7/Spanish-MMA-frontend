@@ -98,7 +98,7 @@ const FighterDetail = () => {
 
       {/* CABECERA PARA VOLVER */}
       <Link to="/peleadores" className="gradiant-color streetFighterTypo hover:underline mb-4 
-      inline-block font-semibold hover:scale-105 transition duration-300 cursor-pointer text-3xl"
+      inline-block font-semibold hover:opacity-75 transition duration-300 cursor-pointer text-3xl"
         title="Volver a peleadores">
         ← VOLVER A PELEADORES
       </Link>
