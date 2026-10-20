@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import api from '../services/api';
+import FadeImage from './FadeImage';
 import { getImageUrl } from '../utils/helpers';
 
 export const NewsDetail = () => {
@@ -69,8 +70,8 @@ export const NewsDetail = () => {
 
                     {/* IMAGEN */}
                     <div className=" w-full h-[400px] lg:h-auto overflow-hidden flex md:items-center md:justify-center">
-                        <img
-                            src={getImageUrl(item.image_url, '/images/Error404.webp', { width: 900 })}
+                        <FadeImage
+                            src={getImageUrl(item.image_url, '/images/Error404.webp', { width: 900, quality: 'best' })}
                             alt={item.title}
                             fetchPriority="high"
                             decoding="async"

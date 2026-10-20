@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import api from "../services/api";
 import avatar from "/images/companies/avatar.webp";
+import FadeImage from "./FadeImage";
 import { getImageUrl } from "../utils/helpers";
 import { Helmet } from "react-helmet-async";
 
@@ -43,7 +44,7 @@ const CompanyDetail = () => {
   }, [company]);
 
   //Helpers de imagen
-  const getLogoUrl = (logoUrl) => getImageUrl(logoUrl, avatar, { width: 384 });
+  const getLogoUrl = (logoUrl) => getImageUrl(logoUrl, avatar, { width: 384, quality: "best" });
 
   const getFighterPhotoUrl = (photoUrl) => getImageUrl(photoUrl, avatar, { width: 256 });
 
@@ -79,7 +80,7 @@ const CompanyDetail = () => {
         <h2 className="text-3xl font-bold mb-6 text-custom-black">{company.name}</h2>
 
         <div className="flex justify-center mb-6">
-          <img
+          <FadeImage
             src={company.logo_url ? getLogoUrl(company.logo_url) : avatar}
             alt={`Logo de ${company.name}`}
             fetchPriority="high"

@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import useFetchNews from '../hooks/useFetchNews';
 import { useNavigate } from 'react-router-dom';
 import { Helmet } from "react-helmet-async";
+import FadeImage from './FadeImage';
 import { formatDate, getImageUrl, getCloudinarySrcSet } from '../utils/helpers';
 
 export const HomePage = () => {
@@ -125,7 +126,7 @@ export const HomePage = () => {
 
                             <div className="flex flex-col md:flex-row md:justify-between gap-6 items-start">
                                 <div className="shrink-0 mx-auto md:mx-0">
-                                    <img
+                                    <FadeImage
                                         src={getImageUrl(item.image_url, '/images/Error404.webp', { width: 640 })}
                                         srcSet={getCloudinarySrcSet(item.image_url, [200, 400, 640]) || undefined}
                                         sizes="(max-width: 767px) 92vw, 320px"

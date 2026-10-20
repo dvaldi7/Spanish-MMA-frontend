@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import api from "../services/api";
 import avatar from "/images/events/avatar.webp";
 import fightersAvatar from "/images/fighters/avatar.webp";
+import FadeImage from "./FadeImage";
 import { getImageUrl } from "../utils/helpers";
 import { Helmet } from "react-helmet-async";
 
@@ -79,7 +80,7 @@ const EventDetail = () => {
   const getFighterPhotoUrl = (photoUrl) => getImageUrl(photoUrl, fightersAvatar, { width: 160 });
 
   //Obtener la imagen del poster
-  const getPosterUrl = (posterUrl) => getImageUrl(posterUrl, avatar, { width: 384 });
+  const getPosterUrl = (posterUrl) => getImageUrl(posterUrl, avatar, { width: 384, quality: "best" });
 
   // Fecha estilo de españa
   const formatDateSpanish = (dateString) => {
@@ -314,7 +315,7 @@ const EventDetail = () => {
 
         {/* Poster del evento */}
         <div className="flex justify-center mb-6 ">
-          <img
+          <FadeImage
             src={event.poster_url ? getPosterUrl(event.poster_url) : avatar}
             alt={`Poster de ${event.name}`}
             fetchPriority="high"

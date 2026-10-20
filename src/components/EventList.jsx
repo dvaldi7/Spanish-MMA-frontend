@@ -3,6 +3,7 @@ import useFetchEvents from '../hooks/useFetchEvents';
 import { useNavigate } from 'react-router-dom';
 import avatar from "/images/events/avatar.webp";
 import { Helmet } from "react-helmet-async";
+import FadeImage from './FadeImage';
 import { getImageUrl, getCloudinarySrcSet } from '../utils/helpers';
 
 export const EventList = () => {
@@ -108,7 +109,7 @@ export const EventList = () => {
                         </h3>
                         {<div className="mb-3 flex justify-center items-center">
                             {event.poster_url ? (
-                                <img
+                                <FadeImage
                                     src={getImageUrl(event.poster_url, avatar, { width: 400 })}
                                     srcSet={getCloudinarySrcSet(event.poster_url, [200, 400, 640]) || undefined}
                                     sizes="(max-width: 767px) 92vw, 288px"

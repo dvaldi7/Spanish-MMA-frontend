@@ -63,6 +63,14 @@ describe('config.getImageUrl', () => {
       .toBe('https://res.cloudinary.com/dygmatgy1/image/upload/f_auto,q_auto,w_320,c_limit/v1770144234/spanish-mma/fighters/foto.jpg');
   });
 
+  it('quality best usa q_auto:best (LCP/fichas) y por defecto q_auto (tarjetas)', async () => {
+    const { getImageUrl } = await loadConfig();
+    expect(getImageUrl(CDN, '/images/avatar.jpg', { quality: 'best' }))
+      .toBe('https://res.cloudinary.com/dygmatgy1/image/upload/f_auto,q_auto:best/v1770144234/spanish-mma/fighters/foto.jpg');
+    expect(getImageUrl(CDN, '/images/avatar.jpg', { width: 384, quality: 'best' }))
+      .toBe('https://res.cloudinary.com/dygmatgy1/image/upload/f_auto,q_auto:best,w_384,c_limit/v1770144234/spanish-mma/fighters/foto.jpg');
+  });
+
   it('las rutas legacy no reciben transformaciones (se sirven tal cual)', async () => {
     vi.stubEnv('VITE_BACKEND_URL', '');
     const { getImageUrl } = await loadConfig();

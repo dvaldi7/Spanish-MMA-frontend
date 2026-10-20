@@ -35,27 +35,44 @@
   }
 
   .card_photo-fighter {
-    @apply w-72 md:w-full h-72 sm:h-80 object-cover rounded-md mb-2 border border-gray-200
+    @apply w-72 md:w-full h-72 sm:h-80 object-cover rounded-md mb-2 border border-gray-200 bg-gray-300/40
   }
 
   .card_photo-avatar {
-    @apply w-72 md:w-full h-72 sm:h-80 object-cover rounded-md mb-2 border border-gray-400
+    @apply w-72 md:w-full h-72 sm:h-80 object-cover rounded-md mb-2 border border-gray-400 bg-gray-300/40
   }
 
   .card_logo-company {
-    @apply w-72 md:w-full h-64 sm:h-80 object-contain rounded-md mb-2 border border-gray-200
+    @apply w-72 md:w-full h-44 sm:h-48 object-contain rounded-md mb-2 border border-gray-200 bg-white/70 p-2
   }
 
   .card_logo-avatar {
-    @apply w-72 md:w-full h-64 sm:h-80 object-contain rounded-md mb-2 border border-gray-200
+    @apply w-72 md:w-full h-44 sm:h-48 object-contain rounded-md mb-2 border border-gray-200 bg-white/70 p-2
   }
 
   .card_poster-event {
-    @apply w-72 md:w-full h-64 sm:h-80 object-cover rounded-md mb-2 border border-gray-200
+    @apply w-72 md:w-full h-64 sm:h-80 object-cover rounded-md mb-2 border border-gray-200 bg-gray-300/40
   }
 
   .card_poster-avatar {
-    @apply w-72 md:w-full h-64 sm:h-80 object-cover rounded-md mb-2 border border-gray-200
+    @apply w-72 md:w-full h-64 sm:h-80 object-cover rounded-md mb-2 border border-gray-200 bg-gray-300/40
+  }
+
+  /* Aparición suave de imágenes al terminar de cargar (respeta prefers-reduced-motion) */
+  .img-fade {
+    opacity: 0;
+    transition: opacity 300ms ease-in;
+  }
+
+  .img-fade-loaded {
+    opacity: 1;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .img-fade {
+      opacity: 1;
+      transition: none;
+    }
   }
 
   .card_photo-news {

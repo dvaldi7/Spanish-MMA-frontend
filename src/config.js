@@ -18,11 +18,13 @@ const CLOUDINARY_UPLOAD = '/image/upload/';
 const CLOUDINARY_URL = /^https?:\/\/res\.cloudinary\.com\/[^/]+\/image\/upload\//;
 
 // Inyecta transformaciones de entrega en URLs de Cloudinary sin alterar el original:
-// f_auto (formato negociado WebP/AVIF), q_auto (compresión adaptativa) y, opcionalmente,
-// w_<px> con c_limit (redimensiona SOLO si el original es mayor: nunca hace upscale).
-const injectCloudinaryTransform = (url, width) => {
+// f_auto (formato negociado WebP/AVIF), q_auto|q_auto:best (compresión adaptativa;
+// ':best' prioriza nitidez en imágenes grandes/LCP) y, opcionalmente, w_<px> con c_limit
+// (redimensiona SOLO si el original es mayor: nunca hace upscale).
+const injectCloudinaryTransform = (url, width, quality = 'auto') => {
   if (!CLOUDINARY_URL.test(url)) return url;
-  const parts = ['f_auto', 'q_auto'];
+  const q = quality === 'best' ? 'q_auto:best' : 'q_auto';
+  const parts = ['f_auto', q];
   if (width) parts.push(`w_${width}`, 'c_limit');
   const transform = parts.join(',');
   return url.replace(CLOUDINARY_UPLOAD, `${CLOUDINARY_UPLOAD}${transform}/`);
@@ -40,10 +42,10 @@ const injectCloudinaryTransform = (url, width) => {
 export function getImageUrl(url, fallback, options = {}) {
   if (!url) return fallback;
   if (/^(blob:|https?:\/\/)/i.test(url) && !CLOUDINARY_URL.test(url)) return url;
-  const { width } = options;
+  const { width, quality } = options;
 
   if (CLOUDINARY_URL.test(url)) {
-    return injectCloudinaryTransform(url, width);
+    return injectCloudinaryTransform(url, width, quality);
   }
 
   const path = url.startsWith('/') ? url : `/${url}`;

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import api from "../services/api";
 import avatar from "/images/fighters/avatar.webp";
+import FadeImage from "./FadeImage";
 import { getImageUrl } from "../utils/helpers";
 import { Helmet } from "react-helmet-async";
 
@@ -109,8 +110,8 @@ const FighterDetail = () => {
         </h1>
 
         <div className="flex justify-center mb-6">
-          <img
-            src={getImageUrl(fighter.photo_url, avatar, { width: 384 })}
+          <FadeImage
+            src={getImageUrl(fighter.photo_url, avatar, { width: 384, quality: "best" })}
             alt={`Peleador de MMA ${fullName} - Perfil oficial Spanish MMA`}
             fetchPriority="high"
             decoding="async"

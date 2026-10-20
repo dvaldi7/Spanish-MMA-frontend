@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import useFetchCompanies from '../hooks/useFetchCompanies';
 import avatar from "/images/companies/avatar.webp";
+import FadeImage from './FadeImage';
 import { getImageUrl, getCloudinarySrcSet } from '../utils/helpers';
 
 export const CompanyList = () => {
@@ -112,7 +113,7 @@ export const CompanyList = () => {
                         </h3>
                         {<div className="mb-3 flex justify-center items-center">
                             {company.logo_url ? (
-                                <img
+                                <FadeImage
                                     src={getImageUrl(company.logo_url, avatar, { width: 400 })}
                                     srcSet={getCloudinarySrcSet(company.logo_url, [200, 400, 640]) || undefined}
                                     sizes="(max-width: 767px) 92vw, 288px"

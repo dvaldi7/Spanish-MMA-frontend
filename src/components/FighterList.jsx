@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import useFetchFighters from '../hooks/useFetchFighters';
 import { buildPageWindow } from '../utils/pagination';
+import FadeImage from './FadeImage';
 import { getImageUrl, getCloudinarySrcSet } from '../utils/helpers';
 import avatar from "/images/fighters/avatar.webp";
 
@@ -144,7 +145,7 @@ const FighterList = () => {
                         </h3>
                         <div className="mb-3 flex justify-center items-center">
                             {fighter.photo_url ? (
-                                <img
+                                <FadeImage
                                     src={getImageUrl(fighter.photo_url, avatar, { width: 400 })}
                                     srcSet={getCloudinarySrcSet(fighter.photo_url, [200, 400, 640]) || undefined}
                                     sizes="(max-width: 767px) 92vw, 288px"
@@ -154,7 +155,7 @@ const FighterList = () => {
                                     className="card_photo-fighter"
                                 />
                             ) : (
-                                <img
+                                <FadeImage
                                     src={avatar}
                                     alt={`Avatar de peleador`}
                                     className="card_photo-avatar"
