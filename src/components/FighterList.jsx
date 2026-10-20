@@ -136,7 +136,7 @@ const FighterList = () => {
                         className="bg-gray-200 bg-opacity-65 p-5 shadow-xl rounded-xl 
                     border-l-2 border-l-custom-red border-b-2  border-b-custom-gold hover:shadow-2xl hover:scale-105 
                     transition duration-300 cursor-pointer ">
-                        <h3 className="text-base font-bold text-custom-black mb-5 text-center">
+                        <h3 className="text-base font-bold text-custom-black mb-5 text-center min-h-[3rem] flex items-center justify-center">
                             {fighter.nickname
                                 ? `${fighter.first_name} "${fighter.nickname}" ${fighter.last_name}`
                                 : `${fighter.first_name} ${fighter.last_name}`
