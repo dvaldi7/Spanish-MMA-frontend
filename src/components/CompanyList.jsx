@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import useFetchCompanies from '../hooks/useFetchCompanies';
-import avatar from "/images/companies/avatar.jpg";
-import { getImageUrl } from '../utils/helpers';
+import avatar from "/images/companies/avatar.webp";
+import { getImageUrl, getCloudinarySrcSet } from '../utils/helpers';
 
 export const CompanyList = () => {
 
@@ -113,7 +113,11 @@ export const CompanyList = () => {
                         {<div className="mb-3 flex justify-center items-center">
                             {company.logo_url ? (
                                 <img
-                                    src={getImageUrl(company.logo_url, avatar)}
+                                    src={getImageUrl(company.logo_url, avatar, { width: 400 })}
+                                    srcSet={getCloudinarySrcSet(company.logo_url, [200, 400, 640]) || undefined}
+                                    sizes="(max-width: 767px) 92vw, 288px"
+                                    loading="lazy"
+                                    decoding="async"
                                     alt={`Foto de ${company.name}`}
                                     className="card_logo-company"
                                 />

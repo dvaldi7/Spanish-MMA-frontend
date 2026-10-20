@@ -49,7 +49,7 @@ export const NewsDetail = () => {
                 <meta name="description" content={item.content.substring(0, 160)} />
                 <meta property="og:type" content="article" />
                 <meta property="og:title" content={item.title} />
-                <meta property="og:image" content={getImageUrl(item.image_url, '/images/Error404.jpg')} />
+                <meta property="og:image" content={getImageUrl(item.image_url, '/images/Error404.webp')} />
                 <meta name="twitter:card" content="summary_large_image" />
             </Helmet>
 
@@ -70,9 +70,11 @@ export const NewsDetail = () => {
                     {/* IMAGEN */}
                     <div className=" w-full h-[400px] lg:h-auto overflow-hidden flex md:items-center md:justify-center">
                         <img
-                            src={getImageUrl(item.image_url, '/images/Error404.jpg')}
+                            src={getImageUrl(item.image_url, '/images/Error404.webp', { width: 900 })}
                             alt={item.title}
-                            className="w-full md:w-1/2 md:h-auto lg:w-3/5 h-full object-fill md:object-contain mt-10 "
+                            fetchPriority="high"
+                            decoding="async"
+                            className="w-full md:w-1/2 md:h-auto lg:w-3/5 h-full object-cover md:object-contain mt-10 "
                         />
                     </div>
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import api from "../services/api";
-import avatar from "/images/companies/avatar.jpg";
+import avatar from "/images/companies/avatar.webp";
 import { getImageUrl } from "../utils/helpers";
 import { Helmet } from "react-helmet-async";
 
@@ -43,9 +43,9 @@ const CompanyDetail = () => {
   }, [company]);
 
   //Helpers de imagen
-  const getLogoUrl = (logoUrl) => getImageUrl(logoUrl, avatar);
+  const getLogoUrl = (logoUrl) => getImageUrl(logoUrl, avatar, { width: 384 });
 
-  const getFighterPhotoUrl = (photoUrl) => getImageUrl(photoUrl, avatar);
+  const getFighterPhotoUrl = (photoUrl) => getImageUrl(photoUrl, avatar, { width: 256 });
 
   if (loading) return <p className="text-center text-xl p-6 text-white">Cargando compañía...</p>;
   if (error) return <p className="text-center text-red-600 text-xl p-6">{error}</p>;
@@ -82,7 +82,9 @@ const CompanyDetail = () => {
           <img
             src={company.logo_url ? getLogoUrl(company.logo_url) : avatar}
             alt={`Logo de ${company.name}`}
-            className="w-48 h-48 object-fill rounded-full shadow-lg border-2 border-custom-black"
+            fetchPriority="high"
+            decoding="async"
+            className="w-48 h-48 object-contain rounded-full shadow-lg border-2 border-custom-black"
           />
         </div>
 
@@ -131,6 +133,8 @@ const CompanyDetail = () => {
                 <img
                   src={getFighterPhotoUrl(fighter.photo_url)}
                   alt={fighter.nickname || fighter.first_name}
+                  loading="lazy"
+                  decoding="async"
                   className="w-32 h-32 object-cover rounded-full mb-4 border-2 border-custom-black"
                 />
                 <p className="text-lg font-semibold text-custom-black">

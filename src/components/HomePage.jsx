@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import useFetchNews from '../hooks/useFetchNews';
 import { useNavigate } from 'react-router-dom';
 import { Helmet } from "react-helmet-async";
-import { formatDate, getImageUrl } from '../utils/helpers';
+import { formatDate, getImageUrl, getCloudinarySrcSet } from '../utils/helpers';
 
 export const HomePage = () => {
 
@@ -126,12 +126,15 @@ export const HomePage = () => {
                             <div className="flex flex-col md:flex-row md:justify-between gap-6 items-start">
                                 <div className="shrink-0 mx-auto md:mx-0">
                                     <img
-                                        src={getImageUrl(item.image_url, '/images/Error404.jpg')}
+                                        src={getImageUrl(item.image_url, '/images/Error404.webp', { width: 640 })}
+                                        srcSet={getCloudinarySrcSet(item.image_url, [200, 400, 640]) || undefined}
+                                        sizes="(max-width: 767px) 92vw, 320px"
                                         alt={`Noticia MMA España: ${item.title}`}
-                                        className='card_photo-news w-full md:w-80 h-48 object-cover md:object-contain rounded-lg 
+                                        className='card_photo-news w-full md:w-80 h-48 object-cover rounded-lg
                                         shadow-md cursor-pointer'
                                         onClick={() => navigate(`/news/${item.slug}`)}
                                         loading='lazy'
+                                        decoding='async'
                                     />
                                 </div>
                                 <div className="flex-1">

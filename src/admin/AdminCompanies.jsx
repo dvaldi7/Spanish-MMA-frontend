@@ -3,7 +3,7 @@ import useFetchCompanies from '../hooks/useFetchCompanies';
 import api from '../services/api';
 import CompanyFormModal from '../components/CompanyFormModal';
 import { getImageUrl } from '../utils/helpers';
-import avatar from "/images/companies/avatar.jpg";
+import avatar from "/images/companies/avatar.webp";
 
 
 export const AdminCompanies = () => {
@@ -122,7 +122,7 @@ export const AdminCompanies = () => {
                             <tr key={company.company_id} className="hover:bg-gray-50">
                                 <td className="px-6 py-4 whitespace-nowrap">
                                     <img
-                                        src={getImageUrl(company.logo_url, avatar)}
+                                        src={getImageUrl(company.logo_url, avatar, { width: 80 })}
                                         alt={`Logo de ${company.name}`}
                                         className="h-10 w-10 rounded-full object-cover"
                                     />
@@ -160,7 +160,7 @@ export const AdminCompanies = () => {
                          bg-white hover:bg-gray-50">
                             <div className="flex items-center space-x-3">
                                 <img
-                                    src={getImageUrl(company.logo_url, avatar)}
+                                    src={getImageUrl(company.logo_url, avatar, { width: 80 })}
                                     alt={`Logo de ${company.name}`}
                                     className="h-10 w-10 rounded-full object-cover"
                                 />

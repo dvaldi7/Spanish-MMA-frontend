@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import api from "../services/api";
-import avatar from "/images/events/avatar.jpg";
-import fightersAvatar from "/images/fighters/avatar.png";
+import avatar from "/images/events/avatar.webp";
+import fightersAvatar from "/images/fighters/avatar.webp";
 import { getImageUrl } from "../utils/helpers";
 import { Helmet } from "react-helmet-async";
 
@@ -76,10 +76,10 @@ const EventDetail = () => {
   }, [event]);
 
   //Obtener la foto de los peleadores y si no el avatar de peleadores
-  const getFighterPhotoUrl = (photoUrl) => getImageUrl(photoUrl, fightersAvatar);
+  const getFighterPhotoUrl = (photoUrl) => getImageUrl(photoUrl, fightersAvatar, { width: 160 });
 
   //Obtener la imagen del poster
-  const getPosterUrl = (posterUrl) => getImageUrl(posterUrl, avatar);
+  const getPosterUrl = (posterUrl) => getImageUrl(posterUrl, avatar, { width: 384 });
 
   // Fecha estilo de españa
   const formatDateSpanish = (dateString) => {
@@ -182,8 +182,10 @@ const EventDetail = () => {
                       ${fighter1.isWinner ? "border-green-500" :
                         fighter1.isLoser ? "border-custom-red" :
                           "border-transparent"}
-                      ${fighter1.isAvatar ? "object-fill" : "object-cover"}`}
+                      ${fighter1.isAvatar ? "object-cover" : "object-cover"}`}
                     alt={`Imagen de ${fighter1.cleanName}`}
+                  loading="lazy"
+                  decoding="async"
                   />
                 </Link>
               ) : ( //si no está
@@ -193,8 +195,10 @@ const EventDetail = () => {
                     ${fighter1.isWinner ? "border-green-500" :
                       fighter1.isLoser ? "border-custom-red" :
                         "border-transparent"}
-                    ${fighter1.isAvatar ? "object-fill" : "object-cover"}`}
+                    ${fighter1.isAvatar ? "object-cover" : "object-cover"}`}
                   alt={`Imagen de ${fighter1.cleanName}`}
+                  loading="lazy"
+                  decoding="async"
                 />
               )}
             </div>
@@ -222,8 +226,10 @@ const EventDetail = () => {
                       ${fighter2.isWinner ? "border-green-500" :
                         fighter2.isLoser ? "border-custom-red" :
                           "border-transparent"}
-                      ${fighter2.isAvatar ? "object-fill" : "object-cover"}`}
+                      ${fighter2.isAvatar ? "object-cover" : "object-cover"}`}
                     alt={`Imagen de ${fighter2.cleanName}`}
+                  loading="lazy"
+                  decoding="async"
                   />
                 </Link>
               ) : ( //si no está
@@ -233,8 +239,10 @@ const EventDetail = () => {
                     ${fighter2.isWinner ? "border-green-500" :
                       fighter2.isLoser ? "border-custom-red" :
                         "border-transparent"}
-                    ${fighter2.isAvatar ? "object-fill" : "object-cover"}`}
+                    ${fighter2.isAvatar ? "object-cover" : "object-cover"}`}
                   alt={`Imagen de ${fighter2.cleanName}`}
+                  loading="lazy"
+                  decoding="async"
                 />
               )}
             </div>
@@ -309,7 +317,9 @@ const EventDetail = () => {
           <img
             src={event.poster_url ? getPosterUrl(event.poster_url) : avatar}
             alt={`Poster de ${event.name}`}
-            className="w-48 h-48 object-fill rounded-full shadow-lg border-2 border-custom-black"
+            fetchPriority="high"
+            decoding="async"
+            className="w-48 h-48 object-cover rounded-full shadow-lg border-2 border-custom-black"
           />
         </div>
 
@@ -386,6 +396,8 @@ const EventDetail = () => {
                 <img
                   src={getFighterPhotoUrl(fighter.photo_url)}
                   alt={fighter.nickname || fighter.first_name}
+                  loading="lazy"
+                  decoding="async"
                   className="w-32 h-32 object-cover rounded-full mb-4 border-2 border-custom-black"
                 />
                 <p className="text-lg font-semibold text-custom-black">

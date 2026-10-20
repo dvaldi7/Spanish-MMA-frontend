@@ -1,6 +1,6 @@
-import { getImageUrl } from '../config';
+import { getImageUrl, getCloudinarySrcSet } from '../config';
 
-export { getImageUrl };
+export { getImageUrl, getCloudinarySrcSet };
 
 export const formatDate = (dateString, short = false) => {
     if (!dateString) return 'N/A';

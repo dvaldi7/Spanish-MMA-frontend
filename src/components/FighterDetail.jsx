@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import api from "../services/api";
-import avatar from "/images/fighters/avatar.png";
+import avatar from "/images/fighters/avatar.webp";
 import { getImageUrl } from "../utils/helpers";
 import { Helmet } from "react-helmet-async";
 
@@ -110,8 +110,10 @@ const FighterDetail = () => {
 
         <div className="flex justify-center mb-6">
           <img
-            src={getImageUrl(fighter.photo_url, avatar)}
+            src={getImageUrl(fighter.photo_url, avatar, { width: 384 })}
             alt={`Peleador de MMA ${fullName} - Perfil oficial Spanish MMA`}
+            fetchPriority="high"
+            decoding="async"
             className="w-48 h-48 object-cover rounded-full shadow-lg border-2 border-custom-black"
           />
         </div>

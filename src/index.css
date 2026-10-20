@@ -35,27 +35,27 @@
   }
 
   .card_photo-fighter {
-    @apply w-72 md:w-full h-72 sm:h-80 object-cover md:object-cover rounded-md mb-2 border border-gray-200
+    @apply w-72 md:w-full h-72 sm:h-80 object-cover rounded-md mb-2 border border-gray-200
   }
 
   .card_photo-avatar {
-    @apply w-72 md:w-full h-72 sm:h-80 rounded-md mb-2 border border-gray-400
+    @apply w-72 md:w-full h-72 sm:h-80 object-cover rounded-md mb-2 border border-gray-400
   }
 
   .card_logo-company {
-    @apply w-72 md:w-full h-64 sm:h-80 object-fill rounded-md mb-2 border border-gray-200
+    @apply w-72 md:w-full h-64 sm:h-80 object-contain rounded-md mb-2 border border-gray-200
   }
 
   .card_logo-avatar {
-    @apply w-72 md:w-full h-64 sm:h-80 object-fill rounded-md mb-2 border border-gray-200
+    @apply w-72 md:w-full h-64 sm:h-80 object-contain rounded-md mb-2 border border-gray-200
   }
 
   .card_poster-event {
-    @apply w-72 md:w-full h-64 sm:h-80 object-fill rounded-md mb-2 border border-gray-200
+    @apply w-72 md:w-full h-64 sm:h-80 object-cover rounded-md mb-2 border border-gray-200
   }
 
   .card_poster-avatar {
-    @apply w-72 md:w-full h-64 sm:h-80 object-fill rounded-md mb-2 border border-gray-200
+    @apply w-72 md:w-full h-64 sm:h-80 object-cover rounded-md mb-2 border border-gray-200
   }
 
   .card_photo-news {

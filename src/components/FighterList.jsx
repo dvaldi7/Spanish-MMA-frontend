@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import useFetchFighters from '../hooks/useFetchFighters';
 import { buildPageWindow } from '../utils/pagination';
-import { getImageUrl } from '../utils/helpers';
-import avatar from "/images/fighters/avatar.png";
+import { getImageUrl, getCloudinarySrcSet } from '../utils/helpers';
+import avatar from "/images/fighters/avatar.webp";
 
 const FighterList = () => {
 
@@ -145,7 +145,11 @@ const FighterList = () => {
                         <div className="mb-3 flex justify-center items-center">
                             {fighter.photo_url ? (
                                 <img
-                                    src={getImageUrl(fighter.photo_url, avatar)}
+                                    src={getImageUrl(fighter.photo_url, avatar, { width: 400 })}
+                                    srcSet={getCloudinarySrcSet(fighter.photo_url, [200, 400, 640]) || undefined}
+                                    sizes="(max-width: 767px) 92vw, 288px"
+                                    loading="lazy"
+                                    decoding="async"
                                     alt={`Foto de ${fighter.first_name}`}
                                     className="card_photo-fighter"
                                 />

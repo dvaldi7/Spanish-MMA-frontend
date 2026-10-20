@@ -8,7 +8,7 @@ export const Error404 = () => {
             </h1>
 
             <div className='flex items-center justify-center'>
-                <img src='/images/Error404.jpg' alt='Error 404' />
+                <img src='/images/Error404.webp' alt='Error 404' />
             </div>
 
         </>

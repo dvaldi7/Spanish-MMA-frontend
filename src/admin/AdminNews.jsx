@@ -120,8 +120,10 @@ export const AdminNews = () => {
                             <tr key={item.news_id} className="border-b hover:bg-gray-50">
                                 <td className="p-4">
                                     <img
-                                        src={getImageUrl(item.image_url, '/images/Error404.jpg')}
+                                        src={getImageUrl(item.image_url, '/images/Error404.webp', { width: 128 })}
                                         className="w-12 h-10 md:w-16 md:h-12 object-cover rounded shadow-sm"
+                                        loading="lazy"
+                                        decoding="async"
                                         alt="Noticia"
                                     />
                                 </td>

@@ -3,7 +3,7 @@ import useFetchFighters from '../hooks/useFetchFighters';
 import api from '../services/api';
 import FighterFormModal from '../components/FighterFormModal';
 import { getImageUrl } from '../utils/helpers';
-import avatar from "/images/fighters/avatar.png";
+import avatar from "/images/fighters/avatar.webp";
 
 
 const AdminFighters = () => {
@@ -169,13 +169,15 @@ const AdminFighters = () => {
 
                                 <td className="px-6 py-4 whitespace-nowrap">
                                     <img
-                                        src={getImageUrl(fighter.photo_url, avatar)}
+                                        src={getImageUrl(fighter.photo_url, avatar, { width: 80 })}
                                         alt={`Foto de ${fighter.first_name}`}
                                         className="h-10 w-10 rounded-full object-cover"
                                         onError={(e) => {
                                             e.target.onerror = null;
                                             e.target.src = avatar;
                                         }}
+                                        loading="lazy"
+                                        decoding="async"
                                     />
                                 </td>
 
@@ -233,7 +235,7 @@ const AdminFighters = () => {
                          hover:bg-gray-50">
                             <div className="flex items-center space-x-3">
                                 <img
-                                    src={getImageUrl(fighter.photo_url, avatar)}
+                                    src={getImageUrl(fighter.photo_url, avatar, { width: 80 })}
                                     className="h-10 w-10 rounded-full object-cover"
                                     onError={(e) => {
                                         e.target.onerror = null;

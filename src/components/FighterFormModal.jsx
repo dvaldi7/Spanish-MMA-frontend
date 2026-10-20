@@ -385,7 +385,7 @@ const FighterFormModal = ({ fighterIdToEdit, isModalOpen, closeModal, onFighterS
                         {formData.photo_url && (
                             <div className="mt-3">
                                 <img
-                                    src={getImageUrl(formData.photo_url, '/images/fighters/avatar.png')}
+                                    src={getImageUrl(formData.photo_url, '/images/fighters/avatar.webp', { width: 320 })}
                                     alt={`imagen de ${formData.first_name || 'peleador'}`}
                                     className="h-40 w-40 object-cover rounded-lg border border-gray-300 shadow-md"
                                 />

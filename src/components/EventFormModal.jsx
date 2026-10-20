@@ -190,7 +190,7 @@ const EventFormModal = ({ eventIdToEdit, isModalOpen, closeModal, onEventSaved }
                                         className="h-full w-full object-cover"
                                         alt="Preview" />
                                 ) : formData.poster_url ? (
-                                    <img src={getImageUrl(formData.poster_url, '/images/events/avatar.jpg')}
+                                    <img src={getImageUrl(formData.poster_url, '/images/events/avatar.webp', { width: 320 })}
                                         className="h-full w-full object-cover" alt="Actual" />
                                 ) : (
                                     <div className="h-full w-full flex items-center justify-center

@@ -3,7 +3,7 @@ import useFetchEvents from '../hooks/useFetchEvents';
 import api from '../services/api';
 import EventFormModal from '../components/EventFormModal';
 import { getImageUrl, formatDate } from '../utils/helpers';
-import avatar from "/images/events/avatar.jpg";
+import avatar from "/images/events/avatar.webp";
 
 const AdminEvents = () => {
 
@@ -150,13 +150,15 @@ const AdminEvents = () => {
                                 {/* Póster */}
                                 <td className="px-6 py-4 whitespace-nowrap">
                                     <img
-                                        src={getImageUrl(event.poster_url, avatar)}
+                                        src={getImageUrl(event.poster_url, avatar, { width: 80 })}
                                         alt={`Logo de ${event.name}`}
                                         className="h-10 w-10 rounded-full object-cover"
                                         onError={(e) => {
                                             e.target.onerror = null;
                                             e.target.src = avatar;
                                         }}
+                                        loading="lazy"
+                                        decoding="async"
                                     />
                                 </td>
 
@@ -218,7 +220,7 @@ const AdminEvents = () => {
                          hover:bg-gray-50">
                             <div className="flex items-center space-x-3">
                                 <img
-                                    src={getImageUrl(event.poster_url, avatar)}
+                                    src={getImageUrl(event.poster_url, avatar, { width: 80 })}
                                     alt={`Póster de ${event.name}`}
                                     className="h-10 w-10 rounded-md object-cover"
                                     onError={(e) => {

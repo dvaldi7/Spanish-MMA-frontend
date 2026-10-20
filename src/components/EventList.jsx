@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import useFetchEvents from '../hooks/useFetchEvents';
 import { useNavigate } from 'react-router-dom';
-import avatar from "/images/events/avatar.jpg";
+import avatar from "/images/events/avatar.webp";
 import { Helmet } from "react-helmet-async";
-import { getImageUrl } from '../utils/helpers';
+import { getImageUrl, getCloudinarySrcSet } from '../utils/helpers';
 
 export const EventList = () => {
 
@@ -109,7 +109,11 @@ export const EventList = () => {
                         {<div className="mb-3 flex justify-center items-center">
                             {event.poster_url ? (
                                 <img
-                                    src={getImageUrl(event.poster_url, avatar)}
+                                    src={getImageUrl(event.poster_url, avatar, { width: 400 })}
+                                    srcSet={getCloudinarySrcSet(event.poster_url, [200, 400, 640]) || undefined}
+                                    sizes="(max-width: 767px) 92vw, 288px"
+                                    loading="lazy"
+                                    decoding="async"
                                     alt={`Foto de ${event.name}`}
                                     className="card_poster-event"
                                 />
