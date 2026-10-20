@@ -18,14 +18,24 @@ const CLOUDINARY_UPLOAD = '/image/upload/';
 const CLOUDINARY_URL = /^https?:\/\/res\.cloudinary\.com\/[^/]+\/image\/upload\//;
 
 // Inyecta transformaciones de entrega en URLs de Cloudinary sin alterar el original:
-// f_auto (formato negociado WebP/AVIF), q_auto|q_auto:best (compresión adaptativa;
-// ':best' prioriza nitidez en imágenes grandes/LCP) y, opcionalmente, w_<px> con c_limit
-// (redimensiona SOLO si el original es mayor: nunca hace upscale).
-const injectCloudinaryTransform = (url, width, quality = 'auto') => {
+// - f_auto (formato negociado WebP/AVIF) y q_auto|q_auto:best (compresión adaptativa;
+//   ':best' prioriza nitidez en imágenes grandes/LCP).
+// - Con solo width: w_<px> + c_limit (redimensiona SOLO si el original es mayor: nunca upscale).
+// - Con width+height+gravity: recorte AI centrado en rostros (c_fill,g_auto:face) SOLO si el
+//   original es mayor que el contenedor (condicional if_w_gt_and_h_gt); si es menor, c_limit
+//   sin ampliar y el object-cover del navegador resuelve el pequeño desajuste de aspecto.
+const injectCloudinaryTransform = (url, width, quality = 'auto', height, gravity) => {
   if (!CLOUDINARY_URL.test(url)) return url;
   const q = quality === 'best' ? 'q_auto:best' : 'q_auto';
   const parts = ['f_auto', q];
-  if (width) parts.push(`w_${width}`, 'c_limit');
+  if (width && height) {
+    const crop = [`if_w_gt_${width}_and_h_gt_${height}`, `w_${width}`, `h_${height}`, 'c_fill'];
+    if (gravity) crop.push(`g_${gravity}`);
+    // La segunda transformación (fallback sin upscale) va unida con '/' dentro del mismo segmento
+    parts.push(`${crop.join(',')}/if_else,c_limit,w_${width}`);
+  } else if (width) {
+    parts.push(`w_${width}`, 'c_limit');
+  }
   const transform = parts.join(',');
   return url.replace(CLOUDINARY_UPLOAD, `${CLOUDINARY_UPLOAD}${transform}/`);
 };
@@ -42,10 +52,10 @@ const injectCloudinaryTransform = (url, width, quality = 'auto') => {
 export function getImageUrl(url, fallback, options = {}) {
   if (!url) return fallback;
   if (/^(blob:|https?:\/\/)/i.test(url) && !CLOUDINARY_URL.test(url)) return url;
-  const { width, quality } = options;
+  const { width, height, quality, gravity } = options;
 
   if (CLOUDINARY_URL.test(url)) {
-    return injectCloudinaryTransform(url, width, quality);
+    return injectCloudinaryTransform(url, width, quality, height, gravity);
   }
 
   const path = url.startsWith('/') ? url : `/${url}`;

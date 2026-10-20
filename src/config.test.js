@@ -71,6 +71,21 @@ describe('config.getImageUrl', () => {
       .toBe('https://res.cloudinary.com/dygmatgy1/image/upload/f_auto,q_auto:best,w_384,c_limit/v1770144234/spanish-mma/fighters/foto.jpg');
   });
 
+  it('con width+height recorta con c_fill y gravedad facial SOLO si el original es mayor (sin upscale)', async () => {
+    const { getImageUrl } = await loadConfig();
+    expect(getImageUrl(CDN, '/images/avatar.jpg', { width: 640, height: 384, gravity: 'auto:face' }))
+      .toBe('https://res.cloudinary.com/dygmatgy1/image/upload/f_auto,q_auto,if_w_gt_640_and_h_gt_384,w_640,h_384,c_fill,g_auto:face/if_else,c_limit,w_640/v1770144234/spanish-mma/fighters/foto.jpg');
+  });
+
+  it('el recorte con gravedad solo se aplica a Cloudinary; legacy/externas quedan intactas', async () => {
+    vi.stubEnv('VITE_BACKEND_URL', '');
+    const { getImageUrl } = await loadConfig();
+    expect(getImageUrl('images/news/vertical.png.png', '/x.webp', { width: 640, height: 384, gravity: 'auto:face' }))
+      .toBe('/backend-images/images/news/vertical.png.png');
+    expect(getImageUrl('http://example.com/a.jpg', '/x.webp', { width: 640, height: 384, gravity: 'auto:face' }))
+      .toBe('http://example.com/a.jpg');
+  });
+
   it('las rutas legacy no reciben transformaciones (se sirven tal cual)', async () => {
     vi.stubEnv('VITE_BACKEND_URL', '');
     const { getImageUrl } = await loadConfig();
