@@ -19,6 +19,7 @@ const AdminLayout = () => {
     const adminLinks = [
         { to: '/admin/news', label: 'Noticias' },
         { to: '/admin/fighters', label: 'Peleadores' },
+        { to: '/admin/fights', label: 'Combates' },
         { to: '/admin/companies', label: 'Compañías' },
         { to: '/admin/events', label: 'Eventos' },
     ];

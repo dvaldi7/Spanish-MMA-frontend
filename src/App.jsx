@@ -7,6 +7,7 @@ import { CompanyList } from './components/CompanyList.jsx';
 import { EventList } from './components/EventList.jsx';
 import AdminFighters from './admin/AdminFighters.jsx';
 import { AdminCompanies } from './admin/AdminCompanies.jsx';
+import AdminFights from './admin/AdminFights.jsx';
 import AdminLayout from './admin/AdminLayout.jsx';
 import AdminEvents from './admin/AdminEvents.jsx';
 import FighterDetail from './components/FighterDetail.jsx';
@@ -57,6 +58,7 @@ function App() {
             <Route path="companies" element={<AdminCompanies />} />
             <Route path="events" element={<AdminEvents />} />
             <Route path="news" element={<AdminNews />} />
+            <Route path="fights" element={<AdminFights />} />
           </Route>
 
         </Route>
