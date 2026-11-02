@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import api from '../services/api';
+import ProposalImport from './ProposalImport';
 
 const NATURES = ['PROFESSIONAL', 'AMATEUR', 'EXHIBITION'];
 const FIGHT_STATUSES = ['DRAFT', 'SCHEDULED', 'COMPLETED', 'POSTPONED', 'CANCELLED'];
@@ -368,6 +369,8 @@ const AdminFights = () => {
                     </button>
                 )}
             </div>
+
+            <ProposalImport events={events} fighters={fighters} />
 
             {selectedEventId && loadingFights && <p className="text-gray-600">Cargando combates…</p>}
 
