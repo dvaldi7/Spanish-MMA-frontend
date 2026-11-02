@@ -93,7 +93,6 @@ const ProposalImport = ({ events, fighters }) => {
         const own = overrides[index] && overrides[index][`${side}Side`];
         if (own) return own;
         const m = matchFor(f, side, matchingList ?? parsedProp?.matching);
-        console.log('WDBG sideOf', JSON.stringify({ index, side, matchListType: typeof matchingList, len: (matchingList ?? parsedProp?.matching ?? []).length, result: m.match, cand: m.candidate }));
         const announced = f.participants?.[side] ?? '';
         if (m.match === 'strong' && m.candidate_fighter_id) {
             return { mode: 'internal', fighter_id: String(m.candidate_fighter_id), external_name: '', ambiguous: false, announced };
