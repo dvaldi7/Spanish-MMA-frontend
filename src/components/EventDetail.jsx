@@ -7,10 +7,37 @@ import FadeImage from "./FadeImage";
 import { getImageUrl } from "../utils/helpers";
 import { Helmet } from "react-helmet-async";
 
+// TASK-0049: etiquetas de la cartelera estructurada
+const METHOD_LABELS = {
+  KO: 'KO',
+  TKO: 'TKO',
+  SUBMISSION: 'Sumisión',
+  DEC_UNANIMOUS: 'Decisión unánime',
+  DEC_SPLIT: 'Decisión dividida',
+  DEC_MAJORITY: 'Decisión mayoritaria',
+  DQ: 'Descalificación',
+  NO_CONTEST: 'No contest',
+  OTHER: 'Otro',
+};
+const NATURE_LABELS_ES = {
+  PROFESSIONAL: 'Profesional',
+  AMATEUR: 'Amateur',
+  EXHIBITION: 'Exhibición',
+};
+const FIGHT_STATUS_TEXT = {
+  DRAFT: 'Borrador',
+  SCHEDULED: 'Por disputar',
+  COMPLETED: 'Completado',
+  POSTPONED: 'Aplazado',
+  CANCELLED: 'Cancelado',
+};
+const formatRoundTime = (secs) => `${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, '0')}`;
+
 const EventDetail = () => {
   const { slug } = useParams();
   const [event, setEvent] = useState(null);
   const [fighters, setFighters] = useState([]);
+  const [fights, setFights] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [timeLeft, setTimeLeft] = useState({ dias: 0, horas: 0, minutos: 0, segundos: 0 });
@@ -55,6 +82,15 @@ const EventDetail = () => {
 
         const dataRoster = responseRoster.data;
         setFighters(dataRoster.roster || []);
+
+        // TASK-0049: combates estructurados (si el evento los tiene). Si la consulta
+        // falla o no hay fights, se conserva la cartelera legacy sin duplicar nada.
+        try {
+          const responseFights = await api.get(`/fights/event/${eventId}`);
+          setFights(responseFights.data.fights || []);
+        } catch {
+          setFights([]);
+        }
 
       } catch (err) {
         setError(err.response?.data?.message || "Evento no encontrado");
@@ -112,9 +148,111 @@ const EventDetail = () => {
     return eventDate < today;
   };
 
+  // TASK-0049: renderiza un combate estructurado (nunca sustituye el parser legacy)
+  const renderStructuredFight = (f) => {
+    const red = f.participants.find((p) => p.corner === 'RED');
+    const blue = f.participants.find((p) => p.corner === 'BLUE');
+
+    const winnerConfirmed = (p) =>
+      f.result_type === 'PARTICIPANT_WIN' &&
+      f.winner_participant_id === p?.participant_id &&
+      f.field_flag !== 'needs_review';
+
+    const renderSide = (p, alignRight) => {
+      if (!p) return <span className="text-gray-500">Por confirmar</span>;
+      const label = p.fighter
+        ? `${p.fighter.first_name} ${p.fighter.last_name}`
+        : (p.external_name || 'Por confirmar');
+      const isWinner = winnerConfirmed(p);
+      const nameEl = (
+        <span
+          className={`text-sm md:text-md font-bold uppercase italic text-center truncate block
+            ${isWinner ? 'text-green-600' : 'text-gray-700'}`}
+        >
+          {label}
+          {isWinner && (
+            <span className="block text-[10px] font-black text-green-600 not-italic">GANADOR 🏆</span>
+          )}
+        </span>
+      );
+      return (
+        <div className={`flex flex-col items-center ${alignRight ? 'md:items-end' : 'md:items-start'}`}>
+          {p.fighter ? (
+            <Link to={`/peleadores/${p.fighter.slug}`} className="hover:opacity-80 transition">
+              {nameEl}
+            </Link>
+          ) : (
+            nameEl
+          )}
+          {!p.fighter && (
+            <span className="text-[10px] text-gray-500 mt-1">(rival externo)</span>
+          )}
+        </div>
+      );
+    };
+
+    const methodText = f.method_code
+      ? `${METHOD_LABELS[f.method_code] || f.method_code}${f.method_detail ? ` (${f.method_detail})` : ''
+      }${f.ending_round ? ` · R${f.ending_round}` : ''
+      }${f.round_seconds !== null && f.round_seconds !== undefined ? ` · ${formatRoundTime(f.round_seconds)}` : ''}`
+      : null;
+
+    const resultLine = f.status !== 'COMPLETED'
+      ? (FIGHT_STATUS_TEXT[f.status] || f.status)
+      : (f.result_type === 'PARTICIPANT_WIN'
+        ? (f.winner_participant_id
+          ? (f.field_flag === 'needs_review'
+            ? 'Ganador pendiente de revisión'
+            : `Ganador: ${(() => {
+              const w = f.participants.find((p) => p.participant_id === f.winner_participant_id);
+              return w ? (w.fighter ? `${w.fighter.first_name} ${w.fighter.last_name}` : w.external_name) : '';
+            })()}`)
+          : null)
+        : f.result_type === 'DRAW'
+          ? 'Empate'
+          : f.result_type === 'NO_CONTEST'
+            ? 'No contest'
+            : f.field_flag === 'needs_review'
+              ? 'Resultado pendiente de revisión'
+              : null);
+
+    return (
+      <div key={f.fight_id} className="bg-white bg-opacity-40 p-3 rounded-lg mb-2 border border-gray-300
+        border-l-4 border-l-custom-black border-b-2 border-b-custom-black hover:border-l-red-600
+        hover:shadow-lg hover:border-b-custom-gold transition-all duration-300">
+        <div className="text-xs text-gray-500 flex flex-wrap justify-center gap-x-3 mb-2">
+          <span>#{f.bout_order ?? '—'}</span>
+          <span>{NATURE_LABELS_ES[f.nature] || f.nature}</span>
+          {f.status !== 'COMPLETED' && <span className="font-bold text-gray-600">{FIGHT_STATUS_TEXT[f.status] || f.status}</span>}
+          {f.is_title && <span className="font-bold text-custom-gold">Por título</span>}
+        </div>
+
+        <div className="flex flex-col md:flex-row items-center justify-center gap-3 md:gap-6">
+          <div className="flex-1 flex justify-center">{renderSide(red, false)}</div>
+          <span className="text-2xl md:text-3xl italic gradiant-color streetFighterTypo">VS</span>
+          <div className="flex-1 flex justify-center">{renderSide(blue, true)}</div>
+        </div>
+
+        {(resultLine || methodText) && (
+          <div className="text-center mt-2 text-xs md:text-sm text-gray-700">
+            {resultLine && <span className="font-bold italic mr-2">{resultLine}</span>}
+            {methodText && <span>({methodText})</span>}
+            <div className="text-[10px] text-gray-500 mt-1">
+              {f.source_name && (
+                <span>
+                  Fuente: {f.source_name}
+                  {f.confidence ? ` · Confianza ${f.confidence}` : ''}
+                </span>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  };
+
   // busca si el peleador existe en tu DB para la cartelera
-  const renderBout = (line, index) => {
-    if (!line.trim()) return null;
+  const renderBout = (line, index) => {    if (!line.trim()) return null;
 
     const boutFighterName = line.split(/\s+VS\s+/i);
 
@@ -362,17 +500,29 @@ const EventDetail = () => {
           </p>
         </div>
 
-        {/* CARTELERA  */}
-        {event.description && (
+        {/* CARTELERA — estructurada si el evento tiene fights; si no, legacy textual (nunca ambas) */}
+        {fights.length > 0 ? (
           <div className="mb-12 mt-10">
             <h2 className="text-4xl font-bold text-custom-red italic font-sans 
            mb-10 text-center uppercase">
               Cartelera
             </h2>
             <div className="space-y-4">
-              {event.description.split('\n').map((line, idx) => renderBout(line, idx))}
+              {fights.map((f) => renderStructuredFight(f))}
             </div>
           </div>
+        ) : (
+          event.description && (
+            <div className="mb-12 mt-10">
+              <h2 className="text-4xl font-bold text-custom-red italic font-sans 
+           mb-10 text-center uppercase">
+                Cartelera
+              </h2>
+              <div className="space-y-4">
+                {event.description.split('\n').map((line, idx) => renderBout(line, idx))}
+              </div>
+            </div>
+          )
         )}
       </div>
 
